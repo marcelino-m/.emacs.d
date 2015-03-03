@@ -2,8 +2,10 @@
 
 ;; write here cust var.
 (setq custom-file "~/.emacs.d/custom.el")
+;; if custom-file don't exist, then create empty file
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file))
 (load custom-file)
-
 
 (require 'init-utils)
 (require 'init-elpa)      ;; Machinery for installing required packages
