@@ -1,0 +1,38 @@
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+;; write here cust var.
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
+
+(require 'init-utils)
+(require 'init-elpa)      ;; Machinery for installing required packages
+(require 'init-exec-path) ;; Set up $PATH
+
+(require-package 'diminish)
+(require-package 'scratch)
+(require 'init-key-chord)
+(require 'init-frame-hooks)
+(require 'init-themes)
+(require 'init-gui-frames)
+(require 'init-dired)
+(require 'init-ido)
+(require 'init-editing-utils)
+(require 'init-uniquify)
+(require 'init-windows)
+(require 'init-git)
+(require 'init-helm)
+(require 'init-projectile)
+(require 'init-c++)
+(require 'init-backup)
+(require 'init-multi-term)
+(require 'init-imenu-anywhere)
+(require 'init-cmake)
+(require 'init-csv)
+(require 'init-save-places)
+(require 'init-org)
+(require 'init-ispell)
+(require 'init-js2)
+(require 'init-php)
+(require 'init-markdown)
+(require 'init-qtpro)
