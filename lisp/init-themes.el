@@ -1,4 +1,5 @@
 (require-package 'solarized-theme)
+(require-package 'zenburn-theme)
 
 (setq x-underline-at-descent-line t)
 
