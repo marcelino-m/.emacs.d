@@ -40,3 +40,4 @@
 (require 'init-qtpro)
 (require 'init-web)
 (require 'init-translate)
+(require 'init-powerline)
