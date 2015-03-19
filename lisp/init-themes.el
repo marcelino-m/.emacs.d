@@ -10,7 +10,7 @@
 (defun my/theme-dark ()
   "Activate a dark color theme."
   (interactive)
-  (load-theme 'solarized-dark t))
+  (load-theme 'zenburn t))
 
 
 
