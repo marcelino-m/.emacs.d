@@ -1,17 +1,12 @@
 (require-package 'unfill)
 
-(when (fboundp 'electric-pair-mode)
-  (electric-pair-mode))
-(when (eval-when-compile (version< "24.4" emacs-version))
-  (electric-indent-mode 1))
-
 ;;----------------------------------------------------------------------------
 ;; Some basic preferences
 ;;----------------------------------------------------------------------------
 (setq-default
  blink-cursor-interval 0.4
  bookmark-default-file (expand-file-name ".bookmarks.el" user-emacs-directory)
- buffers-menu-max-size 30
+;; buffers-menu-max-size 30
  case-fold-search t
  column-number-mode t
  delete-selection-mode t
@@ -19,7 +14,6 @@
  ediff-window-setup-function 'ediff-setup-windows-plain
  mouse-yank-at-point t
  save-interprogram-paste-before-kill t
-;; scroll-preserve-screen-position 'always
  set-mark-command-repeat-pop t
  tooltip-delay 1.5
  truncate-lines nil
@@ -30,40 +24,14 @@
 (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
 
-(transient-mark-mode t)
-
 
+
 ;;; Whitespace
 (setq mode-require-final-newline nil)
 (require-package 'ethan-wspace)
 (require 'ethan-wspace)
 (global-ethan-wspace-mode 1)
 
-
-
-
-;; (defun sanityinc/no-trailing-whitespace ()
-;;   "Turn off display of trailing whitespace in this buffer."
-;;   (setq show-trailing-whitespace nil))
-
-;; ;; But don't show trailing whitespace in SQLi, inf-ruby etc.
-;; (dolist (hook '(special-mode-hook
-;;		eww-mode-hook
-;;		term-mode-hook
-;;		comint-mode-hook
-;;		compilation-mode-hook
-;;		twittering-mode-hook
-;;		minibuffer-setup-hook))
-;;   (add-hook hook #'sanityinc/no-trailing-whitespace))
-
-
-;; (require-package 'whitespace-cleanup-mode)
-;; (global-whitespace-cleanup-mode t)
-;; (add-hook 'before-save-hook 'whitespace-cleanup)
-
-
-
-;; (global-set-key [remap just-one-space] 'cycle-spacing)
 
 
 ;;; Newline behaviour
@@ -90,6 +58,7 @@
   (global-prettify-symbols-mode))
 
 
+;; Undo tree
 (require-package 'undo-tree)
 (global-undo-tree-mode)
 (diminish 'undo-tree-mode)
@@ -104,19 +73,15 @@
 
 
 
-(require-package 'browse-kill-ring)
 
-
-;;----------------------------------------------------------------------------
 ;; Don't disable narrowing commands
-;;----------------------------------------------------------------------------
+
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-defun 'disabled nil)
 
-;;----------------------------------------------------------------------------
+
 ;; Show matching parens
-;;----------------------------------------------------------------------------
 (show-paren-mode 1)
 
 ;;----------------------------------------------------------------------------
@@ -134,21 +99,8 @@
 
 
 ;;----------------------------------------------------------------------------
-;; Rectangle selections, and overwrite text when the selection is active
-;;----------------------------------------------------------------------------
-(cua-selection-mode t)                  ; for rectangles, CUA is nice
-
-
-;;----------------------------------------------------------------------------
 ;; Handy key bindings
 ;;----------------------------------------------------------------------------
-
-;; Vimmy alternatives to M-^ and C-u M-^
-(global-set-key (kbd "C-c j") 'join-line)
-(global-set-key (kbd "C-c J") (lambda () (interactive) (join-line 1)))
-
-(global-set-key (kbd "C-.") 'set-mark-command)
-(global-set-key (kbd "C-x C-.") 'pop-global-mark)
 
 (require-package 'ace-jump-mode)
 (key-chord-define-global "jc" 'ace-jump-char-mode)
@@ -167,6 +119,8 @@
 (global-set-key (kbd "C-c c c") 'mc/edit-lines)
 (global-set-key (kbd "C-c c e") 'mc/edit-ends-of-lines)
 (global-set-key (kbd "C-c c a") 'mc/edit-beginnings-of-lines)
+
+
 
 
 (defun kill-back-to-indentation ()
@@ -202,47 +156,17 @@
 (global-set-key (kbd "C-c p") 'md/duplicate-down)
 (global-set-key (kbd "C-c P") 'md/duplicate-up)
 
-;;----------------------------------------------------------------------------
-;; Fix backward-up-list to understand quotes, see http://bit.ly/h7mdIL
-;;----------------------------------------------------------------------------
-(defun backward-up-sexp (arg)
-  "Jump up to the start of the ARG'th enclosing sexp."
-  (interactive "p")
-  (let ((ppss (syntax-ppss)))
-    (cond ((elt ppss 3)
-	   (goto-char (elt ppss 8))
-	   (backward-up-sexp (1- arg)))
-	  ((backward-up-list arg)))))
-
-(global-set-key [remap backward-up-list] 'backward-up-sexp) ; C-M-u, C-M-up
 
 
 ;;----------------------------------------------------------------------------
 ;; Cut/copy the current line if no region is active
 ;;----------------------------------------------------------------------------
-(require-package 'whole-line-or-region)
-(whole-line-or-region-mode t)
-(diminish 'whole-line-or-region-mode)
-(make-variable-buffer-local 'whole-line-or-region-mode)
 
-(defun suspend-mode-during-cua-rect-selection (mode-name)
-  "Add an advice to suspend `MODE-NAME' while selecting a CUA rectangle."
-  (let ((flagvar (intern (format "%s-was-active-before-cua-rectangle" mode-name)))
-	(advice-name (intern (format "suspend-%s" mode-name))))
-    (eval-after-load 'cua-rect
-      `(progn
-	 (defvar ,flagvar nil)
-	 (make-variable-buffer-local ',flagvar)
-	 (defadvice cua--activate-rectangle (after ,advice-name activate)
-	   (setq ,flagvar (and (boundp ',mode-name) ,mode-name))
-	   (when ,flagvar
-	     (,mode-name 0)))
-	 (defadvice cua--deactivate-rectangle (after ,advice-name activate)
-	   (when ,flagvar
-	     (,mode-name 1)))))))
-
-(suspend-mode-during-cua-rect-selection 'whole-line-or-region-mode)
-
+;; BUG HERE!!!!!!!!  :)
+;;(require-package 'whole-line-or-region)
+;;(whole-line-or-region-mode t)
+;;(diminish 'whole-line-or-region-mode)
+;; (make-variable-buffer-local 'whole-line-or-region-mode)
 
 
 
