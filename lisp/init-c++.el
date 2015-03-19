@@ -1,27 +1,27 @@
-(require-package 'company)
-(require-package 'irony)
-(require-package 'company-irony)
+
+(require-package 'auto-complete)
+
+(require 'auto-complete)
+(require 'auto-complete-config)
 
 
 (add-hook 'c++-mode-hook (lambda ()
+                           (ac-config-default)
                            (setq tab-width 4
                                  indent-tabs-mode nil)
                            (c-set-style "Stroustrup")))
 
 
+(defun my-pretty ()
+  "make some word or string show as pretty Unicode symbols"
+  (setq prettify-symbols-alist
+        '(
+          ("->" . 10230)    ;
+          ("<=" . 10877)    ;
+          (">=" . 10878)    ;
+          )))
 
-(require 'company)
-(add-hook 'c++-mode-hook 'company-mode)
 
-;; for irony
-(require 'irony)
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-;; then company-irony
-(require 'company-irony)
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-irony))
-
+(add-hook 'c++-mode-hook 'my-pretty)
 
 (provide 'init-c++)
