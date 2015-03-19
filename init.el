@@ -38,3 +38,5 @@
 (require 'init-php)
 (require 'init-markdown)
 (require 'init-qtpro)
+(require 'init-web)
+(require 'init-translate)
