@@ -221,16 +221,6 @@ With arg N, insert N newlines."
 (require-package 'highlight-escape-sequences)
 (hes-mode)
 
-
-
-(require-package 'smooth-scroll)
-(require 'smooth-scroll)
-(smooth-scroll-mode t)
-(global-set-key [(control  down)]  'scroll-up-1)
-(global-set-key [(control  up)]    'scroll-down-1)
-(global-set-key [(control  left)]  'scroll-right-1)
-(global-set-key [(control  right)] 'scroll-left-1)
-(diminish 'smooth-scroll-mode)
 
 
 (provide 'init-editing-utils)
