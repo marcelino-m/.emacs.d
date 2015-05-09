@@ -1,11 +1,17 @@
 (require-package 'js2-mode)
 (require-package 'ac-js2)
-(add-to-list 'load-path "/home/marcelo/.nvm/versions/io.js/v1.3.0/lib/node_modules/tern/emacs/")
-(require 'tern)
-(require 'tern-auto-complete)
+(require-package 'auto-complete)
+(require-package 'tern)
+(require-package 'tern-auto-complete)
 (require-package 'js2-refactor)
 (require-package 'rainbow-delimiters)
 
+
+(add-to-list 'load-path "/home/marcelo/.nvm/versions/io.js/v1.3.0/lib/node_modules/tern/emacs/")
+
+(require 'tern)
+(require 'tern-auto-complete)
+(require 'js2-refactor)
 
 (setenv "PATH" (concat "/home/marcelo/.nvm/versions/io.js/v1.3.0/bin/:" (getenv "PATH")))
 
@@ -20,6 +26,7 @@
    '(progn
       (require 'tern-auto-complete)
       (tern-ac-setup)))
-(require 'js2-refactor)
+
+
 
 (provide 'init-js2)

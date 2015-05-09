@@ -25,10 +25,11 @@
                                              (current-time)))
           6)))
 
+(my/theme-dark)
+;; (if (my/is-night)
+;;     (my/theme-dark)
+;;   (my/theme-light))
 
-(if (my/is-night)
-    (my/theme-dark)
-  (my/theme-light))
 
 
 

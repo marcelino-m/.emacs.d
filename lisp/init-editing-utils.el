@@ -88,6 +88,7 @@
 ;; Expand region
 ;;----------------------------------------------------------------------------
 (require-package 'expand-region)
+(require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 
@@ -103,9 +104,9 @@
 ;;----------------------------------------------------------------------------
 
 (require-package 'ace-jump-mode)
-(key-chord-define-global "jc" 'ace-jump-char-mode)
+(key-chord-define-global "qq" 'ace-jump-char-mode)
 (key-chord-define-global "jw" 'ace-jump-word-mode)
-(key-chord-define-global "jl" 'goto-line)
+(key-chord-define-global "jj" 'goto-line)
 
 
 (require-package 'multiple-cursors)
@@ -150,12 +151,8 @@
 (require-package 'move-dup)
 (global-set-key [M-up] 'md/move-lines-up)
 (global-set-key [M-down] 'md/move-lines-down)
-(global-set-key [M-S-up] 'md/move-lines-up)
-(global-set-key [M-S-down] 'md/move-lines-down)
-
-(global-set-key (kbd "C-c p") 'md/duplicate-down)
-(global-set-key (kbd "C-c P") 'md/duplicate-up)
-
+(global-set-key (kbd "C-M-p") 'md/duplicate-down)
+(global-set-key (kbd "C-M-S-P") 'md/duplicate-up)
 
 
 ;;----------------------------------------------------------------------------

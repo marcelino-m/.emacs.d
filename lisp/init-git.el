@@ -9,6 +9,8 @@
 (require-package 'git-messenger) ;; Though see also vc-annotate's "n" & "p" bindings
 (require-package 'git-timemachine)
 
+(setq magit-last-seen-setup-instructions "1.4.0")
+
 (setq-default
  magit-save-some-buffers nil
  magit-process-popup-time 10
@@ -20,7 +22,7 @@
 (global-set-key [(f12)] 'magit-status)
 
 (after-load 'magit
-  (define-key magit-status-mode-map (kbd "C-M-<up>") 'magit-goto-parent-section))
+  (define-key magit-status-mode-map (kbd "C-S-<up>") 'magit-goto-parent-section))
 
 (require-package 'fullframe)
 (after-load 'magit
@@ -80,6 +82,5 @@
 
 (require-package 'git-messenger)
 (global-set-key (kbd "C-x v p") #'git-messenger:popup-message)
-
 
 (provide 'init-git)

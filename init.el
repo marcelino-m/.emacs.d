@@ -1,4 +1,13 @@
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+(package-initialize)
+
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+;; exuberant ctag
+(setq path-to-ctags "/usr/bin/ctags")
+
 
 ;; write here cust var.
 (setq custom-file "~/.emacs.d/custom.el")
@@ -25,7 +34,7 @@
 (require 'init-git)
 (require 'init-helm)
 (require 'init-projectile)
-(require 'init-c++)
+(require 'init-company)
 (require 'init-backup)
 (require 'init-multi-term)
 (require 'init-imenu-anywhere)
@@ -41,3 +50,5 @@
 (require 'init-web)
 (require 'init-translate)
 (require 'init-powerline)
+(require 'init-prog-mode)
+(require 'init-helm-gtags)

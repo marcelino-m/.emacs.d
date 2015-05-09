@@ -13,7 +13,7 @@
   (ido-ubiquitous-mode t))
 
 (require-package 'ido-vertical-mode)
-(ido-vertical-mode 1);
+(ido-vertical-mode 1)
 
 ;; Use smex to handle M-x
 (when (maybe-require-package 'smex)
@@ -27,7 +27,15 @@
 (setq ido-default-buffer-method 'selected-window)
 
 ;; http://www.reddit.com/r/emacs/comments/21a4p9/use_recentf_and_ido_together/cgbprem
-(add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up] 'previous-history-element)))
+;(add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up] 'previous-history-element)))
+
+ (defun ido-define-keys () ;; C-n/p is more intuitive in vertical layout
+   (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
+   (define-key ido-completion-map (kbd "<down>") 'ido-next-match)
+   (define-key ido-completion-map (kbd "C-p") 'ido-prev-match)
+   (define-key ido-completion-map (kbd "<up>") 'ido-prev-match))
+
+(add-hook 'ido-setup-hook 'ido-define-keys)
 
 
 

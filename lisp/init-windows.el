@@ -36,5 +36,15 @@
 (global-set-key [(control  right)] 'scroll-left-1)
 (diminish 'smooth-scroll-mode)
 
+(defun my/scroll-other-window-one-line ()
+  (interactive)
+  (scroll-other-window 1))
 
+(defun my/scroll-other-window-down-one-line ()
+  (interactive)
+  (scroll-other-window-down 1))
+
+
+(global-set-key [(control meta down)]  'my/scroll-other-window-one-line)
+(global-set-key [(control meta up)]  'my/scroll-other-window-down-one-line)
 (provide 'init-windows)
