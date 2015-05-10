@@ -23,6 +23,7 @@
 (require-package 'diminish)
 (require-package 'scratch)
 (require 'init-key-chord)
+(require 'init-c++)
 (require 'init-frame-hooks)
 (require 'init-themes)
 (require 'init-gui-frames)
