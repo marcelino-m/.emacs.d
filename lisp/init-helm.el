@@ -13,7 +13,10 @@
 (setq helm-autoresize-max-height 40)
 (setq helm-autoresize-min-height 40)
 (setq helm-buffers-fuzzy-matching t)
+(setq helm-M-x-fuzzy-match t)
+
 ;;(global-set-key (kbd "M-s") 'helm-swoop)
+
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "M-m") 'helm-all-mark-rings)
 

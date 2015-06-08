@@ -15,6 +15,7 @@
              (define-key yas-minor-mode-map (kbd "<tab>") nil)
              (define-key yas-minor-mode-map (kbd "TAB") nil)
              (define-key yas-minor-mode-map (kbd "<backtab>") 'yas-expand)
+             (electric-pair-mode)
              (setq tab-width 4
                    indent-tabs-mode nil)))
 

@@ -47,4 +47,5 @@
 
 (global-set-key [(control meta down)]  'my/scroll-other-window-one-line)
 (global-set-key [(control meta up)]  'my/scroll-other-window-down-one-line)
+
 (provide 'init-windows)

@@ -1,12 +1,8 @@
-(require-package 'unfill)
-
 ;;----------------------------------------------------------------------------
 ;; Some basic preferences
 ;;----------------------------------------------------------------------------
 (setq-default
  blink-cursor-interval 0.4
- bookmark-default-file (expand-file-name ".bookmarks.el" user-emacs-directory)
-;; buffers-menu-max-size 30
  case-fold-search t
  column-number-mode t
  delete-selection-mode t
@@ -47,10 +43,8 @@
 
 
 
-(when (eval-when-compile (string< "24.3.1" emacs-version))
-  ;; https://github.com/purcell/emacs.d/issues/138
-  (after-load 'subword
-    (diminish 'subword-mode)))
+(after-load 'subword
+  (diminish 'subword-mode))
 
 
 
@@ -74,15 +68,11 @@
 
 
 
-;; Don't disable narrowing commands
-
-(put 'narrow-to-region 'disabled nil)
-(put 'narrow-to-page 'disabled nil)
-(put 'narrow-to-defun 'disabled nil)
-
 
 ;; Show matching parens
 (show-paren-mode 1)
+
+
 
 ;;----------------------------------------------------------------------------
 ;; Expand region
@@ -98,30 +88,14 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-
 ;;----------------------------------------------------------------------------
 ;; Handy key bindings
 ;;----------------------------------------------------------------------------
 
 (require-package 'ace-jump-mode)
-(key-chord-define-global "qq" 'ace-jump-char-mode)
+(key-chord-define-global "zz" 'ace-jump-char-mode)
 (key-chord-define-global "jw" 'ace-jump-word-mode)
-(key-chord-define-global "jj" 'goto-line)
-
-
-(require-package 'multiple-cursors)
-;; multiple-cursors
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-+") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-;; From active region to multiple cursors:
-(global-set-key (kbd "C-c c r") 'set-rectangular-region-anchor)
-(global-set-key (kbd "C-c c c") 'mc/edit-lines)
-(global-set-key (kbd "C-c c e") 'mc/edit-ends-of-lines)
-(global-set-key (kbd "C-c c a") 'mc/edit-beginnings-of-lines)
-
-
+ (key-chord-define-global "jj" 'goto-line)
 
 
 (defun kill-back-to-indentation ()
@@ -148,22 +122,13 @@
 ;; it will use those keybindings. For this reason, you might prefer to
 ;; use M-S-up and M-S-down, which will work even in lisp modes.
 ;;----------------------------------------------------------------------------
+
 (require-package 'move-dup)
 (global-set-key [M-up] 'md/move-lines-up)
 (global-set-key [M-down] 'md/move-lines-down)
 (global-set-key (kbd "C-M-p") 'md/duplicate-down)
 (global-set-key (kbd "C-M-S-P") 'md/duplicate-up)
 
-
-;;----------------------------------------------------------------------------
-;; Cut/copy the current line if no region is active
-;;----------------------------------------------------------------------------
-
-;; BUG HERE!!!!!!!!  :)
-;;(require-package 'whole-line-or-region)
-;;(whole-line-or-region-mode t)
-;;(diminish 'whole-line-or-region-mode)
-;; (make-variable-buffer-local 'whole-line-or-region-mode)
 
 
 
@@ -195,22 +160,6 @@ With arg N, insert N newlines."
     (indent-according-to-mode)))
 
 (global-set-key (kbd "C-o") 'sanityinc/open-line-with-reindent)
-
-
-;;----------------------------------------------------------------------------
-;; Random line sorting
-;;----------------------------------------------------------------------------
-(defun sort-lines-random (beg end)
-  "Sort lines in region randomly."
-  (interactive "r")
-  (save-excursion
-    (save-restriction
-      (narrow-to-region beg end)
-      (goto-char (point-min))
-      (let ;; To make `end-of-line' and etc. to ignore fields.
-	  ((inhibit-field-text-motion t))
-	(sort-subr nil 'forward-line 'end-of-line nil nil
-		   (lambda (s1 s2) (eq (random 2) 0)))))))
 
 
 

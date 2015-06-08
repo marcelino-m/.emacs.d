@@ -9,6 +9,8 @@
 (require-package 'git-messenger) ;; Though see also vc-annotate's "n" & "p" bindings
 (require-package 'git-timemachine)
 
+(require 'init-ispell)
+
 (setq magit-last-seen-setup-instructions "1.4.0")
 
 (setq-default
@@ -28,10 +30,13 @@
 (after-load 'magit
   (fullframe magit-status magit-mode-quit-window))
 
+
+
 (add-hook 'git-commit-mode-hook 'goto-address-mode)
 (after-load 'session
   (add-to-list 'session-mode-disable-list 'git-commit-mode))
 
+(add-hook 'git-commit-mode-hook (lambda () (flyspell-mode 1)))
 
 
 ;;; When we start working on git-backed files, use git-wip if available
@@ -82,5 +87,8 @@
 
 (require-package 'git-messenger)
 (global-set-key (kbd "C-x v p") #'git-messenger:popup-message)
+
+
+
 
 (provide 'init-git)
