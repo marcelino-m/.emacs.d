@@ -1,11 +1,12 @@
 (require-package 'company)
 (require-package 'company-c-headers)
 (require-package 'company-irony)
-
+(require-package 'company-tern)
 
 (require 'company)
 (require 'company-irony)
 (require 'irony)
+
 ;;(require 'company-cmake)
 (require 'init-cmake)
 (require 'company-c-headers)
@@ -22,8 +23,10 @@
 
 (add-hook 'emacs-lisp-mode-hook 'company-mode)
 (add-hook 'cmake-mode-hook      'company-mode)
+(add-hook 'js2-mode-hook        'company-mode)
+(add-hook 'sparql-mode-hook     'company-mode)
 
-
+(add-to-list 'company-backends 'company-tern)
 
 ;; replace the `completion-at-point' and `complete-symbol' bindings in
 ;; irony-mode's buffers by irony-mode's function

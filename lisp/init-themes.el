@@ -25,10 +25,13 @@
                                              (current-time)))
           6)))
 
+;;(load-theme 'material t)
+;;(load-theme 'material-light t)
 (my/theme-dark)
+;;(my/theme-light)
 ;; (if (my/is-night)
 ;;     (my/theme-dark)
-;;   (my/theme-light))
+;;     (my/theme-light))
 
 
 

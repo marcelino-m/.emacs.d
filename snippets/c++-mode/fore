@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: fore
+# key: fore
+# --
+for(${1:auto &}$2 : ${3:conteiner})
+{
+    $0
+}

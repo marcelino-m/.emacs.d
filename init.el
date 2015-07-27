@@ -3,6 +3,11 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 (package-initialize)
+(toggle-frame-maximized)
+(setq inhibit-startup-screen t)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
@@ -17,15 +22,10 @@
   (write-region "" nil custom-file))
 (load custom-file)
 
-(setq inhibit-startup-screen t)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-
 
 (require 'init-utils)
 (require 'init-elpa)      ;; Machinery for installing required packages
 (require 'init-exec-path) ;; Set up $PATH
-
 (require-package 'diminish)
 (require 'init-key-chord)
 (require 'init-c++)
@@ -57,7 +57,8 @@
 (require 'init-prog-mode)
 (require 'init-helm-gtags)
 (require 'init-global-keybinding)
-
+(require 'init-sparkql)
+(require 'mapserver-mode)
 
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
