@@ -93,7 +93,7 @@
 ;;----------------------------------------------------------------------------
 
 (require-package 'ace-jump-mode)
-(key-chord-define-global "zz" 'ace-jump-char-mode)
+(global-set-key (kbd "C-:") 'ace-jump-char-mode)
 (key-chord-define-global "jw" 'ace-jump-word-mode)
  (key-chord-define-global "jj" 'goto-line)
 
