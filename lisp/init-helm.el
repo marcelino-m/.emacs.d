@@ -15,6 +15,12 @@
 (setq helm-buffers-fuzzy-matching t)
 (setq helm-M-x-fuzzy-match t)
 
+(add-to-list 'display-buffer-alist
+             `(,(rx bos "*helm" (* not-newline) "*" eos)
+               (display-buffer-in-side-window)
+               (inhibit-same-window . t)
+               (window-height . 0.4)))
+
 ;;(global-set-key (kbd "M-s") 'helm-swoop)
 
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
