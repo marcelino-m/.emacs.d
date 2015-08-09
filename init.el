@@ -40,7 +40,6 @@
 (require 'init-projectile)
 (require 'init-company)
 (require 'init-backup)
-(require 'init-multi-term)
 (require 'init-imenu-anywhere)
 (require 'init-cmake)
 (require 'init-csv)
