@@ -58,6 +58,7 @@
 (require 'init-global-keybinding)
 (require 'init-sparkql)
 (require 'mapserver-mode)
+(require 'init-vimish-fold)
 
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
@@ -69,15 +70,10 @@
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
-(defun reload-irony ()
-  "Recursearga irony cuando deja de funcionar"
-  (interactive)
-  (irony-server-kill)
-  (irony-mode)
-  (irony-mode))
-
 ;; Use smex to handle M-x
 (when (maybe-require-package 'smex)
   ;; Change path for ~/.smex-items
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   (global-set-key [remap execute-extended-command] 'smex))
+
+(global-set-key (kbd "<escape>")      'keyboard-quit)

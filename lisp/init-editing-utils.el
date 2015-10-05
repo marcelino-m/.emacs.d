@@ -78,9 +78,9 @@
 ;; Expand region
 ;;----------------------------------------------------------------------------
 (require-package 'expand-region)
+
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
-
 
 ;;----------------------------------------------------------------------------
 ;; Don't disable case-change functions
@@ -94,8 +94,7 @@
 
 (require-package 'ace-jump-mode)
 (global-set-key (kbd "C-:") 'ace-jump-char-mode)
-(key-chord-define-global "jw" 'ace-jump-word-mode)
- (key-chord-define-global "jj" 'goto-line)
+(key-chord-define-global "jj" 'goto-line)
 
 
 (defun kill-back-to-indentation ()

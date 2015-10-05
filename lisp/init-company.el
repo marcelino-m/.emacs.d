@@ -2,14 +2,15 @@
 (require-package 'company-tern)
 (require-package 'ycmd)
 (require-package 'company-ycmd)
-
-
+(require-package 'company-web)
 
 (require 'company)
 (require 'ycmd)
-;;(require 'company-cmake)
+(require 'company-web-html)
 (require 'init-cmake)
 
+
+;;(require 'company-cmake)
 
 (require 'company-ycmd)
 (set-variable 'ycmd-server-command '("python" "/home/marcelo/src/ycmd/ycmd"))
@@ -25,7 +26,11 @@
 
 (add-to-list 'company-backends 'company-tern)
 
-(require 'company-ycmd)
+(add-hook 'web-mode-hook (lambda ()
+                           (set (make-local-variable 'company-backends) '(company-web-html company-css))
+                           (company-mode t)))
+
+
 (company-ycmd-setup)
 
 
