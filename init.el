@@ -58,7 +58,8 @@
 (require 'init-global-keybinding)
 (require 'init-sparkql)
 (require 'mapserver-mode)
-(require 'init-vimish-fold)
+(require 'init-zeal)
+
 
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."

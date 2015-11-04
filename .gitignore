@@ -1,2 +1,5 @@
 /saveplace
 /.bbdb
+elpa/
+.cask
+anaconda-mode/
