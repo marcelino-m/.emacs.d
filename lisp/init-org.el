@@ -1,23 +1,42 @@
-(require 'org-capture)
+(require-package 'org-bullets)
 
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(setq org-log-done 'time)
-(setq org-todo-keywords
-       '((sequence "TODO" "DOING" "DONE")))
+;; Bullets mode
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+
+;; Capture mode
+(require 'org-capture)
+(setq org-directory "~/org-files")
+(setq org-default-notes-file "~/org-files/refile.org")
+
 
 (setq org-capture-templates
-      '(
-        ("l" "Task log TiM" item (file+datetree "~/Documents/org/tim/tasklog.org")
-         "- %?\n  %i\n")
-        ("s" "Smartsupply timelog TiM" item (file+datetree "~/Documents/org/smartsupply/timelog.org")
-         "- %?\n  %i\n")
-        ("o" "Hacer cuando tengas tiempo " item (file+headline "~/Documents/org/personal/para-cuando-bueque-que-hacer.org" "Tareas")
-         "** TODO %?\n  %i\n")
+      (quote
+       (
+        ("n" "Note" entry (file "~/org-files/notes.org")
+         (file "~/.emacs.d/org-templates/note.org.tmpl"))
+        ("t" "Todo" entry (file "~/org-files/refile.org")
+         (file "~/.emacs.d/org-templates/todo.org.tmpl"))
+        ("j" "Journal" entry (file+datetree "~/org-files/journal.org")
+             (file "~/.emacs.d/org-templates/journal.org.tmpl"))
+        )))
 
-        ))
+;; Export to LaTex
 
-
+;; (quote (("t" "todo" entry (file "~/org-files/refile.org")
+;;                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+;;               ("r" "respond" entry (file "~/org-files/refile.org")
+;;                "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+;;               ("n" "note" entry (file "~/org-files/notes.org")
+;;                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+;;               ("j" "Journal" entry (filfe+datetree "~/org-files/diary.org")
+;;                "* %?\n%U\n" :clock-in t :clock-resume t)
+;;               ("m" "Meeting" entry (file "~/org-files/refile.org")
+;;                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+;;               ("p" "Phone call" entry (file "~/org-files/refile.org")
+;;                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+;;               ("h" "Habit" entry (file "~/org-files/refile.org")
+;;                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
 
 (provide 'init-org)

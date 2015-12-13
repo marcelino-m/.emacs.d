@@ -1,5 +1,7 @@
 (require-package 'web-mode)
+(require-package 'emmet-mode)
 (require 'web-mode)
+(require 'emmet-mode)
 
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -13,7 +15,10 @@
 
 (add-hook 'web-mode-hook (lambda ()
                            (setq web-mode-markup-indent-offset 2)
-                           (setq web-mode-code-indent-offset 4)))
+                           (setq web-mode-code-indent-offset 4)
+                           (emmet-mode 1)))
+
+
 
 
 (provide 'init-web)

@@ -2,5 +2,6 @@
 (require-package 'flyspell-popup)
 
 (setq ispell-dictionary "castellano")
-(define-key flyspell-mode-map (kbd "C-;") #'flyspell-popup-correct)
+(define-key flyspell-mode-map (kbd "C-S-<mouse-1>") #'flyspell-popup-correct)
+
 (provide 'init-ispell)

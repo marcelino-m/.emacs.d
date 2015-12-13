@@ -1,0 +1,13 @@
+(require-package 'diminish)
+(require 'diminish)
+
+(eval-after-load "yasnippet"
+  '(diminish 'yas-minor-mode))
+
+;(eval-after-load "lisp-interaction"
+;  '(diminish 'lisp-interaction-mode "lisp-int"))
+
+(eval-after-load "lisp"
+  '(diminished-modes 'elisp-mode "elisp"))
+
+(provide 'init-dimish)

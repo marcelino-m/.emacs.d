@@ -1,41 +1,6 @@
 (require-package 'solarized-theme)
 (require-package 'zenburn-theme)
 
-(setq x-underline-at-descent-line t)
-
-(defun my/theme-light ()
-  "Activate a light color theme."
-  (interactive)
-  (load-theme 'solarized-light t))
-
-(defun my/theme-dark ()
-  "Activate a dark color theme."
-  (interactive)
-  (load-theme 'zenburn t))
-
-
-
-(defun my/is-night ()
-  "Return t if is night ([21 - 7] hrs), nil otherwise"
-  (or (>= (string-to-number (format-time-string "%H"
-                                             (current-time)))
-          21)
-
-      (<= (string-to-number (format-time-string "%H"
-                                             (current-time)))
-          6)))
-
-;;(load-theme 'material t)
-;;(load-theme 'material-light t)
-(my/theme-dark)
-;;(my/theme-light)
-;; (if (my/is-night)
-;;     (my/theme-dark)
-;;     (my/theme-light))
-
-
-
-
-
+(load-theme 'zenburn t)
 
 (provide 'init-themes)

@@ -3,6 +3,7 @@
 (require-package 'helm-ag)
 (require-package 'helm-swoop)
 
+
 (require 'helm)
 (require 'ag)
 (require 'helm-ag)
@@ -13,15 +14,13 @@
 (setq helm-autoresize-max-height 40)
 (setq helm-autoresize-min-height 40)
 (setq helm-buffers-fuzzy-matching t)
-(setq helm-M-x-fuzzy-match t)
+
 
 (add-to-list 'display-buffer-alist
              `(,(rx bos "*helm" (* not-newline) "*" eos)
                (display-buffer-in-side-window)
                (inhibit-same-window . t)
                (window-height . 0.4)))
-
-;;(global-set-key (kbd "M-s") 'helm-swoop)
 
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "M-m") 'helm-all-mark-rings)

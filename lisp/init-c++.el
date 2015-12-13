@@ -2,22 +2,28 @@
 (require-package 'ggtags)
 (require 'ggtags)
 
-
 (c-add-style "my-style"
-             '("stroustrup"
+             '("k&r"
                (c-offsets-alist . ((innamespace . [0])))))
 
-
 (add-hook 'c++-mode-hook (lambda ()
-                           (setq tab-width 4
-                                 indent-tabs-mode nil)
                            (c-set-style "my-style")
-                           (setq comment-start "/* " comment-end " */")
-                           (add-to-list  'c-cleanup-list 'comment-close-slash)
-                           ;; yas
-                           (define-key yas-minor-mode-map (kbd "<tab>") nil)
-                           (define-key yas-minor-mode-map (kbd "TAB") nil)
-                           (define-key yas-minor-mode-map (kbd "<backtab>") 'yas-expand)
+                           (setq c-basic-offset 4
+                                 tab-width 4
+                                 indent-tabs-mode nil)
+
+                           (font-lock-add-keywords nil
+                                                   '(("\\."  . font-lock-keyword-face)
+                                                     ("\\-\>". font-lock-keyword-face)
+                                                     ("=="   . font-lock-keyword-face)
+                                                     ("!="   . font-lock-keyword-face)
+                                                     ("!"    . font-lock-keyword-face)
+                                                     ("\<"   . font-lock-keyword-face)
+                                                     ("\<="  . font-lock-keyword-face)
+                                                     ("\>"   . font-lock-keyword-face)
+                                                     ("\|"   . font-lock-keyword-face)
+                                                     ("&"    . font-lock-keyword-face)
+                                                     ("\>="  . font-lock-keyword-face)))
                            ))
 
 
@@ -31,7 +37,7 @@
           )))
 
 
-(add-hook 'c++-mode-hook 'my-pretty)
-
+;;(add-hook 'c++-mode-hook 'my-pretty)
+(setq compilation-ask-about-save nil)
 
 (provide 'init-c++)

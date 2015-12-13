@@ -1,6 +1,8 @@
 (require-package 'helm-gtags)
 (require 'helm-gtags)
 
+(setq  helm-gtags-pulse-at-cursor nil)
+
 (add-hook 'c-mode-hook 'helm-gtags-mode)
 (add-hook 'c++-mode-hook 'helm-gtags-mode)
 

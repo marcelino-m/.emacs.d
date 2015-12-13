@@ -1,16 +1,23 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 (package-initialize)
+
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(blink-cursor-mode -1)
 (toggle-frame-maximized)
 (setq inhibit-startup-screen t)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
 
+(require 'unicode-fonts)
+(unicode-fonts-setup)
+
+;;(desktop-save-mode 1)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "site-lisp/projectile" user-emacs-directory))
+
 
 ;; exuberant ctag
 (setq path-to-ctags "/usr/bin/ctags")
@@ -22,11 +29,10 @@
   (write-region "" nil custom-file))
 (load custom-file)
 
-
 (require 'init-utils)
 (require 'init-elpa)      ;; Machinery for installing required packages
+(require 'init-dimish)
 (require 'init-exec-path) ;; Set up $PATH
-(require-package 'diminish)
 (require 'init-key-chord)
 (require 'init-c++)
 (require 'init-themes)
@@ -59,22 +65,24 @@
 (require 'init-sparkql)
 (require 'mapserver-mode)
 (require 'init-zeal)
+(require 'init-python)
+(require-package 'tomatinho)
+(require 'tomatinho)
+(require-package 'smooth-scrolling)
+(require 'smooth-scrolling)
+
+(set-default 'indicate-empty-lines t)
+(global-hl-line-mode 1)
+
+(require 'recentf)
+(setq recentf-max-saved-items 200
+      recentf-max-menu-items 15)
+(recentf-mode +1)
 
 
-(defun copy-file-name-to-clipboard ()
-  "Copy the current buffer file name to the clipboard."
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 ;; Use smex to handle M-x
 (when (maybe-require-package 'smex)
   ;; Change path for ~/.smex-items
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   (global-set-key [remap execute-extended-command] 'smex))
-
-(global-set-key (kbd "<escape>")      'keyboard-quit)

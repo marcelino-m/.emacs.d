@@ -1,0 +1,9 @@
+#name : #ifndef XXX; #define XXX; #endif
+# key: once+
+# --
+#ifndef ${1:PREFICX_$(upcase yas-text)}${2:`(upcase (file-name-nondirectory (file-name-sans-extension (buffer-file-name))))`}${3:_HPP$(upcase yas-text)}
+#define $1$2$3
+
+$0
+
+#endif /* $1$2$3 */
