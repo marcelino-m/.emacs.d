@@ -110,7 +110,7 @@
 
 (require-package 'paradox)
 (require 'paradox)
-(setq paradox-github-token  "6357a7503d3bcf6304c9f1f538f32dcd7a79eb43")
+
 (require-package 'transpose-frame)
 (require 'init-sql)
 
