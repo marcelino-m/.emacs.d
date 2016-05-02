@@ -22,8 +22,6 @@
                (inhibit-same-window . t)
                (window-height . 0.4)))
 
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "M-m") 'helm-all-mark-rings)
-
+(setq helm-ag-insert-at-point 'symbol)
 
 (provide 'init-helm)

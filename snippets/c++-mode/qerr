@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: qerr
+# key: qer
+# --
+qDebug() << $0

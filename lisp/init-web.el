@@ -12,6 +12,16 @@
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
+(setq web-mode-engines-alist
+      '(
+        ("angular"    . "\\.html\\'")
+        )
+      )
+
+
+(eval-after-load "company" '(add-to-list 'company-backends 'company-css))
+(eval-after-load "company" '(add-to-list 'company-backends 'company-web-html))
+(add-hook 'web-mode-hook '(lambda () (company-mode 1)))
 
 (add-hook 'web-mode-hook (lambda ()
                            (setq web-mode-markup-indent-offset 2)

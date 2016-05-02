@@ -21,6 +21,9 @@
 (eval-after-load "company"
   '(diminish 'company-mode))
 
+(eval-after-load "page-break-lines"
+  '(diminish 'page-break-lines-mode))
+
 
 
 (provide 'init-dimish)

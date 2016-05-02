@@ -1,6 +1,4 @@
-(require-package 'mkdown)
-(setq markdown-content-type "text/html")
-(setq path (cons mkdown-css-file-name ()))
-(setq markdown-css-paths path)
-
+(require-package 'markdown-mode)
+(add-hook 'markdown-mode-hook (lambda ()
+                                (ethan-wspace-mode 1)))
 (provide 'init-markdown)

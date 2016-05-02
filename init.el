@@ -5,19 +5,40 @@
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
+(menu-bar-mode  1)
 (blink-cursor-mode -1)
 (toggle-frame-maximized)
 (setq inhibit-startup-screen t)
-
-(require 'unicode-fonts)
-(unicode-fonts-setup)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;;(desktop-save-mode 1)
+;; Functions (load all files in defuns-dir)
+(setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
+(dolist (file (directory-files defuns-dir t "\\w+"))
+  (when (file-regular-p file)
+    (load file)))
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
-(add-to-list 'load-path (expand-file-name "site-lisp/projectile" user-emacs-directory))
+;; Set path to dependencies
+(setq site-lisp-dir
+      (expand-file-name "site-lisp" user-emacs-directory))
 
+(setq settings-dir
+      (expand-file-name "lisp" user-emacs-directory))
+
+;; Add external projects to load path
+(dolist (project (directory-files site-lisp-dir t "\\w+"))
+  (when (file-directory-p project)
+    (add-to-list 'load-path project)))
+
+
+;; Set up load path
+(add-to-list 'load-path settings-dir)
+(add-to-list 'load-path site-lisp-dir)
+
+
+(dolist (project (directory-files site-lisp-dir t "\\w+"))
+  (when (file-directory-p project)
+    (add-to-list 'load-path project)))
 
 ;; exuberant ctag
 (setq path-to-ctags "/usr/bin/ctags")
@@ -33,7 +54,6 @@
 (require 'init-elpa)      ;; Machinery for installing required packages
 (require 'init-dimish)
 (require 'init-exec-path) ;; Set up $PATH
-(require 'init-key-chord)
 (require 'init-c++)
 (require 'init-themes)
 (require 'init-dired)
@@ -66,23 +86,47 @@
 (require 'mapserver-mode)
 (require 'init-zeal)
 (require 'init-python)
+(require-package 'ace-jump-mode)
+(require 'init-keybinding)
 (require-package 'tomatinho)
 (require 'tomatinho)
 (require-package 'smooth-scrolling)
 (require 'smooth-scrolling)
-
+(require-package 'unicode-fonts)
+(require 'unicode-fonts)
+(unicode-fonts-setup)
+(require-package 'page-break-lines)
+(global-page-break-lines-mode)
 (set-default 'indicate-empty-lines t)
-(global-hl-line-mode 1)
 
+;;(global-hl-line-mode 1)
+
+(require-package 'bury-successful-compilation)
+(require 'init-swiper)
 (require 'recentf)
 (setq recentf-max-saved-items 200
       recentf-max-menu-items 15)
 (recentf-mode +1)
 
-
+(require-package 'paradox)
+(require 'paradox)
+(setq paradox-github-token  "6357a7503d3bcf6304c9f1f538f32dcd7a79eb43")
+(require-package 'transpose-frame)
+(require 'init-sql)
 
 ;; Use smex to handle M-x
 (when (maybe-require-package 'smex)
   ;; Change path for ~/.smex-items
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   (global-set-key [remap execute-extended-command] 'smex))
+(require 'init-json)
+(require 'dired-x)
+(setq-default dired-omit-files-p t) ; this is buffer-local variable
+(setq dired-omit-files
+    (concat dired-omit-files "\\.pdf$\\|__pycache__\\|\\.pyc$"))
+
+;; activate pdf tools
+;; (pdf-tools-install)
+
+(require 'init-css)
+(require 'init-latex)

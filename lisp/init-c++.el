@@ -12,6 +12,9 @@
                                  tab-width 4
                                  indent-tabs-mode nil)
 
+                           (setq compilation-skip-threshold 2)
+                           (setq compilation-scroll-output 'first-error)
+                           (define-key c++-mode-map (kbd "\C-s") 'swiper)
                            (font-lock-add-keywords nil
                                                    '(("\\."  . font-lock-keyword-face)
                                                      ("\\-\>". font-lock-keyword-face)

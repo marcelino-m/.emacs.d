@@ -17,14 +17,8 @@
                               "*helm imenu*"
                               "*helm etags*"
                               "*helm-mt*"
+                              "\\*magit.*"
                               ))
-
-;; ace-windows
-(require-package 'ace-window)
-(require 'ace-window)
-(global-set-key (kbd "M-p") 'ace-window)
-(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-
 
 
 (require-package 'smooth-scroll)

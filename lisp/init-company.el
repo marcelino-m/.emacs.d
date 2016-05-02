@@ -1,16 +1,16 @@
+(require-package 'f)
 (require-package 'company)
 (require-package 'company-tern)
 (require-package 'ycmd)
 (require-package 'company-ycmd)
 (require-package 'company-web)
-(require-package 'company-anaconda)
-(require-package 'pyenv-mode)
+(require-package 'company-shell)
 
 (require 'company)
 (require 'ycmd)
 (require 'company-web-html)
 (require 'init-cmake)
-
+(require 'company-shell)
 
 
 ;;(require 'company-cmake)
@@ -26,19 +26,10 @@
 (add-hook 'c-mode-hook          'company-mode)
 (add-hook 'c++-mode-hook        'ycmd-mode)
 (add-hook 'c-mode-hook          'ycmd-mode)
-
-(add-hook 'python-mode-hook     '(lambda ( )
-                                   (company-mode 1)
-                                   (add-to-list 'company-backends 'company-anaconda)
-                                   (pyenv-mode)
-                                   (anaconda-mode 1)))
-
-(add-hook 'web-mode-hook (lambda ()
-                           (set (make-local-variable 'company-backends) '(company-web-html company-css))
-                           (company-mode t)))
+(add-hook 'sh-mode-hook         'company-mode)
 
 (add-to-list 'company-backends 'company-tern)
 (company-ycmd-setup)
-
+(add-to-list 'company-backends 'company-shell)
 
 (provide 'init-company)

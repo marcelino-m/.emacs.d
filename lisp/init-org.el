@@ -22,6 +22,10 @@
              (file "~/.emacs.d/org-templates/journal.org.tmpl"))
         )))
 
+(setq org-todo-keywords
+       '((sequence "TODO(t)" "DOING(a)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+
+
 ;; Export to LaTex
 
 ;; (quote (("t" "todo" entry (file "~/org-files/refile.org")

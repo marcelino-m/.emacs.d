@@ -1,5 +1,5 @@
-(require-package 'key-chord)
-(require 'key-chord)
-(key-chord-mode 1)
+;; (require-package 'key-chord)
+;; (require 'key-chord)
+;; (key-chord-mode 1)
 
-(provide 'init-key-chord)
+;; (provide 'init-key-chord)

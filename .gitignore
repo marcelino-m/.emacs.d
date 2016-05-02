@@ -3,3 +3,5 @@
 elpa/
 .cask
 anaconda-mode/
+backups/*
+eshell/*

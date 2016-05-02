@@ -3,8 +3,9 @@
 (require-package 'tern)
 (require-package 'js-doc)
 
-(add-to-list 'load-path "/home/marcelo/.nvm/versions/node/v4.1.1/lib/node_modules/tern/emacs")
-(setenv "PATH" (concat "/home/marcelo/.nvm/versions/node/v4.1.1/bin:" (getenv "PATH")))
+(add-to-list 'load-path  (concat (getenv "NVM_PATH") "/../node_modules/tern/emacs"))
+;;(add-to-list 'load-path "/home/marcelo/.nvm/versions/node/v5.7.0/lib/node_modules/tern/emacs")
+
 
 (require 'tern)
 (require 'js2-refactor)
