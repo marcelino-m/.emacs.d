@@ -1,0 +1,6 @@
+[submodule "site-lisp/projectile"]
+	path = site-lisp/projectile
+	url = git@github.com:marcelino-m/projectile.git
+[submodule "deps/ycmd"]
+	path = deps/ycmd
+	url = git@github.com:Valloric/ycmd.git
