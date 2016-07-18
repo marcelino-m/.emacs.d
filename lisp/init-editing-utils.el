@@ -4,7 +4,6 @@
 (setq-default
   case-fold-search t
   column-number-mode t
-  delete-selection-mode t
   ediff-split-window-function 'split-window-horizontally
   ediff-window-setup-function 'ediff-setup-windows-plain
   mouse-yank-at-point t
