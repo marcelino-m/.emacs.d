@@ -126,3 +126,4 @@
 
 (require 'init-css)
 (require 'init-latex)
+(require 'init-openwith)
