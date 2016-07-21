@@ -16,7 +16,8 @@
 ;;(require 'company-cmake)
 
 (require 'company-ycmd)
-(set-variable 'ycmd-server-command '("python" "/home/marcelo/src/ycmd/ycmd"))
+;;(company-ycmd-setup)
+(set-variable 'ycmd-server-command '("python" "/home/marcelo/.emacs.d/deps/ycmd/ycmd"))
 
 (add-hook 'emacs-lisp-mode-hook 'company-mode)
 (add-hook 'cmake-mode-hook      'company-mode)

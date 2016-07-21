@@ -5,7 +5,7 @@
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
-(menu-bar-mode  1)
+(menu-bar-mode -1)
 (blink-cursor-mode -1)
 (toggle-frame-maximized)
 (setq inhibit-startup-screen t)
@@ -19,26 +19,21 @@
     (load file)))
 
 ;; Set path to dependencies
-(setq site-lisp-dir
-      (expand-file-name "site-lisp" user-emacs-directory))
+;; (setq site-lisp-dir
+;;       (expand-file-name "site-lisp" user-emacs-directory))
 
 (setq settings-dir
       (expand-file-name "lisp" user-emacs-directory))
 
 ;; Add external projects to load path
-(dolist (project (directory-files site-lisp-dir t "\\w+"))
-  (when (file-directory-p project)
-    (add-to-list 'load-path project)))
+;; (dolist (project (directory-files site-lisp-dir t "\\w+"))
+;;   (when (file-directory-p project)
+;;     (add-to-list 'load-path project)))
 
 
 ;; Set up load path
 (add-to-list 'load-path settings-dir)
-(add-to-list 'load-path site-lisp-dir)
-
-
-(dolist (project (directory-files site-lisp-dir t "\\w+"))
-  (when (file-directory-p project)
-    (add-to-list 'load-path project)))
+;; (add-to-list 'load-path site-lisp-dir)
 
 ;; exuberant ctag
 (setq path-to-ctags "/usr/bin/ctags")
@@ -83,9 +78,8 @@
 (require 'init-helm-gtags)
 (require 'init-global-keybinding)
 (require 'init-sparkql)
-(require 'mapserver-mode)
 (require 'init-zeal)
-(require 'init-python)
+;;(require 'init-python)
 (require-package 'ace-jump-mode)
 (require 'init-keybinding)
 (require-package 'tomatinho)
@@ -93,13 +87,13 @@
 (require-package 'smooth-scrolling)
 (require 'smooth-scrolling)
 (require-package 'unicode-fonts)
-(require 'unicode-fonts)
-(unicode-fonts-setup)
+;; (require 'unicode-fonts)
+;; (unicode-fonts-setup)
 (require-package 'page-break-lines)
 (global-page-break-lines-mode)
 (set-default 'indicate-empty-lines t)
 (delete-selection-mode)
-;;(global-hl-line-mode 1)
+(require 'init-c)
 
 (require-package 'bury-successful-compilation)
 (require 'init-swiper)
@@ -121,9 +115,7 @@
   (global-set-key [remap execute-extended-command] 'smex))
 (require 'init-json)
 
-;; activate pdf tools
-;; (pdf-tools-install)
-
 (require 'init-css)
 (require 'init-latex)
 (require 'init-openwith)
+(require 'init-ts)
