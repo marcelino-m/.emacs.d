@@ -98,7 +98,7 @@
 (require-package 'page-break-lines)
 (global-page-break-lines-mode)
 (set-default 'indicate-empty-lines t)
-
+(delete-selection-mode)
 ;;(global-hl-line-mode 1)
 
 (require-package 'bury-successful-compilation)
@@ -110,8 +110,8 @@
 
 (require-package 'paradox)
 (require 'paradox)
-
 (require-package 'transpose-frame)
+(require 'transpose-frame)
 (require 'init-sql)
 
 ;; Use smex to handle M-x
@@ -120,13 +120,10 @@
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   (global-set-key [remap execute-extended-command] 'smex))
 (require 'init-json)
-(require 'dired-x)
-(setq-default dired-omit-files-p t) ; this is buffer-local variable
-(setq dired-omit-files
-    (concat dired-omit-files "\\.pdf$\\|__pycache__\\|\\.pyc$"))
 
 ;; activate pdf tools
 ;; (pdf-tools-install)
 
 (require 'init-css)
 (require 'init-latex)
+(require 'init-openwith)

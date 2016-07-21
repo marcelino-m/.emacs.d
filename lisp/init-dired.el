@@ -50,5 +50,10 @@
      (define-key wdired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
      (define-key wdired-mode-map (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)))
 
+(setq-default dired-omit-files-p t) ; this is buffer-local variable
+(setq dired-omit-files
+    (concat dired-omit-files "\\.pdf$\\|__pycache__\\|\\.pyc$"))
+
+(setq dired-omit-verbose nil)
 
 (provide 'init-dired)
