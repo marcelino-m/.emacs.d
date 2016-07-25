@@ -1,121 +1,472 @@
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
+(toggle-frame-maximized)
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
 
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; global options
+(scroll-bar-mode   -1)
+(tool-bar-mode     -1)
 (blink-cursor-mode -1)
-(toggle-frame-maximized)
-(setq inhibit-startup-screen t)
+(delete-selection-mode)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;;(desktop-save-mode 1)
-;; Functions (load all files in defuns-dir)
-(setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
-(dolist (file (directory-files defuns-dir t "\\w+"))
-  (when (file-regular-p file)
-    (load file)))
-
-;; Set path to dependencies
-;; (setq site-lisp-dir
-;;       (expand-file-name "site-lisp" user-emacs-directory))
-
-(setq settings-dir
-      (expand-file-name "lisp" user-emacs-directory))
-
-;; Add external projects to load path
-;; (dolist (project (directory-files site-lisp-dir t "\\w+"))
-;;   (when (file-directory-p project)
-;;     (add-to-list 'load-path project)))
+(setq-default
+ case-fold-search                     t
+ column-number-mode                   t
+ mouse-yank-at-point                  t
+ set-mark-command-repeat-pop          t
+ tooltip-delay                        0
+ save-interprogram-paste-before-kill  t
+ inhibit-startup-screen               t
+ truncate-lines                       nil
+ truncate-partial-width-windows       nil
+ visible-bell                         nil
+ ediff-window-setup-function          'ediff-setup-windows-plain
+ ediff-split-window-function          'split-window-horizontally
+ ring-bell-function                   'ignore
+ mode-require-final-newline           nil
+ )
 
 
-;; Set up load path
-(add-to-list 'load-path settings-dir)
-;; (add-to-list 'load-path site-lisp-dir)
+;; save backups
+(setq
+ backup-directory-alist '(("." . "~/.emacs.d/backups"))
+ delete-old-versions -1
+ version-control t
+ vc-make-backup-files t
+ auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 
-;; exuberant ctag
-(setq path-to-ctags "/usr/bin/ctags")
 
-;; write here cust var.
+;; Custom options history
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-;; if custom-file don't exist, then create empty file
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file))
 (load custom-file)
 
-(require 'init-utils)
-(require 'init-elpa)      ;; Machinery for installing required packages
-(require 'init-dimish)
-(require 'init-exec-path) ;; Set up $PATH
-(require 'init-c++)
-(require 'init-themes)
-(require 'init-dired)
-(require 'init-ido)
-(require 'init-editing-utils)
-(require 'init-uniquify)
-(require 'init-windows)
-(require 'init-git)
-(require 'init-helm)
-(require 'init-projectile)
-(require 'init-company)
-(require 'init-backup)
-(require 'init-imenu-anywhere)
-(require 'init-cmake)
-(require 'init-csv)
-(require 'init-save-places)
-(require 'init-org)
-(require 'init-ispell)
-(require 'init-js2)
-(require 'init-php)
-(require 'init-markdown)
-(require 'init-qtpro)
-(require 'init-web)
-(require 'init-translate)
-(require 'init-powerline)
-(require 'init-prog-mode)
-(require 'init-helm-gtags)
-(require 'init-global-keybinding)
-(require 'init-sparkql)
-(require 'init-zeal)
-;;(require 'init-python)
-(require-package 'ace-jump-mode)
-(require 'init-keybinding)
-(require-package 'tomatinho)
-(require 'tomatinho)
-(require-package 'smooth-scrolling)
-(require 'smooth-scrolling)
-(require-package 'unicode-fonts)
-;; (require 'unicode-fonts)
-;; (unicode-fonts-setup)
-(require-package 'page-break-lines)
-(global-page-break-lines-mode)
-(set-default 'indicate-empty-lines t)
-(delete-selection-mode)
-(require 'init-c)
 
-(require-package 'bury-successful-compilation)
-(require 'init-swiper)
-(require 'recentf)
-(setq recentf-max-saved-items 200
-      recentf-max-menu-items 15)
-(recentf-mode +1)
+;; Setup packages
+(use-package zenburn-theme
+  :ensure t)
 
-(require-package 'paradox)
-(require 'paradox)
-(require-package 'transpose-frame)
-(require 'transpose-frame)
-(require 'init-sql)
+(use-package csv-mode
+  :ensure t
+  :mode   "\\.csv\\'")
 
-;; Use smex to handle M-x
-(when (maybe-require-package 'smex)
-  ;; Change path for ~/.smex-items
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+
+
+(use-package move-dup
+  :ensure   t
+  :bind (("M-p" . md/move-lines-up)
+         ("M-n" . md/move-lines-down)))
+
+(use-package powerline
+  :ensure t
+  :config
+  (powerline-default-theme))
+
+
+(use-package swiper
+  :ensure t
+  :defer  t
+  :init
+  (setq
+   ivy-use-virtual-buffers t))
+
+(use-package smooth-scroll
+  :ensure   t
+  :diminish smooth-scroll-mode
+  :bind (([(meta  up)] . scroll-down-1)
+         ([(meta  down)] . scroll-up-1)))
+
+(use-package smooth-scrolling
+  :config
+  (smooth-scrolling-mode 1))
+
+(use-package uniquify
+  :init
+  (setq
+   uniquify-buffer-name-style   'reverse
+   uniquify-separator           " • "
+   uniquify-after-kill-buffer-p t
+   uniquify-ignore-buffers-re   "^\\*"))
+
+
+(use-package yasnippet
+  :ensure t
+  :demand t
+  :diminish yas-minor-mode
+  :commands (yas-expand yas-minor-mode)
+  :functions (yas-guess-snippet-directories yas-table-name)
+  :defines (yas-guessed-modes)
+  :bind (
+         ([backtab]   . yas-expand)
+         ("C-c y s"   . yas-insert-snippet)
+         ("C-c y n"   . yas-new-snippet)
+         ("C-c y v"   . yas-visit-snippet-file)
+         )
+  :preface
+  (defun yas-new-snippet (&optional choose-instead-of-guess)
+    (interactive "P")
+    (let ((guessed-directories (yas-guess-snippet-directories)))
+      (switch-to-buffer "*new snippet*")
+      (erase-buffer)
+      (kill-all-local-variables)
+      (snippet-mode)
+      (set (make-local-variable 'yas-guessed-modes)
+           (mapcar #'(lambda (d) (intern (yas-table-name (car d))))
+                   guessed-directories))
+      (unless (and choose-instead-of-guess
+                   (not (y-or-n-p "Insert a snippet with useful headers? ")))
+        (yas-expand-snippet
+         (concat "\n"
+                 "# -*- mode: snippet -*-\n"
+                 "# name: $1\n"
+                 "# --\n"
+                 "$0\n")))))
+
+  :config
+  (yas-load-directory "~/.emacs.d/snippets/")
+  (yas-global-mode 1))
+
+
+(use-package prog-mode
+  :defer t
+  :init
+  (setq
+   tab-width 4
+   indent-tabs-mode nil )
+  (add-hook 'prog-mode-hook
+            '(lambda ()
+               (electric-pair-mode)
+               (ethan-wspace-mode 1)
+               (define-key prog-mode-map (kbd "\C-s") 'swiper)
+               )))
+
+
+
+(use-package saveplace
+  :init
+  (setq-default
+   save-place t
+   save-place-file "~/.emacs.d/saveplace")
+  :config
+  (save-place-mode))
+
+(use-package undo-tree
+  :ensure t
+  :diminish undo-tree-mode
+  :config
+  (global-undo-tree-mode))
+
+(use-package markdown-mode
+  :ensure t
+  :init
+  (add-hook 'markdown-mode-hook (lambda ()
+                                  (ethan-wspace-mode 1)))
+  :mode (("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode)))
+
+
+(use-package projectile
+  :ensure t
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :bind (:map projectile-mode-map
+              ("C-p s s" . helm-projectile-ag))
+  :config
+  (use-package helm-projectile
+    :ensure t)
+  (define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
+  (setq projectile-enable-caching t)
+  (setq projectile-mode-line '(:eval (format " 𝚷(%s)" (projectile-project-name))))
+  (setq projectile-switch-project-action '(lambda ()
+                                            (projectile-dired)
+                                            (projectile-find-file)))
+  (projectile-global-mode))
+
+(use-package smex
+  :ensure t
+  :config
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   (global-set-key [remap execute-extended-command] 'smex))
-(require 'init-json)
 
-(require 'init-css)
-(require 'init-latex)
-(require 'init-openwith)
-(require 'init-ts)
+
+
+(use-package ido
+  :ensure t
+  :init
+  (setq ido-enable-prefix nil
+        ido-enable-flex-matching t
+        ido-case-fold nil
+        ido-auto-merge-work-directories-length -1
+        ido-create-new-buffer 'always
+        ido-use-filename-at-point nil
+        ido-max-prospects 10
+        ido-use-faces nil)
+  (define-key ido-file-completion-map (kbd "~") '(lambda ()
+                                                   (interactive)
+                                                   (cond
+                                                    ((looking-back "/") (insert "~/"))
+                                                    (:else (call-interactively 'self-insert-command)))))
+  :config
+  (ido-mode t)
+  (use-package flx-ido
+    :ensure t
+    :config
+    (flx-ido-mode 1)
+    )
+  (use-package ido-vertical-mode
+    :ensure t
+    :init
+    (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
+    :config
+    (ido-vertical-mode))
+  (use-package ido-ubiquitous
+    :config
+    (ido-ubiquitous-mode 1)))
+
+
+
+(use-package cmake-mode
+  :ensure t
+  :mode ("CMakeList.txt" . cmake-mode))
+
+(use-package fullframe
+  :ensure t)
+
+(use-package flyspell
+  :ensure t
+  :defer  t
+  :init
+  (setq ispell-dictionary "castellano")
+  :config
+  (use-package flyspell-popup
+    :ensure t
+    :init
+    (define-key flyspell-mode-map (kbd "C-;") #'flyspell-popup-correct)))
+
+(use-package magit
+  :ensure t
+  :init
+  (setq magit-save-repository-buffers 'dontask)
+  (add-hook 'git-commit-mode-hook (lambda () (flyspell-mode 1)))
+  :bind (([f12] . magit-status))
+  :config
+  (fullframe magit-status magit-mode-quit-window)
+  (use-package gitignore-mode
+    :ensure t)
+  (use-package git-timemachine
+    :ensure t))
+
+(use-package helm
+  :ensure t
+  :init
+  (setq
+   helm-split-window-in-side-p t
+   helm-autoresize-max-height  40
+   helm-autoresize-min-height  40
+   helm-buffers-fuzzy-matching t
+   helm-ag-insert-at-point     'symbol)
+  :config
+  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+  (add-to-list 'display-buffer-alist
+               `(,(rx bos "*helm" (* not-newline) "*" eos)
+                 (display-buffer-in-side-window)
+                 (inhibit-same-window . t)
+                 (window-height . 0.4))))
+
+
+(use-package windmove
+  :ensure t
+  :defer  5
+  :bind (("s-<right>" . windmove-right)
+         ("s-<left>"  . windmove-left)
+         ("s-<up>"    . windmove-up)
+         ("s-<down>"  . windmove-down)
+         ("s-s"       . windmove-right)
+         ("s-a"       . windmove-left)
+         ("s-w"       . windmove-up)
+         ("s-z"       . windmove-down)))
+
+
+(use-package emmet-mode
+  :ensure t
+  :defer t)
+
+(use-package web-mode
+  :ensure t
+  :defer  t
+  :init
+  (setq web-mode-engines-alist
+        '(
+          ("angular"    . "\\.html\\'")
+          )
+        )
+  (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.[gj]sp\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-hook 'web-mode-hook (lambda ()
+                             (setq web-mode-markup-indent-offset 2)
+                             (setq web-mode-code-indent-offset 4)
+                             (emmet-mode 1)))
+
+  :config
+  (add-to-list 'company-backends 'company-css)
+  (add-to-list 'company-backends 'company-web-html))
+
+(use-package js2-mode
+  :ensure t
+  :init
+  (add-hook 'js2-mode-hook (lambda ()
+                             (tern-mode t)))
+  :mode "\\.js\\'"
+  :interpreter "node"
+  :config
+  (use-package tern
+    :ensure t
+    :load-path (lambda () (concat (getenv "NVM_PATH") "/../node_modules/tern/emacs/"))))
+
+(use-package company
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  (add-hook 'js2-mode-hook        'company-mode)
+  (add-hook 'web-mode-hook        'company-mode)
+  (add-hook 'css-mode-hook        'company-mode)
+
+  :config
+  (use-package company-tern
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-tern))
+  (use-package company-web
+    :ensure t)
+  (use-package company-shell
+    :ensure t))
+
+
+(use-package winner
+  :defer 5
+  :init
+  (setq winner-boring-buffers
+        '("*Completions*"
+          "*Compile-Log*"
+          "*inferior-lisp*"
+          "*Fuzzy Completions*"
+          "*Apropos*"
+          "*dvc-error*"
+          "*Help*"
+          "*cvs*"
+          "*Buffer List*"
+          "*Ibuffer*"
+          "*helm projectile*"
+          "*helm Swoop*"
+          "*helm grep*"
+          "*helm imenu*"
+          "*helm etags*"
+          "*helm-mt*"
+          "\\*magit*"
+          ))
+  :config
+  (winner-mode 1))
+
+(use-package transpose-frame
+  :ensure t
+  :defer 5)
+
+(use-package json-mode
+  :ensure t
+  :init
+  (setq
+   js-indent-level 2)
+  :mode (("\\.geojson\\'" . json-mode)
+         ("\\.json\\'"    . json-mode)))
+
+
+(use-package openwith
+  :ensure t
+  :defer  3
+  :config
+  (setq openwith-associations
+        (list
+         (list (openwith-make-extension-regexp
+                '("db"))
+               "sqlitebrowser"
+               '(file))
+         ))
+  (openwith-mode 1))
+
+(use-package recentf
+  :defer 4
+  :commands (recentf-mode
+             recentf-add-file
+             recentf-apply-filename-handlers)
+  :preface
+  (defun recentf-add-dired-directory ()
+    (if (and dired-directory
+             (file-directory-p dired-directory)
+             (not (string= "/" dired-directory)))
+        (let ((last-idx (1- (length dired-directory))))
+          (recentf-add-file
+           (if (= ?/ (aref dired-directory last-idx))
+               (substring dired-directory 0 last-idx)
+             dired-directory)))))
+  :init
+  (add-hook 'dired-mode-hook 'recentf-add-dired-directory)
+  :config
+  (recentf-mode 1))
+
+;; Functions (load all files in defuns-dir)
+;; (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
+;; (dolist (file (directory-files defuns-dir t "\\w+"))
+;;   (when (file-regular-p file)
+
+;;     (load file)))
+
+;; (setq settings-dir
+;;       (expand-file-name "lisp" user-emacs-directory))
+
+
+;; ;; Set up load path
+;; (add-to-list 'load-path settings-dir)
+
+
+;; ;; exuberant ctag
+;; (setq path-to-ctags "/usr/bin/ctags")
+
+;; ;; write here cust var.
+
+;; (require 'init-utils)
+;; (require 'init-exec-path)
+;; (require 'init-c++)
+;; (require 'init-dired)
+
+
+;; (require 'init-org)
+;; (require 'init-qtpro)
+;; (require 'init-translate)
+;; (require 'init-helm-gtags)
+;; (require 'init-global-keybinding)
+;; (require 'init-zeal)
+;; ;;(require 'init-python)
+;; (require-package 'ace-jump-mode)
+;; (require 'init-keybinding)
+;; (require 'init-c)
+
+
+
+;; (require 'init-latex)
+;; (require 'init-ts)
