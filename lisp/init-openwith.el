@@ -7,6 +7,11 @@
                     '("db"))
                    "sqlitebrowser"
                    '(file))
+             (list (openwith-make-extension-regexp
+                    '("ui"))
+                   "designer"
+                   '(file))
+
              ))
 
 (openwith-mode 1)
