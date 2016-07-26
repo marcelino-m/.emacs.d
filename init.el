@@ -50,6 +50,17 @@
 
 
 ;; Setup packages
+
+
+(use-package exec-path-from-shell
+  :ensure t
+  :defer  2
+  :config
+  (dolist (var '("TIMLIB_SRC_ROOT" "LIB_V4D_INCLUDE" "LIB_V4D_TO_LINK" "NVM_BIN"))
+    (add-to-list 'exec-path-from-shell-variables var))
+  (exec-path-from-shell-initialize))
+
+
 (use-package zenburn-theme
   :ensure t)
 
@@ -346,6 +357,7 @@
   (add-hook 'js2-mode-hook        'company-mode)
   (add-hook 'web-mode-hook        'company-mode)
   (add-hook 'css-mode-hook        'company-mode)
+  (add-hook 'c++-mode-hook        'company-mode)
 
   :config
   (use-package company-tern
@@ -355,7 +367,21 @@
   (use-package company-web
     :ensure t)
   (use-package company-shell
-    :ensure t))
+    :ensure t)
+
+  (use-package ycmd
+    :ensure t
+    :defer  f
+    :init
+    (setq ycmd-server-command '("python" "/home/marcelo/src/ycmd/ycmd"))
+    (add-hook 'c++-mode-hook 'ycmd-mode))
+
+  (use-package company-ycmd
+    :ensure
+    :init
+    (company-ycmd-setup)))
+
+
 
 
 (use-package winner
@@ -380,7 +406,6 @@
           "*helm-mt*"
           "\\*magit*"
           ))
-  :config
   (winner-mode 1))
 
 (use-package transpose-frame
@@ -429,6 +454,28 @@
   :config
   (recentf-mode 1))
 
+
+(use-package c++-mode
+  :init
+  (setq compilation-ask-about-save nil)
+
+  :mode "c++-mode"
+  :config
+  (c-add-style "my-style"
+               '("k&r"
+                 (c-offsets-alist . ((innamespace . [0])))))
+  (add-hook 'c++-mode-hook (lambda ()
+                             (c-set-style "my-style")
+                             (setq c-basic-offset 4
+                                   tab-width 4
+                                   indent-tabs-mode nil)
+
+                             (setq compilation-skip-threshold 2)
+                             (setq compilation-scroll-output 'first-error)
+                             (define-key c++-mode-map (kbd "\C-s") 'swiper))))
+
+
+
 ;; Functions (load all files in defuns-dir)
 ;; (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
 ;; (dolist (file (directory-files defuns-dir t "\\w+"))
@@ -450,8 +497,6 @@
 ;; ;; write here cust var.
 
 ;; (require 'init-utils)
-;; (require 'init-exec-path)
-;; (require 'init-c++)
 ;; (require 'init-dired)
 
 
