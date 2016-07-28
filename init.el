@@ -1,5 +1,3 @@
-(toggle-frame-maximized)
-
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
@@ -13,6 +11,8 @@
 (tool-bar-mode     -1)
 (blink-cursor-mode -1)
 (delete-selection-mode)
+(toggle-frame-maximized)
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (setq-default
@@ -31,6 +31,11 @@
  ring-bell-function                   'ignore
  mode-require-final-newline           nil
  )
+
+
+(add-to-list 'default-frame-alist '(height . 45))
+(add-to-list 'default-frame-alist '(width . 157))
+(setq gc-cons-threshold 500000000)
 
 
 ;; more useful frame title, that show either a file or a
@@ -201,6 +206,10 @@
   :config
   (use-package helm-projectile
     :ensure t)
+
+  (use-package ggtags
+    :ensure t)
+
   (define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
   (setq projectile-enable-caching t)
   (setq projectile-mode-line '(:eval (format " 𝚷(%s)" (projectile-project-name))))
@@ -208,6 +217,8 @@
                                             (projectile-dired)
                                             (projectile-find-file)))
   (projectile-global-mode))
+
+
 
 (use-package smex
   :ensure t
@@ -301,6 +312,17 @@
                  (window-height . 0.4))))
 
 
+(use-package helm-gtags
+  :ensure t
+  :defer  t
+  :config
+  (setq  helm-gtags-pulse-at-cursor nil)
+  (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+  (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+  (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+  (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+  )
+
 (use-package windmove
   :ensure t
   :defer  5
@@ -358,7 +380,8 @@
 
 (use-package company
   :ensure t
-  :defer t
+  :defer  t
+  :diminish company-mode
   :init
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (add-hook 'js2-mode-hook        'company-mode)
@@ -377,8 +400,9 @@
     :ensure t)
 
   (use-package ycmd
-    :ensure t
-    :defer  f
+    :ensure   t
+    :defer    f
+    :diminish ycmd-mode
     :init
     (setq ycmd-server-command '("python" "/home/marcelo/src/ycmd/ycmd"))
     (add-hook 'c++-mode-hook 'ycmd-mode))
@@ -462,12 +486,11 @@
   (recentf-mode 1))
 
 
-(use-package c++-mode
+
+(use-package cc-mode
   :init
   (setq compilation-ask-about-save nil)
-
-  :mode "c++-mode"
-  :config
+  (add-hook 'c++-mode-hook 'helm-gtags-mode)
   (c-add-style "my-style"
                '("k&r"
                  (c-offsets-alist . ((innamespace . [0])))))
@@ -481,6 +504,19 @@
                              (setq compilation-scroll-output 'first-error)
                              (define-key c++-mode-map (kbd "\C-s") 'swiper))))
 
+
+
+(use-package org-bullets
+  :ensure t
+  :defer  t
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(use-package org-mode
+  :defer t
+  :init
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "DOING(a)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)"))))
 
 
 ;; Functions (load all files in defuns-dir)
