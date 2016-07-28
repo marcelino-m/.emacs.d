@@ -30,6 +30,7 @@
  ediff-split-window-function          'split-window-horizontally
  ring-bell-function                   'ignore
  mode-require-final-newline           nil
+ scroll-conservatively                1
  )
 
 
@@ -72,6 +73,16 @@
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize))
 
+(use-package info+
+    :ensure t
+    :defer  t)
+
+(use-package info
+  :defer t
+  :config
+  (define-key Info-mode-map (kbd "<prior>") 'scroll-down-1)
+  (define-key Info-mode-map (kbd "<next>") 'scroll-up-1))
+
 
 (use-package zenburn-theme
   :ensure t)
@@ -108,10 +119,6 @@
   :diminish smooth-scroll-mode
   :bind (([(meta  up)] . scroll-down-1)
          ([(meta  down)] . scroll-up-1)))
-
-(use-package smooth-scrolling
-  :config
-  (smooth-scrolling-mode 1))
 
 (use-package uniquify
   :init
