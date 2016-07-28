@@ -7,6 +7,9 @@
 ;; Add spaces and proper formatting to linum-mode. It uses more room than
 ;; necessary, but that's not a problem since it's only in use when going to
 ;; lines.
+
+(provide 'misc-defuns)
+
 (setq linum-format (lambda (line)
                      (propertize
                       (format (concat " %"
@@ -32,6 +35,29 @@
   (newline-and-indent)
   (end-of-line 0)
   (indent-for-tab-command))
+
+
+(defun open-line-below ()
+  (interactive)
+  (end-of-line)
+  (newline)
+  (indent-for-tab-command))
+
+(defun open-line-above ()
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (forward-line -1)
+  (indent-for-tab-command))
+
+(defun new-line-in-between ()
+  (interactive)
+  (newline)
+  (save-excursion
+    (newline)
+    (indent-for-tab-command))
+  (indent-for-tab-command))
+
 
 ;; start a httpd-server in current directory
 (defun httpd-start-here (directory port)
@@ -118,24 +144,6 @@
      (unsupported-cmd isearch-forward-use-region ".")
      (unsupported-cmd isearch-backward-use-region ".")))
 
-(defun view-url ()
-  "Open a new buffer containing the contents of URL."
-  (interactive)
-  (let* ((default (thing-at-point-url-at-point))
-         (url (read-from-minibuffer "URL: " default)))
-    (switch-to-buffer (url-retrieve-synchronously url))
-    (rename-buffer url t)
-    ;; TODO: switch to nxml/nxhtml mode
-    (cond ((search-forward "<?xml" nil t) (xml-mode))
-          ((search-forward "<html" nil t) (html-mode)))))
-
-;; (defun linkify-region-from-kill-ring (start end)
-;;   (interactive "r")
-;;   (let ((text (buffer-substring start end)))
-;;     (delete-region start end)
-;;     (insert "<a href=\"")
-;;     (yank)
-;;     (insert (concat "\">" text "</a>"))))
 
 (defun buffer-to-html (buffer)
   (with-current-buffer (htmlize-buffer buffer)
@@ -143,9 +151,10 @@
 
 (defun sudo-edit (&optional arg)
   (interactive "p")
-  (if (or arg (not buffer-file-name))
+  (if (or (not (eql  arg 1)) (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
 
 (defun add-file-find-hook-with-pattern (pattern fn &optional contents)
   "Add a find-file-hook that calls FN for files where PATTERN

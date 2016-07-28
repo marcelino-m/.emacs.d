@@ -532,6 +532,22 @@
   :config
   (beacon-mode 1))
 
+(use-package ace-jump-mode
+  :ensure t
+  :init
+  (global-set-key [remap goto-char] 'ace-jump-char-mode)
+  (global-set-key [remap goto-line] 'ace-jump-word-mode)
+  (global-set-key (kbd "M-g l")     'goto-line-with-feedback))
+
+(use-package misc-defuns
+  :load-path "defuns/"
+  :config
+  (global-set-key (kbd "C-o")          'open-line-and-indent)
+  (global-set-key (kbd "<C-return>")   'open-line-below)
+  (global-set-key (kbd "<C-S-return>") 'open-line-above))
+
+
+
 ;; Functions (load all files in defuns-dir)
 ;; (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
 ;; (dolist (file (directory-files defuns-dir t "\\w+"))
@@ -556,10 +572,9 @@
 ;; (require 'init-dired)
 
 
-;; (require 'init-org)
+
 ;; (require 'init-qtpro)
 ;; (require 'init-translate)
-;; (require 'init-helm-gtags)
 ;; (require 'init-global-keybinding)
 ;; (require 'init-zeal)
 ;; ;;(require 'init-python)
