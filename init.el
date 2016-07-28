@@ -527,6 +527,11 @@
         '((sequence "TODO(t)" "DOING(a)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)"))))
 
 
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode 1))
+
 ;; Functions (load all files in defuns-dir)
 ;; (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
 ;; (dolist (file (directory-files defuns-dir t "\\w+"))
