@@ -117,7 +117,8 @@
 (use-package smooth-scroll
   :ensure   t
   :diminish smooth-scroll-mode
-  :bind (([(meta  up)] . scroll-down-1)
+  :init
+  :bind (([(meta  up)]   . scroll-down-1)
          ([(meta  down)] . scroll-up-1)))
 
 (use-package uniquify
