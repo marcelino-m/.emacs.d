@@ -38,6 +38,7 @@
 (add-to-list 'default-frame-alist '(width . 157))
 (setq gc-cons-threshold 100000000)
 
+(add-to-list 'default-frame-alist '(font . "Inconsolata 13"))
 
 ;; more useful frame title, that show either a file or a
 ;; buffer name (if the buffer isn't visiting a file)
