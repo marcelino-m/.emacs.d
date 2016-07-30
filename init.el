@@ -36,7 +36,7 @@
 
 (add-to-list 'default-frame-alist '(height . 45))
 (add-to-list 'default-frame-alist '(width . 157))
-(setq gc-cons-threshold 250000000)
+(setq gc-cons-threshold 100000000)
 
 
 ;; more useful frame title, that show either a file or a
