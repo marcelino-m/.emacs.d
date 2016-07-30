@@ -74,15 +74,13 @@
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize))
 
-(use-package info+
-    :ensure t
-    :defer  t)
-
 (use-package info
   :defer t
   :config
   (define-key Info-mode-map (kbd "<prior>") 'scroll-down-1)
-  (define-key Info-mode-map (kbd "<next>") 'scroll-up-1))
+  (define-key Info-mode-map (kbd "<next>") 'scroll-up-1)
+  (use-package info+
+    :ensure t))
 
 
 (use-package zenburn-theme
