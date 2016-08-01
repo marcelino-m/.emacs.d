@@ -546,6 +546,14 @@
   (global-set-key (kbd "<C-S-return>") 'open-line-above))
 
 
+(use-package sql-indent
+  :ensure t
+  :defer t
+  :init
+  (eval-after-load "sql"
+    '(load-library "sql-indent")))
+
+
 
 ;; Functions (load all files in defuns-dir)
 ;; (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
