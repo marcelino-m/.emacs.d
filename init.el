@@ -266,6 +266,7 @@
     :config
     (ido-vertical-mode))
   (use-package ido-ubiquitous
+    :ensure t
     :config
     (ido-ubiquitous-mode 1)))
 
