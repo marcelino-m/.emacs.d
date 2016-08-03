@@ -31,6 +31,7 @@
  ring-bell-function                   'ignore
  mode-require-final-newline           nil
  scroll-conservatively                1
+ imenu-auto-rescan                    t
  )
 
 
@@ -267,6 +268,10 @@
   (use-package ido-ubiquitous
     :config
     (ido-ubiquitous-mode 1)))
+
+(use-package imenu-anywhere
+  :ensure t
+  :bind (("C-." . imenu-anywhere)))
 
 
 
