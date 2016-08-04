@@ -213,7 +213,7 @@
   :ensure t
   :bind-keymap ("C-c p" . projectile-command-map)
   :bind (:map projectile-mode-map
-              ("C-p s s" . helm-projectile-ag))
+              ("C-c p s a" . helm-projectile-ag))
   :config
   (use-package helm-projectile
     :ensure t)
