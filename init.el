@@ -574,41 +574,11 @@
 
 
 
-;; Functions (load all files in defuns-dir)
-;; (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
-;; (dolist (file (directory-files defuns-dir t "\\w+"))
-;;   (when (file-regular-p file)
-
-;;     (load file)))
-
-;; (setq settings-dir
-;;       (expand-file-name "lisp" user-emacs-directory))
-
-
-;; ;; Set up load path
-;; (add-to-list 'load-path settings-dir)
-
-
-;; ;; exuberant ctag
-;; (setq path-to-ctags "/usr/bin/ctags")
-
-;; ;; write here cust var.
-
-;; (require 'init-utils)
 ;; (require 'init-dired)
-
-
-
 ;; (require 'init-qtpro)
 ;; (require 'init-translate)
-;; (require 'init-global-keybinding)
 ;; (require 'init-zeal)
 ;; ;;(require 'init-python)
-;; (require-package 'ace-jump-mode)
-;; (require 'init-keybinding)
 ;; (require 'init-c)
-
-
-
 ;; (require 'init-latex)
 ;; (require 'init-ts)
