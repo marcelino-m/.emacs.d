@@ -96,10 +96,13 @@
   :bind ("C-=" . er/expand-region))
 
 
-(use-package move-dup
-  :ensure   t
-  :bind (("M-p" . md/move-lines-up)
-         ("M-n" . md/move-lines-down)))
+(use-package drag-stuff
+  :ensure t
+  :bind (([(meta  up)] . drag-stuff-up)
+         ([(meta  down)] . drag-stuff-down)
+         ([(meta  left)] . drag-stuff-left)
+         ([(meta  right)] . drag-stuff-right)))
+
 
 (use-package powerline
   :ensure t
@@ -118,8 +121,8 @@
   :ensure   t
   :diminish smooth-scroll-mode
   :init
-  :bind (([(meta  up)]   . scroll-down-1)
-         ([(meta  down)] . scroll-up-1)))
+  :bind (("M-p"   . scroll-down-1)
+         ("M-n"   . scroll-up-1)))
 
 (use-package uniquify
   :init
