@@ -37,27 +37,30 @@
   (indent-for-tab-command))
 
 
-(defun open-line-below ()
-  (interactive)
-  (end-of-line)
-  (newline)
-  (indent-for-tab-command))
-
-(defun open-line-above ()
-  (interactive)
-  (beginning-of-line)
-  (newline)
-  (forward-line -1)
-  (indent-for-tab-command))
-
-(defun new-line-in-between ()
-  (interactive)
-  (newline)
-  (save-excursion
+(defun open-line-below (&optional keep)
+  "Open line below current line, whithout breack current line, if given
+prefix argument keep point in curretn position"
+  (interactive "P")
+  (let ((point (point)))
+    (end-of-line)
     (newline)
-    (indent-for-tab-command))
-  (indent-for-tab-command))
+    (indent-for-tab-command)
+    (if keep
+        (goto-char point))))
 
+(defun open-line-above (&optional keep)
+  "Open line above current line, whithout breack current line, if given
+prefix argument keep point in curretn position"
+  (interactive "P")
+  (let (point)
+    (save-excursion
+      (beginning-of-line)
+      (newline)
+      (forward-line -1)
+      (indent-for-tab-command)
+      (setq point (point)))
+    (unless keep
+      (goto-char point))))
 
 ;; start a httpd-server in current directory
 (defun httpd-start-here (directory port)
