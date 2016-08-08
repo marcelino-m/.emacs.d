@@ -34,11 +34,6 @@
  imenu-auto-rescan                    t
  )
 
-(defun disable-text-read-only-error-in-minibuffer (data context caller)
-  "Ignore the text-read-only signal in minibuffer"
-  (when (or (not (eq (car data) 'text-read-only)) (not (minibufferp)))
-    (command-error-default-function data context caller)))
-(setq command-error-function #'disable-text-read-only)
 
 
 (add-to-list 'default-frame-alist '(height . 45))
