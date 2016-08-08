@@ -85,6 +85,9 @@
     :ensure t))
 
 
+(use-package ethan-wspace
+  :ensure t)
+
 (use-package zenburn-theme
   :ensure t)
 
@@ -339,6 +342,10 @@
   (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
   (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
   )
+
+(use-package helm-ag
+  :ensure t
+  :defer t)
 
 (use-package windmove
   :ensure t
