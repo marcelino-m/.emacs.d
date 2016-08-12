@@ -15,13 +15,12 @@
   (let ((col-left  (q/mincol-no-blanc-in-region rbeg rend))
         (col-right (q/maxcol-no-blanc-in-region rbeg rend))
         (last-line (line-number-at-pos rend)))
-    (message "%s" padding)
     (save-excursion
       (goto-char rbeg)
       (while
           (progn
             (if (not (q/current-line-empty-p))
-                (q/quote-line-inplace col-left (+ col-right 1) ))
+                (q/quote-line-inplace col-left (+ col-right 1)))
             (and (zerop (forward-line 1))
                  (<= (line-number-at-pos) last-line)))))))
 
