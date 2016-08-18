@@ -32,6 +32,7 @@
  mode-require-final-newline           nil
  scroll-conservatively                1
  imenu-auto-rescan                    t
+ indent-tabs-mode                     nil
  )
 
 
@@ -179,8 +180,7 @@
   :defer t
   :init
   (setq
-   tab-width 4
-   indent-tabs-mode nil )
+   tab-width 4)
   (add-hook 'prog-mode-hook
             '(lambda ()
                (electric-pair-mode)
@@ -469,8 +469,12 @@
 (use-package json-mode
   :ensure t
   :init
-  (setq
-   js-indent-level 2)
+  (make-local-variable 'js-indent-level)
+  (add-hook 'json-mode-hook
+            (lambda ()
+              (make-local-variable 'js-indent-level)
+              (setq js-indent-level 2)))
+
   :mode (("\\.geojson\\'" . json-mode)
          ("\\.json\\'"    . json-mode)))
 
