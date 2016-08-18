@@ -116,7 +116,7 @@
 
 (use-package swiper
   :ensure t
-  :defer  t
+  :bind ("C-s" . swiper)
   :init
   (setq
    ivy-use-virtual-buffers t))
@@ -185,7 +185,6 @@
             '(lambda ()
                (electric-pair-mode)
                (ethan-wspace-mode 1)
-               (define-key prog-mode-map (kbd "\C-s") 'swiper)
                )))
 
 
