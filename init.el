@@ -30,11 +30,11 @@
  ediff-split-window-function          'split-window-horizontally
  ring-bell-function                   'ignore
  mode-require-final-newline           nil
- scroll-conservatively                1
+ mouse-wheel-progressive-speed        nil
+ mouse-wheel-scroll-amount            '(2 ((shift) . 1) ((control) . nil))
  imenu-auto-rescan                    t
  indent-tabs-mode                     nil
  )
-
 
 
 (add-to-list 'default-frame-alist '(height . 45))
