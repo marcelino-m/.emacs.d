@@ -577,6 +577,10 @@
   (eval-after-load "sql"
     '(load-library "sql-indent")))
 
+(use-package dired
+  :defer t
+  :init
+  (setq dired-dwim-target t))
 
 
 ;; (require 'init-dired)
