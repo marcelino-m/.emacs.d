@@ -231,7 +231,7 @@
   (setq projectile-mode-line '(:eval (format " 𝚷(%s)" (projectile-project-name))))
   (setq projectile-switch-project-action '(lambda ()
                                             (projectile-dired)
-                                            (projectile-find-file)))
+                                            (projectile-commander)))
   (projectile-global-mode))
 
 
