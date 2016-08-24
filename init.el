@@ -521,6 +521,7 @@
 
 
 (use-package cc-mode
+  :defer t
   :init
   (setq compilation-ask-about-save nil)
   (add-hook 'c++-mode-hook 'helm-gtags-mode)
@@ -534,8 +535,10 @@
                                    indent-tabs-mode nil)
 
                              (setq compilation-skip-threshold 2)
-                             (setq compilation-scroll-output 'first-error)
-                             (define-key c++-mode-map (kbd "\C-s") 'swiper))))
+                             (setq compilation-scroll-output 'first-error)))
+  :config
+  (define-key c++-mode-map (kbd "<f5>") 'recompile)
+  )
 
 
 
