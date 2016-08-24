@@ -34,6 +34,8 @@
  mouse-wheel-scroll-amount            '(2 ((shift) . 1) ((control) . nil))
  imenu-auto-rescan                    t
  indent-tabs-mode                     nil
+ scroll-conservatively               10000
+ scroll-preserve-screen-position     t
  )
 
 
@@ -552,6 +554,7 @@
 
 (use-package beacon
   :ensure t
+  :disabled t
   :config
   (beacon-mode 1))
 
