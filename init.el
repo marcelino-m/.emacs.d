@@ -393,15 +393,21 @@
 
 (use-package js2-mode
   :ensure t
+  :mode        "\\.js\\'"
+  :interpreter "node"
   :init
   (add-hook 'js2-mode-hook (lambda ()
                              (tern-mode t)))
-  :mode "\\.js\\'"
-  :interpreter "node"
+  :bind (:map js2-mode-map
+              ("C-'" . toggle-quotes))
+
   :config
   (use-package tern
     :ensure t
     :load-path (lambda () (concat (getenv "NVM_PATH") "/../node_modules/tern/emacs/"))))
+
+(use-package toggle-quotes
+  :ensure t)
 
 (use-package company
   :ensure t
