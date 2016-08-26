@@ -606,6 +606,45 @@
   (setq dired-dwim-target t))
 
 
+(use-package auctex
+  :ensure t
+  :mode ("\\.tex\\'" . latex-mode)
+  :commands (latex-mode LaTeX-mode plain-tex-mode)
+  :init
+  ;; AUCTeX configuration
+
+  ;; TeX-close-quote ""
+  ;; TeX-open-quote  ""
+
+  (setq TeX-master      nil
+        TeX-auto-save   t
+        TeX-parse-self  t
+        ;; use pdflatex
+        TeX-PDF-mode    t
+        ;; jump from an to viewer
+        TeX-source-correlate-mode t
+        )
+
+  ;; default viewer
+  (setq TeX-view-program-selection
+        (quote
+         (((output-dvi has-no-display-manager)
+           "dvi2tty")
+          ((output-dvi style-pstricks)
+           "dvips and gv")
+          (output-dvi "xdvi")
+          (output-pdf "Okular")
+          (output-html "xdg-open"))))
+
+  (add-hook
+   'LaTeX-mode-hook (lambda ()
+                      (turn-on-auto-fill)
+                      (TeX-fold-mode 1)
+                      (abbrev-mode +1)
+                      (LaTeX-math-mode 1)
+                      (company-mode))))
+
+
 ;; (require 'init-dired)
 ;; (require 'init-qtpro)
 ;; (require 'init-translate)
