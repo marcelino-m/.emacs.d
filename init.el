@@ -441,7 +441,18 @@
   (use-package company-ycmd
     :ensure
     :init
-    (company-ycmd-setup)))
+    (company-ycmd-setup))
+
+  (use-package company-auctex
+    :ensure t
+    :init
+    (company-auctex-init)
+    (eval-after-load "company-auctex"
+      ;; disable this function, bad alignament in company
+      '(defun company-auctex-symbol-annotation (candidate)
+        nil))
+    )
+  )
 
 
 
