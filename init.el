@@ -644,6 +644,11 @@
                       (LaTeX-math-mode 1)
                       (company-mode))))
 
+(use-package gist
+  :ensure t
+  :init
+  (setq
+   gist-ask-for-description t))
 
 ;; (require 'init-dired)
 ;; (require 'init-qtpro)
