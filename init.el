@@ -588,9 +588,9 @@
 (use-package misc-defuns
   :load-path "defuns/"
   :config
-  (global-set-key (kbd "C-o")          'open-line-and-indent)
-  (global-set-key (kbd "<C-return>")   'open-line-below)
-  (global-set-key (kbd "<C-S-return>") 'open-line-above))
+  (global-set-key (kbd "C-o")          'ma/open-line-and-indent)
+  (global-set-key (kbd "<C-return>")   'ma/open-line-below)
+  (global-set-key (kbd "<C-S-return>") 'ma/open-line-above))
 
 
 (use-package sql-indent

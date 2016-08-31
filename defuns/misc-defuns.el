@@ -21,7 +21,7 @@
                       'face 'linum)))
 
 
-(defun goto-line-with-feedback ()
+(defun ma/goto-line-with-feedback ()
   "Show line numbers temporarily, while prompting for the line number input"
   (interactive)
   (unwind-protect
@@ -30,14 +30,14 @@
         (call-interactively 'goto-line))
     (linum-mode -1)))
 
-(defun open-line-and-indent ()
+(defun ma/open-line-and-indent ()
   (interactive)
   (newline-and-indent)
   (end-of-line 0)
   (indent-for-tab-command))
 
 
-(defun open-line-below (&optional keep)
+(defun ma/open-line-below (&optional keep)
   "Open line below current line, whithout breack current line, if given
 prefix argument keep point in curretn position"
   (interactive "P")
@@ -48,7 +48,7 @@ prefix argument keep point in curretn position"
     (if keep
         (goto-char point))))
 
-(defun open-line-above (&optional keep)
+(defun ma/open-line-above (&optional keep)
   "Open line above current line, whithout breack current line, if given
 prefix argument keep point in curretn position"
   (interactive "P")
@@ -67,7 +67,7 @@ prefix argument keep point in curretn position"
 ;;----------------------------------------------------------------------------
 ;; Delete the current file
 ;;----------------------------------------------------------------------------
-(defun delete-this-file ()
+(defun ma/delete-this-file ()
   "Delete the current file, and kill the buffer."
   (interactive)
   (or (buffer-file-name) (error "No file is currently being edited"))
@@ -80,7 +80,7 @@ prefix argument keep point in curretn position"
 ;;----------------------------------------------------------------------------
 ;; Rename the current file
 ;;----------------------------------------------------------------------------
-(defun rename-this-file-and-buffer (new-name)
+(defun ma/rename-this-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
@@ -99,7 +99,7 @@ prefix argument keep point in curretn position"
 
 
 ;; start a httpd-server in current directory
-(defun httpd-start-here (directory port)
+(defun ma/httpd-start-here (directory port)
   (interactive (list (read-directory-name "Root directory: " default-directory nil t)
                      (read-number "Port: " 8017)))
   (setq httpd-root directory)
@@ -116,11 +116,11 @@ prefix argument keep point in curretn position"
 ;; (global-set-key (kbd "s-l") (λ (insert "\u03bb")))
 
 
-(defun buffer-to-html (buffer)
+(defun ma/buffer-to-html (buffer)
   (with-current-buffer (htmlize-buffer buffer)
     (buffer-string)))
 
-(defun sudo-edit (&optional arg)
+(defun ma/sudo-edit (&optional arg)
   (interactive "p")
   (if (or (not (eql  arg 1)) (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
