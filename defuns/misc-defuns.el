@@ -125,3 +125,12 @@ prefix argument keep point in curretn position"
   (if (or (not (eql  arg 1)) (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+;; Change dictionary ispell
+(defun ma/switch-dictionary()
+  (interactive)
+  (let* ((dic ispell-current-dictionary)
+         (change (if (string= dic "castellano") "english" "castellano")))
+    (ispell-change-dictionary change)
+    (message "Dictionary switched from %s to %s" dic change)
+    ))
