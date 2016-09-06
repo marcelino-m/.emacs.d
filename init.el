@@ -423,6 +423,13 @@
   (add-hook 'css-mode-hook        'company-mode)
   (add-hook 'c++-mode-hook        'company-mode)
 
+  (use-package company-flx
+    :ensure t
+    :defer  t
+    :init
+    (with-eval-after-load 'company
+      (company-flx-mode +1)))
+
   :config
   (use-package company-tern
     :ensure t
@@ -652,6 +659,12 @@
   :init
   (setq
    gist-ask-for-description t))
+
+(use-package simple-httpd
+  :ensure t
+  )
+
+
 
 ;; (require 'init-dired)
 ;; (require 'init-qtpro)
