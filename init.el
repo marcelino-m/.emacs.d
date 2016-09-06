@@ -322,8 +322,8 @@
    helm-split-window-in-side-p t
    helm-autoresize-max-height  40
    helm-autoresize-min-height  40
-   helm-buffers-fuzzy-matching t
-   helm-ag-insert-at-point     'symbol)
+   helm-buffers-fuzzy-matching t)
+
   :config
   (global-set-key (kbd "M-y") 'helm-show-kill-ring)
   (add-to-list 'display-buffer-alist
@@ -346,7 +346,10 @@
 
 (use-package helm-ag
   :ensure t
-  :defer t)
+  :defer t
+  :config
+  (setq helm-ag-fuzzy-match     t
+        helm-ag-insert-at-point 'symbol))
 
 (use-package windmove
   :ensure t
