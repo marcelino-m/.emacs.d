@@ -100,5 +100,5 @@
 
 (add-to-list 'auto-mode-alist '("\\.pr[io]$" . qt-pro-mode))
 
-(provide 'init-qtpro)
+(provide 'qt-pro-mode)
 ;;; qt-pro.el ends here

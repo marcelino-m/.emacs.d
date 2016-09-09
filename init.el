@@ -665,6 +665,9 @@
   )
 
 
+(use-package qt-pro-mode
+  :load-path "site-lisp/"
+  :mode "\\.pro\\'" )
 
 ;; (require 'init-dired)
 ;; (require 'init-qtpro)
