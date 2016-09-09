@@ -665,6 +665,28 @@
   )
 
 
+(use-package anaconda-mode
+  :ensure t
+  :init
+
+  (use-package pyenv-mode
+    :ensure
+    :defer)
+
+  (use-package company-anaconda
+    :ensure t
+    )
+
+  (add-hook 'python-mode-hook 'company-mode)
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+  (add-hook 'python-mode-hook 'pyenv-mode)
+
+  (eval-after-load "company"
+    '(add-to-list 'company-backends 'company-anaconda))
+
+  )
+
 (use-package qt-pro-mode
   :load-path "site-lisp/"
   :mode "\\.pro\\'" )
