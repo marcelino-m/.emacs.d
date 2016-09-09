@@ -592,15 +592,15 @@
   :ensure t
   :init
   (global-set-key [remap goto-char] 'ace-jump-char-mode)
-  (global-set-key [remap goto-line] 'ace-jump-word-mode)
-  (global-set-key (kbd "M-g l")     'goto-line-with-feedback))
+  (global-set-key [remap goto-line] 'ace-jump-word-mode))
 
 (use-package misc-defuns
   :load-path "defuns/"
   :config
   (global-set-key (kbd "C-o")          'ma/open-line-and-indent)
   (global-set-key (kbd "<C-return>")   'ma/open-line-below)
-  (global-set-key (kbd "<C-S-return>") 'ma/open-line-above))
+  (global-set-key (kbd "<C-S-return>") 'ma/open-line-above)
+  (global-set-key (kbd "M-g l")     'ma/goto-line-with-feedback))
 
 
 (use-package sql-indent
