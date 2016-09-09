@@ -692,10 +692,7 @@
   :mode "\\.pro\\'" )
 
 ;; (require 'init-dired)
-;; (require 'init-qtpro)
 ;; (require 'init-translate)
 ;; (require 'init-zeal)
-;; ;;(require 'init-python)
 ;; (require 'init-c)
-;; (require 'init-latex)
 ;; (require 'init-ts)
