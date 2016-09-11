@@ -305,15 +305,18 @@
 (use-package magit
   :ensure t
   :init
-  (setq magit-save-repository-buffers 'dontask)
-  (add-hook 'git-commit-mode-hook (lambda () (flyspell-mode 1)))
-  :bind (([f12] . magit-status))
-  :config
-  (fullframe magit-status magit-mode-quit-window)
   (use-package gitignore-mode
     :ensure t)
   (use-package git-timemachine
-    :ensure t))
+    :ensure t)
+
+  (setq magit-save-repository-buffers 'dontask)
+  (add-hook 'git-commit-mode-hook 'git-commit-turn-on-flyspell)
+
+  :bind (([f12] . magit-status))
+
+  :config
+  (fullframe magit-status magit-mode-quit-window))
 
 (use-package helm
   :ensure t
