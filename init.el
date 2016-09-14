@@ -310,13 +310,15 @@
   (use-package git-timemachine
     :ensure t)
 
-  (setq magit-save-repository-buffers 'dontask)
+  (setq
+   magit-save-repository-buffers 'dontask
+   magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
+
   (add-hook 'git-commit-mode-hook 'git-commit-turn-on-flyspell)
 
-  :bind (([f12] . magit-status))
+  :bind (([f12] . magit-status)))
 
-  :config
-  (fullframe magit-status magit-mode-quit-window))
+
 
 (use-package helm
   :ensure t
