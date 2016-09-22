@@ -697,6 +697,13 @@
   :load-path "site-lisp/"
   :mode "\\.pro\\'" )
 
+(use-package ace-window
+  :ensure t
+  :bind (("C-c j" . ace-window))
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  )
+
 ;; (require 'init-dired)
 ;; (require 'init-translate)
 ;; (require 'init-zeal)
