@@ -6,3 +6,4 @@ anaconda-mode/
 backups/*
 eshell/*
 auto-save-list/
+elpa/
