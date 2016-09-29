@@ -183,7 +183,11 @@
   :defer t
   :init
   (setq
-   tab-width 4)
+   tab-width 4
+   electric-pair-inhibit-predicate (lambda (char) (window-minibuffer-p))
+   )
+
+
   (add-hook 'prog-mode-hook
             '(lambda ()
                (electric-pair-mode)
