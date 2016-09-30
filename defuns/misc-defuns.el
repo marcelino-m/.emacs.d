@@ -145,3 +145,12 @@ Version 2016-08-11"
     (switch-to-buffer -buf)
     (funcall initial-major-mode)
     (setq buffer-offer-save t)))
+
+(defun ma/insert-arrow ()
+  "Insert arrow acording mode"
+  (interactive)
+  (cond
+   ((or (eq major-mode 'c++-mode) (eq major-mode 'c-mode))
+    (insert "->"))
+   ((eq major-mode 'js2-mode)
+    (insert "=>"))))

@@ -413,7 +413,8 @@
   (add-hook 'js2-mode-hook (lambda ()
                              (tern-mode t)))
   :bind (:map js2-mode-map
-              ("C-'" . toggle-quotes))
+              ("C-'" . toggle-quotes)
+              ("C->" . ma/insert-arrow))
 
   :config
   (use-package tern
@@ -576,6 +577,7 @@
                              (setq compilation-scroll-output 'first-error)))
   :config
   (define-key c++-mode-map (kbd "<f5>") 'recompile)
+  (define-key c++-mode-map (kbd "C->")  'ma/insert-arrow)
   )
 
 
