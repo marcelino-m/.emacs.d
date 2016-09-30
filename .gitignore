@@ -7,3 +7,15 @@ backups/*
 eshell/*
 auto-save-list/
 elpa/
+/.smex-items
+/bookmarks
+/custom.el
+/ido.last
+/.emacs.desktop
+/.bookmarks.el
+/recentf
+url/
+var/
+/projectile-bookmarks.eld
+/projectile.cache
+/tramp
