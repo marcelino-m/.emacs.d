@@ -184,6 +184,7 @@
   :init
   (setq
    tab-width 4
+   ;; disable electric pairing in minibuffer
    electric-pair-inhibit-predicate (lambda (char) (window-minibuffer-p))
    )
 
