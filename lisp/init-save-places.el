@@ -1,5 +1,0 @@
-(setq save-place-file "~/.emacs.d/saveplace")
-(require 'saveplace)
-(save-place-mode)
-(setq-default save-place t)
-(provide 'init-save-places)
