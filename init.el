@@ -728,7 +728,6 @@
     ;; `M-x package-install [ret] company`
     (company-mode +1))
 
-  :config
   ;; aligns annotation to the right hand side
   (setq company-tooltip-align-annotations t)
   (add-hook 'typescript-mode-hook #'setup-tide-mode))
