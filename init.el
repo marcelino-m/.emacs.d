@@ -535,6 +535,10 @@
                 '("ui"))
                "designer"
                '(file))
+         (list (openwith-make-extension-regexp
+                '("odg"))
+               "lodraw"
+               '(file))
          ))
   (openwith-mode 1))
 
@@ -630,16 +634,26 @@
   (setq dired-dwim-target t))
 
 
-(use-package auctex
-  :ensure t
-  :mode ("\\.tex\\'" . latex-mode)
+(use-package tex
+  :defer t
+  :ensure auctex
+  :mode ("\\.tex\\'" . TeX-latex-mode)
   :commands (latex-mode LaTeX-mode plain-tex-mode)
-  :init
+  :config
+
+  (defun ma/run-latex ()
+    "Compile latex whithout prompt"
+    (interactive)
+    (TeX-save-document (TeX-master-file))
+    (TeX-command "LaTeX" 'TeX-master-file -1))
+
+  (defun ma/run-biber ()
+    "Compile biber whithout prompt"
+    (interactive)
+    (TeX-save-document (TeX-master-file))
+    (TeX-command "Biber" 'TeX-master-file -1))
+
   ;; AUCTeX configuration
-
-  ;; TeX-close-quote ""
-  ;; TeX-open-quote  ""
-
   (setq TeX-master      nil
         TeX-auto-save   t
         TeX-parse-self  t
@@ -647,6 +661,7 @@
         TeX-PDF-mode    t
         ;; jump from an to viewer
         TeX-source-correlate-mode t
+
         )
 
   ;; default viewer
@@ -666,7 +681,13 @@
                       (TeX-fold-mode 1)
                       (abbrev-mode +1)
                       (LaTeX-math-mode 1)
-                      (company-mode))))
+                      (flyspell-mode)
+                      (company-mode)
+                      (turn-on-reftex)
+                      (local-set-key (kbd "<f5>") 'ma/run-latex)
+                      (local-set-key (kbd "<f6>") 'ma/run-biber)
+                      ))
+  )
 
 (use-package gist
   :ensure t
@@ -711,7 +732,6 @@
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   )
-
 
 (use-package tide
   :ensure t
