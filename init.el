@@ -406,21 +406,28 @@
   (add-to-list 'company-backends 'company-css)
   (add-to-list 'company-backends 'company-web-html))
 
+
 (use-package js2-mode
   :ensure t
   :mode        "\\.js\\'"
   :interpreter "node"
-  :init
-  (add-hook 'js2-mode-hook (lambda ()
-                             (tern-mode t)))
   :bind (:map js2-mode-map
               ("C-'" . toggle-quotes)
-              ("C->" . ma/insert-arrow))
+              ("C->" . ma/insert-arrow)))
 
-  :config
-  (use-package tern
-    :ensure t
-    :load-path (lambda () (concat (getenv "NVM_PATH") "/../node_modules/tern/emacs/"))))
+(use-package tern
+  :ensure t
+  :defer  t
+  :load-path (lambda () (concat (getenv "NVM_PATH") "/../node_modules/tern/emacs/"))
+  :init
+  (defun tern-setup ()
+    (interactive)
+    (when (string-match "\\.js\\'" buffer-file-name)
+      (tern-mode 1)))
+
+  (add-hook 'js2-mode-hook 'tern-setup))
+
+
 
 (use-package toggle-quotes
   :ensure t)
@@ -735,22 +742,24 @@
 
 (use-package tide
   :ensure t
-  :mode ("\\.ts\\'" . typescript-mode)
+  :mode ("\\.ts\\'" . js2-mode)
   :init
   (defun setup-tide-mode ()
     (interactive)
-    (tide-setup)
-    (flycheck-mode +1)
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
-    (eldoc-mode +1)
-    ;; company is an optional dependency. You have to
-    ;; install it separately via package-install
-    ;; `M-x package-install [ret] company`
-    (company-mode +1))
+    (when (string-match "\\.ts\\'" buffer-file-name)
+      (tide-setup)
+      (flycheck-mode +1)
+      (setq flycheck-check-syntax-automatically '(save mode-enabled)
+            js2-mode-show-parse-errors          nil
+            js2-mode-show-strict-warnings       nil
+            )
+      (eldoc-mode +1)
+      (company-mode +1)))
 
   ;; aligns annotation to the right hand side
   (setq company-tooltip-align-annotations t)
-  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+  (add-hook 'js2-mode-hook #'setup-tide-mode)
+  )
 
 
 
