@@ -664,11 +664,11 @@
   (setq TeX-master      nil
         TeX-auto-save   t
         TeX-parse-self  t
+        TeX-save-query nil
         ;; use pdflatex
         TeX-PDF-mode    t
         ;; jump from an to viewer
         TeX-source-correlate-mode t
-
         )
 
   ;; default viewer
@@ -691,8 +691,9 @@
                       (flyspell-mode)
                       (company-mode)
                       (turn-on-reftex)
-                      (local-set-key (kbd "<f5>") 'ma/run-latex)
-                      (local-set-key (kbd "<f6>") 'ma/run-biber)
+                      (local-set-key (kbd "<f5>") 'TeX-view)
+                      (local-set-key (kbd "<f6>") 'ma/run-latex)
+                      (local-set-key (kbd "<f7>") 'ma/run-biber)
                       ))
   )
 
