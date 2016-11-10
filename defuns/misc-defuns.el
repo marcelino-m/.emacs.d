@@ -132,6 +132,7 @@ prefix argument keep point in curretn position"
   (let* ((dic ispell-current-dictionary)
          (change (if (string= dic "castellano") "english" "castellano")))
     (ispell-change-dictionary change)
+    (flyspell-buffer)
     (message "Dictionary switched from %s to %s" dic change)
     ))
 

@@ -487,10 +487,12 @@
     :init
     (company-auctex-init)
     (eval-after-load "company-auctex"
-      ;; disable this function, bad alignament in company
+      ;; override this function, bad alignament in company
       '(defun company-auctex-symbol-annotation (candidate)
         nil))
     )
+
+  (add-to-list 'company-backend 'company-ispell)
   )
 
 
