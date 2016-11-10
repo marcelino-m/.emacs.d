@@ -260,7 +260,8 @@
         ido-create-new-buffer 'always
         ido-use-filename-at-point nil
         ido-max-prospects 10
-        ido-use-faces nil)
+        ido-use-faces t)
+
   (define-key ido-file-completion-map (kbd "~") '(lambda ()
                                                    (interactive)
                                                    (cond
@@ -276,8 +277,16 @@
   (use-package ido-vertical-mode
     :ensure t
     :init
-    (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
+    (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right
+          ido-vertical-indicator "*>")
     :config
+    (set-face-attribute 'ido-vertical-first-match-face nil
+                        :foreground "DarkOliveGreen1" :weight 'bold)
+    (set-face-attribute 'ido-vertical-only-match-face nil
+                        :foreground "DarkOliveGreen1" :weight 'bold)
+    (set-face-attribute 'ido-vertical-match-face nil
+                        :foreground "DarkOliveGreen4")
+
     (ido-vertical-mode))
   (use-package ido-ubiquitous
     :ensure t
