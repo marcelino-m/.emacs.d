@@ -234,7 +234,7 @@
 
   (define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
   (setq projectile-enable-caching t)
-  (setq projectile-mode-line '(:eval (format " 𝚷(%s)" (projectile-project-name))))
+  (setq projectile-mode-line '(:eval (format " 𝚷〔%s〕" (projectile-project-name))))
   (setq projectile-switch-project-action '(lambda ()
                                             (projectile-dired)
                                             (projectile-commander)))
@@ -278,7 +278,7 @@
     :ensure t
     :init
     (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right
-          ido-vertical-indicator "*>")
+          ido-vertical-indicator "➤")
     :config
     (set-face-attribute 'ido-vertical-first-match-face nil
                         :foreground "DarkOliveGreen1" :weight 'bold)

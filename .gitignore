@@ -1,8 +1,8 @@
 /saveplace
 /.bbdb
-elpa/
+elpa/*
 .cask
-anaconda-mode/
+anaconda-mode/*
 backups/*
 eshell/*
 auto-save-list/
