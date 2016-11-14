@@ -774,6 +774,13 @@
   (add-hook 'js2-mode-hook #'setup-tide-mode)
   )
 
+(use-package mocha-snippets
+  :ensure t)
+
+(use-package npm-mode
+  :ensure t
+  :defer t
+  )
 
 
 
