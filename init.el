@@ -759,6 +759,7 @@
   (defun setup-tide-mode ()
     (interactive)
     (when (string-match "\\.ts\\'" buffer-file-name)
+      (setq tide-tsserver-executable "node_modules/typescript/bin/tsserver")
       (tide-setup)
       (flycheck-mode +1)
       (setq flycheck-check-syntax-automatically '(save mode-enabled)
