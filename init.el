@@ -782,6 +782,11 @@
   :defer t
   )
 
+(use-package deft
+  :ensure
+  :init
+  (setq deft-directory "~/Dropbox/notes")
 
+  )
 
 ;; (require 'init-zeal)
