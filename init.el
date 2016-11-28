@@ -278,7 +278,7 @@
     :ensure t
     :init
     (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right
-          ido-vertical-indicator "➤")
+          ido-vertical-indicator "•➤")
     :config
     (set-face-attribute 'ido-vertical-first-match-face nil
                         :foreground "DarkOliveGreen1" :weight 'bold)
@@ -315,7 +315,9 @@
   (use-package flyspell-popup
     :ensure t
     :init
-    (define-key flyspell-mode-map (kbd "C-;") #'flyspell-popup-correct)))
+    (define-key flyspell-mode-map (kbd "C-;") #'flyspell-popup-correct)
+    (define-key flyspell-mode-map (kbd "C-ñ") #'flyspell-popup-correct)
+    ))
 
 (use-package magit
   :ensure t
@@ -786,7 +788,10 @@
   :ensure
   :init
   (setq deft-directory "~/Dropbox/notes")
-
+  (setq deft-extensions '("org" "md" "txt"))
   )
+
+(use-package rainbow-mode
+  :ensure t)
 
 ;; (require 'init-zeal)
