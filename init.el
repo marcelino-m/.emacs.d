@@ -207,6 +207,7 @@
 
 (use-package undo-tree
   :ensure t
+  :defer  3
   :diminish undo-tree-mode
   :config
   (global-undo-tree-mode))
@@ -252,6 +253,7 @@
 
 (use-package ido
   :ensure t
+  :defer  3
   :init
   (setq ido-enable-prefix nil
         ido-enable-flex-matching t
@@ -303,8 +305,6 @@
   :ensure t
   :mode ("CMakeList.txt" . cmake-mode))
 
-(use-package fullframe
-  :ensure t)
 
 (use-package flyspell
   :ensure t
@@ -315,8 +315,7 @@
   (use-package flyspell-popup
     :ensure t
     :init
-    (define-key flyspell-mode-map (kbd "C-;") #'flyspell-popup-correct)
-    (define-key flyspell-mode-map (kbd "C-ñ") #'flyspell-popup-correct)
+    :bind (("C-c c" . flyspell-popup-correct))
     ))
 
 (use-package magit
