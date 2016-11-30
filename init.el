@@ -786,6 +786,7 @@
 
 (use-package deft
   :ensure
+  :bind ([f9] . deft)
   :init
   (setq deft-directory "~/Dropbox/notes")
   (setq deft-extensions '("org" "md" "txt"))
@@ -794,4 +795,10 @@
 (use-package rainbow-mode
   :ensure t)
 
-;; (require 'init-zeal)
+(use-package google-translate
+  :ensure t
+  :bind ("C-c t" . google-translate-smooth-translate)
+  :init
+  (setq
+   google-translate-translation-directions-alist '(("en" . "es") ("es" . "en"))
+   ))
