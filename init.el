@@ -713,7 +713,8 @@
   :ensure t
   :init
   (setq
-   gist-ask-for-description t))
+   gist-ask-for-description t
+   gist-ask-for-filename t))
 
 (use-package simple-httpd
   :ensure t
@@ -801,3 +802,7 @@
   (setq
    google-translate-translation-directions-alist '(("en" . "es") ("es" . "en"))
    ))
+
+(use-package paradox
+  :ensure t
+  )
