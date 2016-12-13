@@ -13,6 +13,7 @@
 (blink-cursor-mode -1)
 (delete-selection-mode)
 (toggle-frame-maximized)
+(show-paren-mode t)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -44,7 +45,8 @@
 (add-to-list 'default-frame-alist '(width . 157))
 (setq gc-cons-threshold 100000000)
 
-(add-to-list 'default-frame-alist '(font . "Inconsolata 12"))
+(custom-set-faces
+ '(default ((t (:family "Inconsolata" :foundry "unknown" :slant normal :weight normal :height 119 :width normal)))))
 
 ;; more useful frame title, that show either a file or a
 ;; buffer name (if the buffer isn't visiting a file)
