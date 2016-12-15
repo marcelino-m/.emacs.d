@@ -410,7 +410,9 @@
 (use-package tern
   :ensure t
   :defer  t
-  :load-path (lambda () (concat (getenv "NVM_PATH") "/../node_modules/tern/emacs/"))
+  :load-path (lambda () (expand-file-name
+                         (concat (getenv "NVM_PATH")
+                                 "/../node_modules/tern/emacs/")))
   :init
   (defun tern-setup ()
     (interactive)
@@ -418,7 +420,6 @@
       (tern-mode 1)))
 
   (add-hook 'js2-mode-hook 'tern-setup))
-
 
 
 (use-package toggle-quotes
