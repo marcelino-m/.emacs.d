@@ -217,7 +217,7 @@
 
   (define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
   (setq projectile-enable-caching t)
-  (setq projectile-mode-line '(:eval (format " 𝚷〔%s〕" (projectile-project-name))))
+  (setq projectile-mode-line '(:eval (format "℘❪ %s ❫" (projectile-project-name))))
   (setq projectile-switch-project-action '(lambda ()
                                             (projectile-dired)
                                             (projectile-commander)))
