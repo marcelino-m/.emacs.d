@@ -8,6 +8,8 @@ git submodule update --init --recursive
 # system dependecies for ycmd
 echo -e "${RED}Installing:${NC} dependencies for ycmd"
 sudo aptitude install python-dev python3-dev build-essential cmake
+echo -e "${RED}Installing:${NC} gloabal"
+sudo aptitude install global
 
 # dictionaries
 echo -e "${RED}Installing:${NC} dictionaries"
