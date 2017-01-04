@@ -465,7 +465,7 @@
     :defer    f
     :diminish ycmd-mode
     :init
-    (setq ycmd-server-command '("python" "/home/marcelo/src/ycmd/ycmd"))
+    (setq ycmd-server-command '("python" "/home/marcelo/.emacs.d/vendors/ycmd/ycmd"))
     (add-hook 'c++-mode-hook 'ycmd-mode))
 
   (use-package company-ycmd
