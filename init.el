@@ -436,6 +436,13 @@
   (add-hook 'css-mode-hook        'company-mode)
   (add-hook 'c++-mode-hook        'company-mode)
 
+  (setq
+   company-idle-delay            0
+   company-tooltip-idle-delay    0
+   company-minimum-prefix-length 1
+   company-show-numbers          t
+   )
+
   (use-package company-flx
     :ensure t
     :defer  t
