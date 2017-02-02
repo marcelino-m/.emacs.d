@@ -70,7 +70,7 @@
   (write-region "" nil custom-file))
 (load custom-file)
 
-
+(server-start)
 ;; Setup packages
 
 
