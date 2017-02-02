@@ -95,7 +95,36 @@
   :ensure t)
 
 (use-package zenburn-theme
+  :disabled t
   :ensure t)
+
+(use-package solarized-theme
+  :ensure t
+  :config
+  (setq
+   ;; make the fringe stand out from the background
+   solarized-distinct-fringe-background t
+   ;; make the modeline high contrast
+   solarized-use-variable-pitch nil
+   solarized-high-contrast-mode-line t
+   ;; Use less bolding
+   solarized-use-less-bold t
+   ;; Use more italics
+   solarized-use-more-italic t
+   ;; Use less colors for indicators such as git:gutter, flycheck and similar
+   solarized-emphasize-indicators nil
+   ;; Don't change size of org-mode headlines (but keep other size-changes)
+   solarized-scale-org-headlines nil
+   ;; Avoid all font-size changes
+   solarized-height-minus-1  1
+   solarized-height-plus-1   1
+   solarized-height-plus-2   1
+   solarized-height-plus-3   1
+   solarized-height-plus-4   1
+
+   x-underline-at-descent-line t)
+  (load-theme 'solarized-light)
+  )
 
 (use-package csv-mode
   :ensure t
