@@ -145,9 +145,14 @@
 
 (use-package powerline
   :ensure t
+  :disabled t
   :config
   (powerline-center-theme))
 
+(use-package spaceline-config
+  :ensure spaceline
+  :config
+  (spaceline-emacs-theme))
 
 (use-package swiper
   :ensure t
@@ -246,7 +251,7 @@
 
   (define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
   (setq projectile-enable-caching t)
-  (setq projectile-mode-line '(:eval (format "℘❪ %s ❫" (projectile-project-name))))
+  (setq projectile-mode-line '(:eval (format "❪℘ %s❫" (projectile-project-name))))
   (setq projectile-switch-project-action '(lambda ()
                                             (projectile-dired)
                                             (projectile-commander)))
@@ -722,6 +727,7 @@
                       (flyspell-mode)
                       (company-mode)
                       (turn-on-reftex)
+                      (ethan-wspace-mode 1)
                       (local-set-key (kbd "<f5>") 'TeX-view)
                       (local-set-key (kbd "<f6>") 'ma/run-latex)
                       (local-set-key (kbd "<f7>") 'ma/run-biber)
@@ -826,7 +832,18 @@
   :ensure t
   )
 
+
+(use-package geiser
+  :ensure t)
+
+
+(use-package zeal-at-point
+  :ensure t
+  :bind ("C-c d" . zeal-at-point)
+  :config
+  (add-to-list 'zeal-at-point-mode-alist '(python-mode . ("python")))
+  )
+
 (use-package dockerfile-mode
   :ensure t
-   :mode ("Dockerfile\\'" . dockerfile-mode)
-  )
+  :mode "Dockerfile\\'")

@@ -155,3 +155,8 @@ Version 2016-08-11"
     (insert "->"))
    ((eq major-mode 'js2-mode)
     (insert "=>"))))
+
+
+(defun ma/goto-lab ()
+  (interactive)
+  (dired "~/lab/"))
