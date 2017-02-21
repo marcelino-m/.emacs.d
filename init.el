@@ -71,9 +71,24 @@
 (load custom-file)
 
 (server-start)
+
+(defun ma/neotree-toggle ()
+  "Toggle show the NeoTree window."
+  (interactive)
+  (if (neo-global--window-exists-p)
+      (neotree-hide)
+    (or (ignore-errors
+          (neotree-dir (projectile-project-root)))
+        (neotree-show))))
+
+(defun ma/update-neotree-root ()
+  (interactive)
+  (when (neo-global--window-exists-p)
+    (progn
+      (neotree-dir (projectile-project-root))
+      (other-window 1))))
+
 ;; Setup packages
-
-
 (use-package exec-path-from-shell
   :ensure t
   :defer  2
@@ -147,7 +162,8 @@
   :ensure t
   :disabled t
   :config
-  (powerline-center-theme))
+  (spaceline-spacemacs-theme))
+
 
 (use-package spaceline-config
   :ensure spaceline
@@ -237,6 +253,7 @@
          ("\\.markdown\\'" . markdown-mode)))
 
 
+
 (use-package projectile
   :ensure t
   :bind-keymap ("C-c p" . projectile-command-map)
@@ -254,6 +271,7 @@
   (setq projectile-mode-line '(:eval (format "❪℘ %s❫" (projectile-project-name))))
   (setq projectile-switch-project-action '(lambda ()
                                             (projectile-dired)
+                                            (ma/update-neotree-root)
                                             (projectile-commander)))
   (projectile-global-mode))
 
@@ -847,3 +865,17 @@
 (use-package dockerfile-mode
   :ensure t
   :mode "Dockerfile\\'")
+
+(use-package neotree
+  :ensure t
+  :init
+  (global-set-key [f8] 'ma/neotree-toggle)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  )
+
+(use-package all-the-icons
+  :load-path "~/.emacs.d/vendors/all-the-icons/")
+
+
+(use-package volatile-highlights
+  :ensure t)
