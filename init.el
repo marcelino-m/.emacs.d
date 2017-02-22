@@ -71,6 +71,9 @@
 (load custom-file)
 
 (server-start)
+(xterm-mouse-mode)
+
+;; Setup packages
 
 (defun ma/neotree-toggle ()
   "Toggle show the NeoTree window."
@@ -110,11 +113,12 @@
   :ensure t)
 
 (use-package zenburn-theme
-  :disabled t
+  ;; :disabled t
   :ensure t)
 
 (use-package solarized-theme
   :ensure t
+  :disabled t
   :config
   (setq
    ;; make the fringe stand out from the background
@@ -207,7 +211,10 @@
          ("C-c y v"   . yas-visit-snippet-file)
          )
   :config
-  (yas-load-directory "~/.emacs.d/snippets/")
+  (define-key yas-minor-mode-map [(tab)] nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
+
+  (setq-default yas-snippet-dirs "~/.emacs.d/snippets/")
   (yas-global-mode 1)
   )
 
@@ -432,7 +439,12 @@
         '(
           ("angular"    . "\\.html\\'")
           )
+
+        web-mode-enable-current-element-highlight     t
+        web-mode-enable-element-content-fontification t
+        web-mode-enable-element-tag-fontification     t
         )
+
   (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.[gj]sp\\'" . web-mode))
@@ -879,3 +891,6 @@
 
 (use-package volatile-highlights
   :ensure t)
+(use-package multiple-cursors
+  :ensure t
+  )
