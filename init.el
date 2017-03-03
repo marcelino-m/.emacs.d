@@ -214,9 +214,10 @@
   (define-key yas-minor-mode-map [(tab)] nil)
   (define-key yas-minor-mode-map (kbd "TAB") nil)
 
-  (setq-default yas-snippet-dirs "~/.emacs.d/snippets/")
-  (yas-global-mode 1)
-  )
+  (setq yas-snippet-dirs (append yas-snippet-dirs
+                               '("~/.emacs.d/snippets/")))
+
+  (yas-global-mode 1))
 
 (use-package prog-mode
   :defer t
