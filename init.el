@@ -275,6 +275,7 @@
     :ensure t)
 
   (define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
+  (define-key projectile-mode-map (kbd "C-c p o") 'helm-occur)
   (setq projectile-enable-caching t)
   (setq projectile-mode-line '(:eval (format "❪℘ %s❫" (projectile-project-name))))
   (setq projectile-switch-project-action '(lambda ()
@@ -879,6 +880,9 @@
   :ensure t
   :mode "Dockerfile\\'")
 
+(use-package font-lock+
+  :ensure t)
+
 (use-package neotree
   :ensure t
   :init
@@ -886,7 +890,7 @@
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   )
 
-(use-package all-the-icons
+(use-package  all-the-icons
   :load-path "~/.emacs.d/vendors/all-the-icons/")
 
 
