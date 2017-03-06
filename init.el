@@ -20,8 +20,7 @@
 (delete-selection-mode)
 (toggle-frame-maximized)
 (show-paren-mode t)
-
-(defalias 'yes-or-no-p 'y-or-n-p)
+(xterm-mouse-mode)
 
 (setq-default
  case-fold-search                     t
@@ -48,6 +47,8 @@
 
 (setq gc-cons-threshold 100000000)
 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 (custom-set-faces
  '(default ((t (:family "Inconsolata" :foundry "unknown" :slant normal :weight normal :height 119 :width normal)))))
 
@@ -73,8 +74,7 @@
   (write-region "" nil custom-file))
 (load custom-file)
 
-(server-start)
-(xterm-mouse-mode)
+
 
 ;; Setup packages
 
