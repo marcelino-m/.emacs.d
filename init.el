@@ -7,10 +7,16 @@
   (package-install 'use-package))
 
 ;; global options
-(scroll-bar-mode   -1)
+
+(add-to-list 'default-frame-alist '(height . 45))
+(add-to-list 'default-frame-alist '(width . 157))
+(add-to-list 'default-frame-alist '(cursor-color . "firebrick1"))
+(add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
+(add-to-list 'default-frame-alist '(cursor-type . bar))
+
 (tool-bar-mode     -1)
 (menu-bar-mode     -1)
-(blink-cursor-mode -1)
+(blink-cursor-mode  1)
 (delete-selection-mode)
 (toggle-frame-maximized)
 (show-paren-mode t)
@@ -40,9 +46,6 @@
  scroll-step                          1
  )
 
-
-(add-to-list 'default-frame-alist '(height . 45))
-(add-to-list 'default-frame-alist '(width . 157))
 (setq gc-cons-threshold 100000000)
 
 (custom-set-faces
@@ -164,15 +167,10 @@
 
 (use-package powerline
   :ensure t
-  :disabled t
   :config
-  (spaceline-spacemacs-theme))
+  (powerline-default-theme)
+  )
 
-
-(use-package spaceline-config
-  :ensure spaceline
-  :config
-  (spaceline-emacs-theme))
 
 (use-package swiper
   :ensure t
