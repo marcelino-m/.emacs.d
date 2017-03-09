@@ -905,3 +905,8 @@
 (use-package yaml-mode
   :ensure t
   :mode "\\.yml\\'")
+
+(use-package xclip
+  :ensure t
+  :config
+  (xclip-mode 1))

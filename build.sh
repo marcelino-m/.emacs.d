@@ -17,6 +17,11 @@ sudo apt-get install aspell-es aspell-en
 echo -e "${RED}Installing:${NC} Ag silver search"
 sudo apt-get install  silversearcher-ag
 
+# misc
+echo -e "${RED}Installing:${NC} xclip"
+sudo apt-get install xclip
+
+
 HOME_USER=/home/$USER
 
 # builld ycmd server
