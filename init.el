@@ -897,3 +897,7 @@
 (use-package multiple-cursors
   :ensure t
   )
+
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.yml\\'")
