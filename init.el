@@ -154,7 +154,7 @@
 
 (use-package expand-region
   :ensure t
-  :bind ("C-=" . er/expand-region))
+  :bind ("C-c =" . er/expand-region))
 
 
 (use-package drag-stuff
@@ -280,6 +280,8 @@
                                             (projectile-dired)
                                             (ma/update-neotree-root)
                                             (projectile-commander)))
+
+
   (projectile-global-mode))
 
 
@@ -691,7 +693,9 @@
   (global-set-key (kbd "C-o")          'ma/open-line-and-indent)
   (global-set-key (kbd "<C-return>")   'ma/open-line-below)
   (global-set-key (kbd "<C-S-return>") 'ma/open-line-above)
-  (global-set-key (kbd "M-g l")     'ma/goto-line-with-feedback))
+  (global-set-key (kbd "M-g l")     'ma/goto-line-with-feedback)
+  (global-set-key [f7] 'ma/make-frame-command)
+  (global-set-key [f6] 'ma/delete-frame))
 
 
 (use-package sql-indent

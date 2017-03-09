@@ -160,3 +160,11 @@ Version 2016-08-11"
 (defun ma/goto-lab ()
   (interactive)
   (dired "~/lab/"))
+
+(defun ma/make-frame-command ()
+  (interactive)
+  (make-frame-command))
+
+(defun ma/delete-frame ()
+  (interactive)
+  (delete-frame))
