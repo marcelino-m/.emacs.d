@@ -864,6 +864,8 @@
 
 (use-package paradox
   :ensure t
+  :config
+  (setq paradox-display-download-count t)
   )
 
 
