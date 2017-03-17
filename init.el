@@ -915,3 +915,13 @@
   :ensure t
   :config
   (xclip-mode 1))
+(use-package iss-mode
+  :mode "\\.iss\\'"
+  :ensure t)
+
+
+(use-package hl-todo
+  :ensure t
+  :init (global-hl-todo-mode)
+  :config
+  (setq hl-todo-activate-in-modes '(prog-mode)))
