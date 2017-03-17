@@ -899,7 +899,10 @@
 
 
 (use-package volatile-highlights
-  :ensure t)
+  :ensure t
+  :config
+  (volatile-highlights-mode t))
+
 (use-package multiple-cursors
   :ensure t
   )
