@@ -9,7 +9,7 @@
 ;; global options
 
 (add-to-list 'default-frame-alist '(height . 45))
-(add-to-list 'default-frame-alist '(width . 157))
+(add-to-list 'default-frame-alist '(width . 190))
 (add-to-list 'default-frame-alist '(cursor-color . "firebrick1"))
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (add-to-list 'default-frame-alist '(cursor-type . bar))
@@ -254,7 +254,8 @@
   :ensure t
   :init
   (add-hook 'markdown-mode-hook (lambda ()
-                                  (ethan-wspace-mode 1)))
+                                  (ethan-wspace-mode 1)
+                                  (flyspell-mode)))
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 
@@ -471,7 +472,9 @@
   :interpreter "node"
   :bind (:map js2-mode-map
               ("C-'" . toggle-quotes)
-              ("C->" . ma/insert-arrow)))
+              ("C->" . ma/insert-arrow))
+  :config
+  (add-hook 'js2-mode-hook 'subword-mode))
 
 (use-package tern
   :ensure t
@@ -501,6 +504,9 @@
   (add-hook 'web-mode-hook        'company-mode)
   (add-hook 'css-mode-hook        'company-mode)
   (add-hook 'c++-mode-hook        'company-mode)
+  (add-hook 'cider-repl-mode-hook 'company-mode)
+  (add-hook 'cider-mode-hook      'company-mode)
+
 
   (setq
    company-idle-delay            0
@@ -710,6 +716,11 @@
   :init
   (setq dired-dwim-target t))
 
+(use-package dired-narrow
+  :ensure t
+  :bind (:map dired-mode-map
+              ("/" . dired-narrow)))
+
 
 (use-package tex
   :defer t
@@ -912,9 +923,20 @@
   :mode "\\.yml\\'")
 
 (use-package xclip
+  :disabled
   :ensure t
   :config
   (xclip-mode 1))
+
+(use-package clojure-mode
+  :ensure t)
+
+(use-package cider
+  :ensure t
+  :config
+  (add-hook 'cider-mode-hook #'eldoc-mode)
+  )
+
 (use-package iss-mode
   :mode "\\.iss\\'"
   :ensure t)
@@ -925,3 +947,57 @@
   :init (global-hl-todo-mode)
   :config
   (setq hl-todo-activate-in-modes '(prog-mode)))
+
+
+(use-package scss-mode
+  :ensure t
+  :init
+  (setq scss-compile-at-save nil))
+
+(use-package nginx-mode
+  :ensure t
+  )
+
+(use-package mu4e
+  :load-path "/home/marcelo/.local/share/emacs/site-lisp/mu4e"
+  :init
+  (setq mu4e-maildir       "~/maildir"
+        mu4e-drafts-folder "/tim/[Gmail].Drafts"
+        mu4e-sent-folder   "/tim/[Gmail].Sent Mail"
+        mu4e-trash-folder  "/tim/[Gmail].Trash"
+        message-kill-buffer-on-exit t
+        mu4e-sent-messages-behavior 'delete)
+
+  ;; setup some handy shortcuts
+  ;; you can quickly switch to your Inbox -- press ``ji''
+  ;; then, when you want archive some messages, move them to
+  ;; the 'All Mail' folder by pressing ``ma''.
+
+  (setq mu4e-maildir-shortcuts
+        '( ("/tim/INBOX"               . ?i)
+           ("/tim/[Gmail].Sent Mail"   . ?s)
+           ("/tim/[Gmail].Trash"       . ?t)
+           ("/tim/[Gmail].All Mail"    . ?a)))
+
+  ;; allow for updating mail using 'U' in the main view:
+  (setq mu4e-get-mail-command "offlineimap")
+
+  ;; something about ourselves
+  (setq
+   user-mail-address "marcelo.munoz@timining.cl"
+   user-full-name  "Marcelo M. A."
+   mu4e-compose-signature
+   (concat
+    "Marcelo M. A.\n"
+    "\n"))
+
+  ;; sending mail -- replace USERNAME with your gmail username
+  ;; also, make sure the gnutls command line utils are installed
+  ;; package 'gnutls-bin' in Debian/Ubuntu
+
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-stream-type 'starttls
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587)
+  )

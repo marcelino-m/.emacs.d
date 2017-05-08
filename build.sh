@@ -14,12 +14,19 @@ sudo apt-get install global
 # dictionaries
 echo -e "${RED}Installing:${NC} dictionaries"
 sudo apt-get install aspell-es aspell-en
-echo -e "${RED}Installing:${NC} Ag silver search"
-sudo apt-get install  silversearcher-ag
 
 # misc
 echo -e "${RED}Installing:${NC} xclip"
 sudo apt-get install xclip
+echo -e "${RED}Installing:${NC} source-highlight"
+sudo apt-get install source-highlight
+echo -e "${RED}Installing:${NC} sqlitebrowser"
+sudo apt-get install sqlitebrowser
+echo -e "${RED}Installing:${NC} Ag silver search"
+sudo apt-get install  silversearcher-ag
+echo -e "${RED}Installing:${NC} Maildir utilities and dependencies"
+sudo apt-get install  html2text guile-2.0-dev  libgmime-2.6-dev libxapian-dev  libwebkitgtk-dev maildir-utils  offlineimap
+
 
 
 HOME_USER=/home/$USER
