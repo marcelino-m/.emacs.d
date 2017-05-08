@@ -45,6 +45,10 @@
  scroll-step                          1
  )
 
+
+(add-to-list 'default-frame-alist '(height . 47))
+(add-to-list 'default-frame-alist '(width . 200))
+
 (setq gc-cons-threshold 100000000)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -263,6 +267,7 @@
 
 (use-package projectile
   :ensure t
+  :load-path "./defuns/misc-defuns.el"
   :bind-keymap ("C-c p" . projectile-command-map)
   :bind (:map projectile-mode-map
               ("C-c p s a" . helm-projectile-ag))
@@ -272,7 +277,7 @@
 
   (use-package ggtags
     :ensure t)
-
+  (global-set-key [f7] 'ma/make-frame-command)
   (define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
   (define-key projectile-mode-map (kbd "C-c p o") 'helm-occur)
   (setq projectile-enable-caching t)
@@ -375,6 +380,7 @@
    magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
 
   (add-hook 'git-commit-mode-hook 'git-commit-turn-on-flyspell)
+  (global-git-commit-mode)
 
   :bind (([f12] . magit-status)))
 
