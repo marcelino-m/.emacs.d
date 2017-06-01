@@ -30,7 +30,7 @@
  tooltip-delay                        0
  save-interprogram-paste-before-kill  t
  inhibit-startup-screen               t
- truncate-lines                       nil
+ truncate-lines                       t
  truncate-partial-width-windows       nil
  visible-bell                         nil
  ediff-window-setup-function          'ediff-setup-windows-plain
@@ -251,7 +251,7 @@
   :ensure t
   :defer  3
   :diminish undo-tree-mode
-  :config
+  :init
   (global-undo-tree-mode))
 
 (use-package markdown-mode
@@ -286,6 +286,20 @@
                                             (projectile-dired)
                                             (ma/update-neotree-root)
                                             (projectile-commander)))
+
+
+  ;;
+  (defun projectile--file-name-sans-extensions (file-name)
+    "Return FILE-NAME sans any extensions."
+    (file-name-base file-name))
+
+  (defun projectile--file-name-extensions (file-name)
+    "Return FILE-NAME's extensions."
+    (file-name-extension file-name))
+
+  (add-to-list 'projectile-other-file-alist '("ts"   . ("html" "css")))
+  (add-to-list 'projectile-other-file-alist '("html" . ("ts" "css")))
+  (add-to-list 'projectile-other-file-alist '("css"  . ("html" "ts")))
 
 
   (projectile-global-mode))
@@ -630,7 +644,6 @@
   (openwith-mode 1))
 
 (use-package recentf
-  :defer 4
   :commands (recentf-mode
              recentf-add-file
              recentf-apply-filename-handlers)
@@ -1007,3 +1020,13 @@
         smtpmail-smtp-server "smtp.gmail.com"
         smtpmail-smtp-service 587)
   )
+
+(use-package sed-mode
+  :load-path "site-lisp/"
+  :mode "\\.sed\\'" )
+
+
+(use-package flymd
+  :ensure t
+  :init
+  (flymd-output-directory "/tmp"))
