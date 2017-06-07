@@ -168,3 +168,12 @@ Version 2016-08-11"
 (defun ma/delete-frame ()
   (interactive)
   (delete-frame))
+
+(defun ma/kill-line ()
+  (interactive)
+  (kill-region
+   (point)
+   (progn
+     (back-to-indentation)
+     (point)))
+  )

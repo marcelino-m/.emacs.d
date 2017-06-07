@@ -249,9 +249,8 @@
 
 (use-package undo-tree
   :ensure t
-  :defer  3
   :diminish undo-tree-mode
-  :config
+  :init
   (global-undo-tree-mode))
 
 (use-package markdown-mode
@@ -512,6 +511,7 @@
   (add-hook 'c++-mode-hook        'company-mode)
   (add-hook 'cider-repl-mode-hook 'company-mode)
   (add-hook 'cider-mode-hook      'company-mode)
+  (add-hook 'sh-mode-hook         'company-mode)
 
 
   (setq
@@ -533,10 +533,15 @@
     :ensure t
     :init
     (add-to-list 'company-backends 'company-tern))
+
   (use-package company-web
     :ensure t)
+
   (use-package company-shell
-    :ensure t)
+    :disabled
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-shell))
 
   (use-package ycmd
     :ensure   t
@@ -702,10 +707,11 @@
 (use-package misc-defuns
   :load-path "defuns/"
   :config
-  (global-set-key (kbd "C-o")          'ma/open-line-and-indent)
-  (global-set-key (kbd "<C-return>")   'ma/open-line-below)
-  (global-set-key (kbd "<C-S-return>") 'ma/open-line-above)
-  (global-set-key (kbd "M-g l")     'ma/goto-line-with-feedback)
+  (global-set-key (kbd "C-o")           'ma/open-line-and-indent)
+  (global-set-key (kbd "<C-return>")    'ma/open-line-below)
+  (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
+  (global-set-key (kbd "M-g l")         'ma/goto-line-with-feedback)
+  (global-set-key (kbd "<M-backspace>") 'ma/kill-line)
   (global-set-key [f7] 'ma/make-frame-command)
   (global-set-key [f6] 'ma/delete-frame))
 
@@ -931,8 +937,10 @@
 (use-package xclip
   :disabled
   :ensure t
-  :config
+  :disabled
+  :init
   (xclip-mode 1))
+
 
 (use-package clojure-mode
   :ensure t)
@@ -964,46 +972,10 @@
   :ensure t
   )
 
-(use-package mu4e
-  :load-path "/home/marcelo/.local/share/emacs/site-lisp/mu4e"
-  :init
-  (setq mu4e-maildir       "~/maildir"
-        mu4e-drafts-folder "/tim/[Gmail].Drafts"
-        mu4e-sent-folder   "/tim/[Gmail].Sent Mail"
-        mu4e-trash-folder  "/tim/[Gmail].Trash"
-        message-kill-buffer-on-exit t
-        mu4e-sent-messages-behavior 'delete)
-
-  ;; setup some handy shortcuts
-  ;; you can quickly switch to your Inbox -- press ``ji''
-  ;; then, when you want archive some messages, move them to
-  ;; the 'All Mail' folder by pressing ``ma''.
-
-  (setq mu4e-maildir-shortcuts
-        '( ("/tim/INBOX"               . ?i)
-           ("/tim/[Gmail].Sent Mail"   . ?s)
-           ("/tim/[Gmail].Trash"       . ?t)
-           ("/tim/[Gmail].All Mail"    . ?a)))
-
-  ;; allow for updating mail using 'U' in the main view:
-  (setq mu4e-get-mail-command "offlineimap")
-
-  ;; something about ourselves
-  (setq
-   user-mail-address "marcelo.munoz@timining.cl"
-   user-full-name  "Marcelo M. A."
-   mu4e-compose-signature
-   (concat
-    "Marcelo M. A.\n"
-    "\n"))
-
-  ;; sending mail -- replace USERNAME with your gmail username
-  ;; also, make sure the gnutls command line utils are installed
-  ;; package 'gnutls-bin' in Debian/Ubuntu
-
-  (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-stream-type 'starttls
-        smtpmail-default-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 587)
+(use-package sed-mode
+  :load-path "site-lisp/"
+  :mode "\\.sed\\'"
   )
+
+(use-package restart-emacs
+  :ensure t)
