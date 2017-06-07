@@ -30,7 +30,7 @@
  tooltip-delay                        0
  save-interprogram-paste-before-kill  t
  inhibit-startup-screen               t
- truncate-lines                       nil
+ truncate-lines                       t
  truncate-partial-width-windows       nil
  visible-bell                         nil
  ediff-window-setup-function          'ediff-setup-windows-plain
@@ -285,6 +285,20 @@
                                             (projectile-dired)
                                             (ma/update-neotree-root)
                                             (projectile-commander)))
+
+
+  ;;
+  (defun projectile--file-name-sans-extensions (file-name)
+    "Return FILE-NAME sans any extensions."
+    (file-name-base file-name))
+
+  (defun projectile--file-name-extensions (file-name)
+    "Return FILE-NAME's extensions."
+    (file-name-extension file-name))
+
+  (add-to-list 'projectile-other-file-alist '("ts"   . ("html" "css")))
+  (add-to-list 'projectile-other-file-alist '("html" . ("ts" "css")))
+  (add-to-list 'projectile-other-file-alist '("css"  . ("html" "ts")))
 
 
   (projectile-global-mode))
@@ -635,7 +649,6 @@
   (openwith-mode 1))
 
 (use-package recentf
-  :defer 4
   :commands (recentf-mode
              recentf-add-file
              recentf-apply-filename-handlers)
@@ -979,3 +992,8 @@
 
 (use-package restart-emacs
   :ensure t)
+
+(use-package flymd
+  :ensure t
+  :init
+  (flymd-output-directory "/tmp"))
