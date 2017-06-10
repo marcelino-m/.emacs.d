@@ -996,4 +996,5 @@
 (use-package flymd
   :ensure t
   :init
-  (flymd-output-directory "/tmp"))
+  (setq flymd-output-directory "/tmp"))
+
