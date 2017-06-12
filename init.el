@@ -948,9 +948,7 @@
   :mode "\\.yml\\'")
 
 (use-package xclip
-  :disabled
   :ensure t
-  :disabled
   :init
   (xclip-mode 1))
 
