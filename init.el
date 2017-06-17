@@ -996,3 +996,19 @@
   :init
   (setq flymd-output-directory "/tmp"))
 
+(use-package go-mode
+  :ensure t
+  :init
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'gofmt-before-save)
+              (setq tab-width 4)))
+  )
+
+(use-package company-go
+  :ensure t
+  :init
+  (add-hook 'go-mode-hook (lambda ()
+                            (set (make-local-variable 'company-backends) '(company-go))
+                            (company-mode)))
+  )
