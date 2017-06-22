@@ -276,6 +276,7 @@
 
   (use-package ggtags
     :ensure t)
+
   (global-set-key [f7] 'ma/make-frame-command)
   (define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
   (define-key projectile-mode-map (kbd "C-c p o") 'helm-occur)
@@ -296,9 +297,9 @@
     "Return FILE-NAME's extensions."
     (file-name-extension file-name))
 
-  (add-to-list 'projectile-other-file-alist '("ts"   . ("html" "css")))
-  (add-to-list 'projectile-other-file-alist '("html" . ("ts" "css")))
-  (add-to-list 'projectile-other-file-alist '("css"  . ("html" "ts")))
+  (add-to-list 'projectile-other-file-alist '("ts"   . ("css" "html")))
+  (add-to-list 'projectile-other-file-alist '("html" . ("css" "ts")))
+  (add-to-list 'projectile-other-file-alist '("css"  . ("ts" "html")))
 
 
   (projectile-global-mode))
@@ -948,6 +949,7 @@
   :mode "\\.yml\\'")
 
 (use-package xclip
+  :disabled
   :ensure t
   :init
   (xclip-mode 1))
@@ -996,6 +998,7 @@
   :init
   (setq flymd-output-directory "/tmp"))
 
+
 (use-package go-mode
   :ensure t
   :init
@@ -1012,3 +1015,10 @@
                             (set (make-local-variable 'company-backends) '(company-go))
                             (company-mode)))
   )
+
+(use-package guru-mode
+  :ensure t
+  :init
+  (guru-global-mode +1))
+
+
