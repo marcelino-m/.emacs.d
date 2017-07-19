@@ -353,7 +353,7 @@
                         :foreground "DarkOliveGreen4")
 
     (ido-vertical-mode))
-  (use-package ido-ubiquitous
+  (use-package ido-completing-read+
     :ensure t
     :config
     (ido-ubiquitous-mode 1)))
