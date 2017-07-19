@@ -1020,5 +1020,3 @@
   :ensure t
   :init
   (guru-global-mode +1))
-
-
