@@ -251,7 +251,8 @@
   :ensure t
   :diminish undo-tree-mode
   :init
-  (global-undo-tree-mode))
+  (global-undo-tree-mode)
+  (global-set-key (kbd "C-\\") 'undo-tree-redo))
 
 (use-package markdown-mode
   :ensure t
