@@ -103,7 +103,7 @@
   :ensure t
   :defer  2
   :config
-  (dolist (var '("TIMLIB_SRC_ROOT" "LIB_V4D_INCLUDE" "LIB_V4D_TO_LINK" "NVM_BIN"))
+  (dolist (var '("GOPATH"  "NVM_BIN"))
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize))
 
@@ -716,8 +716,8 @@
 (use-package ace-jump-mode
   :ensure t
   :init
-  (global-set-key [remap goto-char] 'ace-jump-char-mode)
-  (global-set-key [remap goto-line] 'ace-jump-word-mode))
+  (global-set-key (kbd "C-c g w")       'ace-jump-word-mode)
+  (global-set-key (kbd "C-c g c")       'ace-jump-char-mode))
 
 (use-package misc-defuns
   :load-path "defuns/"
@@ -725,10 +725,8 @@
   (global-set-key (kbd "C-o")           'ma/open-line-and-indent)
   (global-set-key (kbd "<C-return>")    'ma/open-line-below)
   (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
-  (global-set-key (kbd "M-g l")         'ma/goto-line-with-feedback)
-  (global-set-key (kbd "<M-backspace>") 'ma/kill-line)
-  (global-set-key [f7] 'ma/make-frame-command)
-  (global-set-key [f6] 'ma/delete-frame))
+  (global-set-key (kbd "C-c g l")       'ma/goto-line-with-feedback)
+  (global-set-key (kbd "<M-backspace>") 'ma/kill-line))
 
 
 (use-package sql-indent
