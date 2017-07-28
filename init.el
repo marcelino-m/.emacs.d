@@ -1015,6 +1015,12 @@
                             (company-mode)))
   )
 
+(use-package go-eldoc
+  :ensure t
+  :init
+  (add-hook 'go-mode-hook 'go-eldoc-setup))
+
+
 (use-package guru-mode
   :ensure t
   :init
