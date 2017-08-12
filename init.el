@@ -10,9 +10,9 @@
 
 (add-to-list 'default-frame-alist '(height . 45))
 (add-to-list 'default-frame-alist '(width . 190))
-(add-to-list 'default-frame-alist '(cursor-color . "firebrick1"))
+(add-to-list 'default-frame-alist '(cursor-color . "Olivedrab3"))
+;; (add-to-list 'default-frame-alist '(cursor-type . bar))
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
-(add-to-list 'default-frame-alist '(cursor-type . bar))
 
 (tool-bar-mode     -1)
 (menu-bar-mode     -1)
