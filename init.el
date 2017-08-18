@@ -1006,7 +1006,13 @@
               (add-hook 'before-save-hook 'gofmt-before-save)
               (setq tab-width 4)))
   :config
-  (define-key go-mode-map (kbd "C-c C-r") 'go-remove-unused-imports)
+  (define-key go-mode-map (kbd "C-c C-e") 'go-remove-unused-imports)
+  )
+
+(use-package go-rename
+  :ensure t
+  :config
+  (define-key go-mode-map (kbd "C-c C-r") 'go-rename)
   )
 
 (use-package company-go
