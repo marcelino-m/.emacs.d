@@ -1012,6 +1012,13 @@
               (setq tab-width 4)))
   :config
   (define-key go-mode-map (kbd "C-c C-e") 'go-remove-unused-imports)
+  (define-key go-mode-map (kbd "C-<") (lambda ()
+                                        (interactive)
+                                        (insert "<-")))
+
+  (define-key go-mode-map (kbd "C-:") (lambda ()
+                                        (interactive)
+                                        (insert ":=")))
   )
 
 (use-package go-rename
