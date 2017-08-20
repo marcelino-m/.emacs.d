@@ -709,9 +709,14 @@
 
 (use-package beacon
   :ensure t
-  :disabled t
-  :config
-  (beacon-mode 1))
+  ;; :disabled t
+  :init
+  (setq
+   beacon-color "olive drab"
+   beacon-dont-blink-commands '(next-line previous-line forward-line mwheel-scroll scroll-down-1 scroll-up-1))
+
+  (beacon-mode 1)
+  )
 
 (use-package ace-jump-mode
   :ensure t
