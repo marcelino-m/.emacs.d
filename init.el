@@ -158,7 +158,7 @@
 
 (use-package expand-region
   :ensure t
-  :bind ("C-c =" . er/expand-region))
+  :bind ("C-=" . er/expand-region))
 
 
 (use-package drag-stuff
@@ -230,7 +230,7 @@
    electric-pair-inhibit-predicate (lambda (char) (window-minibuffer-p))
    )
 
-
+  (define-key prog-mode-map (kbd "C-c s") 'ace-jump-char-mode)
   (add-hook 'prog-mode-hook
             '(lambda ()
                (electric-pair-mode)
