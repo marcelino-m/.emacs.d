@@ -950,7 +950,10 @@
 
 (use-package yaml-mode
   :ensure t
-  :mode "\\.yml\\'")
+  :mode "\\.yml\\'"
+  :init
+  (add-hook 'yaml-mode-hook (lambda ()
+                              (ethan-wspace-mode 1))))
 
 (use-package xclip
   :disabled
