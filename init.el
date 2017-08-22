@@ -730,7 +730,7 @@
   (global-set-key (kbd "C-o")           'ma/open-line-and-indent)
   (global-set-key (kbd "<C-return>")    'ma/open-line-below)
   (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
-  (global-set-key (kbd "C-c g l")       'ma/goto-line-with-feedback)
+  (global-set-key (kbd "C-c l")         'ma/goto-line-with-feedback)
   (global-set-key (kbd "<M-backspace>") 'ma/kill-line))
 
 
@@ -1048,3 +1048,10 @@
   :ensure t
   :init
   (guru-global-mode +1))
+
+(use-package linum-relative
+  :ensure t
+  :init
+  (linum-relative-mode t)
+  (linum-on)
+  (setq linum-relative-current-symbol "->"))

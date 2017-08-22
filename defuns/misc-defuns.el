@@ -22,13 +22,16 @@
 
 
 (defun ma/goto-line-with-feedback ()
-  "Show line numbers temporarily, while prompting for the line number input"
+  "Show line numbers temporarily, while prompting for the line number input, this func
+require linum-relative"
   (interactive)
-  (unwind-protect
-      (progn
-        (linum-mode 1)
-        (call-interactively 'goto-line))
-    (linum-mode -1)))
+  (let ((is-linum-on (bound-and-true-p linum-mode)))
+    (unwind-protect
+        (progn
+          (linum-mode 1)
+          (call-interactively (forward-line (read-number "Goto line: " 0))))
+      (unless is-linum-on
+        (linum-mode -1)))))
 
 (defun ma/open-line-and-indent ()
   (interactive)
