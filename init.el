@@ -721,8 +721,8 @@
 (use-package ace-jump-mode
   :ensure t
   :init
-  (global-set-key (kbd "C-c g w")       'ace-jump-word-mode)
-  (global-set-key (kbd "C-c g c")       'ace-jump-char-mode))
+  (global-set-key (kbd "H-s")   'ace-jump-char-mode)
+  (global-set-key (kbd "H-w")   'ace-jump-word-mode)
 
 (use-package misc-defuns
   :load-path "defuns/"
@@ -730,7 +730,7 @@
   (global-set-key (kbd "C-o")           'ma/open-line-and-indent)
   (global-set-key (kbd "<C-return>")    'ma/open-line-below)
   (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
-  (global-set-key (kbd "C-c l")         'ma/goto-line-with-feedback)
+  (global-set-key (kbd "H-l")           'ma/goto-line-with-feedback)
   (global-set-key (kbd "<M-backspace>") 'ma/kill-line))
 
 
