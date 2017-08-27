@@ -163,10 +163,9 @@
 
 (use-package drag-stuff
   :ensure t
-  :bind (([(meta  up)] . drag-stuff-up)
-         ([(meta  down)] . drag-stuff-down)
-         ([(meta  left)] . drag-stuff-left)
-         ([(meta  right)] . drag-stuff-right)))
+  :bind (([(hyper  up)] . drag-stuff-up)
+         ([(hyper  down)] . drag-stuff-down)))
+
 
 
 (use-package powerline
@@ -441,14 +440,10 @@
 (use-package windmove
   :ensure t
   :defer  5
-  :bind (("s-<right>" . windmove-right)
-         ("s-<left>"  . windmove-left)
-         ("s-<up>"    . windmove-up)
-         ("s-<down>"  . windmove-down)
-         ("s-s"       . windmove-right)
+  :bind (("s-d"       . windmove-right)
          ("s-a"       . windmove-left)
          ("s-w"       . windmove-up)
-         ("s-z"       . windmove-down)))
+         ("s-s"       . windmove-down)))
 
 
 (use-package emmet-mode
@@ -720,9 +715,8 @@
 
 (use-package ace-jump-mode
   :ensure t
-  :init
-  (global-set-key (kbd "H-s")   'ace-jump-char-mode)
-  (global-set-key (kbd "H-w")   'ace-jump-word-mode)
+  :bind (("H-s" . ace-jump-char-mode)
+         ("H-w" . ace-jump-word-mode)))
 
 (use-package misc-defuns
   :load-path "defuns/"
@@ -849,7 +843,7 @@
 
 (use-package ace-window
   :ensure t
-  :bind (("C-c j" . ace-window))
+  :bind (("H-j" . ace-window))
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   )
