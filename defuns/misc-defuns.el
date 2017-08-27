@@ -29,7 +29,9 @@ require linum-relative"
     (unwind-protect
         (progn
           (linum-mode 1)
-          (call-interactively (forward-line (read-number "Goto line: " 0))))
+          (call-interactively (if (eq linum-format 'linum-relative)
+                                  (forward-line (read-number "Goto line: " 0))
+                                'goto-line)))
       (unless is-linum-on
         (linum-mode -1)))))
 
