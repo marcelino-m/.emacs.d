@@ -182,3 +182,8 @@ Version 2016-08-11"
      (back-to-indentation)
      (point)))
   )
+
+
+(defun ma/show-current-buffer-other-windows ()
+  (interactive)
+  (switch-to-buffer-other-window (current-buffer)))

@@ -725,7 +725,8 @@
   (global-set-key (kbd "<C-return>")    'ma/open-line-below)
   (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
   (global-set-key (kbd "H-l")           'ma/goto-line-with-feedback)
-  (global-set-key (kbd "<M-backspace>") 'ma/kill-line))
+  (global-set-key (kbd "<M-backspace>") 'ma/kill-line)
+  (global-set-key (kbd "C-c o")         'ma/show-current-buffer-other-windows))
 
 
 (use-package sql-indent
