@@ -1050,3 +1050,13 @@
   (linum-relative-mode t)
   (linum-on)
   (setq linum-relative-current-symbol "->"))
+
+(use-package slime
+  :ensure t
+  :init
+  (setq inferior-lisp-program "/usr/bin/sbcl")
+  (slime-setup '(slime-fancy slime-company))
+
+  :config
+  (use-package slime-company  :ensure t)
+  (slime))
