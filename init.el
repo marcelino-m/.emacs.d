@@ -1060,3 +1060,23 @@
   :config
   (use-package slime-company  :ensure t)
   (slime))
+
+
+(use-package beginend
+  :ensure t
+  :init
+  (beginend-global-mode)
+  )
+
+(use-package highlight-symbol
+  :ensure t
+  :bind (("H-h" . highlight-symbol)
+         ("H-<mouse-1>" . ma/highlight-symbol-at-point-click))
+  :init
+  (defun ma/highlight-symbol-at-point-click (event &optional promote-to-region)
+    "Highlight symbol at point use mouse click"
+    (interactive "e\np")
+    (mouse-set-point event promote-to-region)
+    (highlight-symbol)
+    )
+  )
