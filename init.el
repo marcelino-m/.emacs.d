@@ -1009,6 +1009,37 @@
               (add-hook 'before-save-hook 'gofmt-before-save)
               (setq tab-width 4)))
   :config
+  (use-package go-guru :ensure t)
+  (use-package go-rename :ensure t
+    :config
+    (define-key go-mode-map (kbd "C-c C-r") 'go-rename))
+
+  (use-package company-go :ensure t
+    :init
+    (add-hook 'go-mode-hook (lambda ()
+                              (set (make-local-variable 'company-backends) '(company-go))
+                              (company-mode))))
+
+  (use-package go-eldoc  :ensure t
+    :init
+    (add-hook 'go-mode-hook 'go-eldoc-setup))
+
+
+  (defun godef-jump (point &optional other-window)
+    "Redefine with prefix argument"
+    (interactive "d\nP")
+    (condition-case nil
+        (let ((file (car (godef--call point))))
+          (if (not (godef--successful-p file))
+              (message "%s" (godef--error file))
+            (push-mark)
+            (if (eval-when-compile (fboundp 'xref-push-marker-stack))
+                ;; TODO: Integrate this facility with XRef.
+                (xref-push-marker-stack)
+              (ring-insert find-tag-marker-ring (point-marker)))
+            (godef--find-file-line-column file other-window)))
+      (file-error (message "Could not run godef binary"))))
+
   (define-key go-mode-map (kbd "C-c C-e") 'go-remove-unused-imports)
   (define-key go-mode-map (kbd "C-<") (lambda ()
                                         (interactive)
@@ -1016,27 +1047,8 @@
 
   (define-key go-mode-map (kbd "C-:") (lambda ()
                                         (interactive)
-                                        (insert ":=")))
-  )
+                                        (insert ":="))))
 
-(use-package go-rename
-  :ensure t
-  :config
-  (define-key go-mode-map (kbd "C-c C-r") 'go-rename)
-  )
-
-(use-package company-go
-  :ensure t
-  :init
-  (add-hook 'go-mode-hook (lambda ()
-                            (set (make-local-variable 'company-backends) '(company-go))
-                            (company-mode)))
-  )
-
-(use-package go-eldoc
-  :ensure t
-  :init
-  (add-hook 'go-mode-hook 'go-eldoc-setup))
 
 
 (use-package guru-mode
