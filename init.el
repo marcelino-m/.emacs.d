@@ -42,8 +42,7 @@
  imenu-auto-rescan                    t
  indent-tabs-mode                     nil
  scroll-preserve-screen-position      t
- scroll-step                          1
- )
+ scroll-step                          1)
 
 
 (add-to-list 'default-frame-alist '(height . 47))
@@ -120,7 +119,6 @@
   :ensure t)
 
 (use-package zenburn-theme
-  ;; :disabled t
   :ensure t)
 
 (use-package solarized-theme
@@ -149,8 +147,7 @@
    solarized-height-plus-4   1
 
    x-underline-at-descent-line t)
-  (load-theme 'solarized-light)
-  )
+  (load-theme 'solarized-light))
 
 (use-package csv-mode
   :ensure t
@@ -171,8 +168,7 @@
 (use-package powerline
   :ensure t
   :config
-  (powerline-default-theme)
-  )
+  (powerline-default-theme))
 
 
 (use-package swiper
@@ -183,7 +179,7 @@
    ivy-use-virtual-buffers t))
 
 (use-package smooth-scroll
-  :ensure   t
+  :ensure t
   :diminish smooth-scroll-mode
   :init
   :bind (("M-p"   . scroll-down-1)
@@ -221,7 +217,6 @@
   (yas-global-mode 1))
 
 (use-package prog-mode
-  :defer t
   :init
   (setq
    tab-width 4
@@ -233,8 +228,7 @@
   (add-hook 'prog-mode-hook
             '(lambda ()
                (electric-pair-mode)
-               (ethan-wspace-mode 1)
-               )))
+               (ethan-wspace-mode 1))))
 
 
 
@@ -301,9 +295,7 @@
   (add-to-list 'projectile-other-file-alist '("html" . ("css" "ts")))
   (add-to-list 'projectile-other-file-alist '("css"  . ("ts" "html")))
 
-
   (projectile-global-mode))
-
 
 
 (use-package smex
@@ -311,7 +303,6 @@
   :config
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   (global-set-key [remap execute-extended-command] 'smex))
-
 
 
 (use-package ido
@@ -334,11 +325,12 @@
                                                     (:else (call-interactively 'self-insert-command)))))
   :config
   (ido-mode t)
+
   (use-package flx-ido
     :ensure t
     :config
-    (flx-ido-mode 1)
-    )
+    (flx-ido-mode 1))
+
   (use-package ido-vertical-mode
     :ensure t
     :init
@@ -351,17 +343,16 @@
                         :foreground "DarkOliveGreen1" :weight 'bold)
     (set-face-attribute 'ido-vertical-match-face nil
                         :foreground "DarkOliveGreen4")
-
     (ido-vertical-mode))
+
   (use-package ido-completing-read+
     :ensure t
     :config
     (ido-ubiquitous-mode 1)))
 
-(use-package imenu-anywhere
-  :ensure t
-  :bind (("C-." . imenu-anywhere)))
 
+(use-package imenu-anywhere :ensure t
+  :bind (("C-." . imenu-anywhere)))
 
 
 (use-package cmake-mode
@@ -378,8 +369,7 @@
   (use-package flyspell-popup
     :ensure t
     :init
-    :bind (("C-c c" . flyspell-popup-correct))
-    ))
+    :bind (("C-c c" . flyspell-popup-correct))))
 
 (use-package magit
   :ensure t
@@ -415,31 +405,26 @@
                `(,(rx bos "*helm" (* not-newline) "*" eos)
                  (display-buffer-in-side-window)
                  (inhibit-same-window . t)
-                 (window-height . 0.4))))
+                 (window-height . 0.4)))
 
+  (use-package helm-gtags
+    :ensure t
+    :config
+    (setq  helm-gtags-pulse-at-cursor nil)
+    (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+    (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+    (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack))
 
-(use-package helm-gtags
-  :ensure t
-  :defer  t
-  :config
-  (setq  helm-gtags-pulse-at-cursor nil)
-  (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
-  (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
-  (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
-  (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-  (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-  )
-
-(use-package helm-ag
-  :ensure t
-  :defer t
-  :config
-  (setq helm-ag-fuzzy-match     t
-        helm-ag-insert-at-point 'symbol))
+  (use-package helm-ag
+    :ensure t
+    :config
+    (setq helm-ag-fuzzy-match     t
+          helm-ag-insert-at-point 'symbol)))
 
 (use-package windmove
   :ensure t
-  :defer  5
   :bind (("s-d"       . windmove-right)
          ("s-a"       . windmove-left)
          ("s-w"       . windmove-up)
@@ -454,15 +439,10 @@
   :ensure t
   :defer  t
   :init
-  (setq web-mode-engines-alist
-        '(
-          ("angular"    . "\\.html\\'")
-          )
-
+  (setq web-mode-engines-alist '(("angular"    . "\\.html\\'"))
         web-mode-enable-current-element-highlight     t
         web-mode-enable-element-content-fontification t
-        web-mode-enable-element-tag-fontification     t
-        )
+        web-mode-enable-element-tag-fontification     t)
 
   (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -489,26 +469,25 @@
   :bind (:map js2-mode-map
               ("C-'" . toggle-quotes)
               ("C->" . ma/insert-arrow))
-  :config
-  (add-hook 'js2-mode-hook 'subword-mode))
-
-(use-package tern
-  :ensure t
-  :defer  t
-  :load-path (lambda () (expand-file-name
-                         (concat (getenv "NVM_PATH")
-                                 "/../node_modules/tern/emacs/")))
   :init
-  (defun tern-setup ()
-    (interactive)
-    (when (string-match "\\.js\\'" buffer-file-name)
-      (tern-mode 1)))
+  (add-hook 'js2-mode-hook 'subword-mode)
+  (add-hook 'js2-mode-hook 'tern-setup)
 
-  (add-hook 'js2-mode-hook 'tern-setup))
+  :config
+  (use-package toggle-quotes :ensure t)
+  (use-package tern :ensure t
+    :defer  t
+    :load-path (lambda () (expand-file-name
+                           (concat (getenv "NVM_PATH")
+                                   "/../node_modules/tern/emacs/")))
+    :init
+    (defun tern-setup ()
+      (interactive)
+      (when (string-match "\\.js\\'" buffer-file-name)
+        (tern-mode 1)))))
 
 
-(use-package toggle-quotes
-  :ensure t)
+
 
 (use-package company
   :ensure t
@@ -549,13 +528,13 @@
     :ensure t)
 
   (use-package company-shell
-    :disabled
     :ensure t
+    :disabled
     :init
     (add-to-list 'company-backends 'company-shell))
 
   (use-package ycmd
-    :ensure   t
+    :ensure t
     :defer    f
     :diminish ycmd-mode
     :init
@@ -574,14 +553,9 @@
     (eval-after-load "company-auctex"
       ;; override this function, bad alignament in company
       '(defun company-auctex-symbol-annotation (candidate)
-        nil))
-    )
+        nil)))
 
-  (add-to-list 'company-backend 'company-ispell)
-  )
-
-
-
+  (add-to-list 'company-backend 'company-ispell))
 
 (use-package winner
   :defer 5
@@ -603,8 +577,7 @@
           "*helm imenu*"
           "*helm etags*"
           "*helm-mt*"
-          "\\*magit*"
-          ))
+          "\\*magit*"))
   (winner-mode 1))
 
 (use-package transpose-frame
@@ -641,8 +614,7 @@
          (list (openwith-make-extension-regexp
                 '("odg"))
                "lodraw"
-               '(file))
-         ))
+               '(file))))
   (openwith-mode 1))
 
 (use-package recentf
@@ -664,8 +636,6 @@
   :config
   (recentf-mode 1))
 
-
-
 (use-package cc-mode
   :defer t
   :init
@@ -684,8 +654,7 @@
                              (setq compilation-scroll-output 'first-error)))
   :config
   (define-key c++-mode-map (kbd "<f5>") 'recompile)
-  (define-key c++-mode-map (kbd "C->")  'ma/insert-arrow)
-  )
+  (define-key c++-mode-map (kbd "C->")  'ma/insert-arrow))
 
 
 
@@ -710,8 +679,7 @@
    beacon-color "olive drab"
    beacon-dont-blink-commands '(next-line previous-line forward-line mwheel-scroll scroll-down-1 scroll-up-1))
 
-  (beacon-mode 1)
-  )
+  (beacon-mode 1))
 
 (use-package ace-jump-mode
   :ensure t
@@ -737,7 +705,6 @@
     '(load-library "sql-indent")))
 
 (use-package dired
-  :defer t
   :init
   (setq dired-dwim-target t))
 
@@ -746,9 +713,7 @@
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
 
-
 (use-package tex
-  :defer t
   :ensure auctex
   :mode ("\\.tex\\'" . TeX-latex-mode)
   :commands (latex-mode LaTeX-mode plain-tex-mode)
@@ -800,9 +765,7 @@
                       (ethan-wspace-mode 1)
                       (local-set-key (kbd "<f5>") 'TeX-view)
                       (local-set-key (kbd "<f6>") 'ma/run-latex)
-                      (local-set-key (kbd "<f7>") 'ma/run-biber)
-                      ))
-  )
+                      (local-set-key (kbd "<f7>") 'ma/run-biber))))
 
 (use-package gist
   :ensure t
@@ -812,21 +775,18 @@
    gist-ask-for-filename t))
 
 (use-package simple-httpd
-  :ensure t
-  )
+  :ensure t)
 
 
 (use-package anaconda-mode
   :ensure t
   :init
-
   (use-package pyenv-mode
     :ensure
     :defer)
 
   (use-package company-anaconda
-    :ensure t
-    )
+    :ensure t)
 
   (add-hook 'python-mode-hook 'company-mode)
   (add-hook 'python-mode-hook 'anaconda-mode)
@@ -834,9 +794,7 @@
   (add-hook 'python-mode-hook 'pyenv-mode)
 
   (eval-after-load "company"
-    '(add-to-list 'company-backends 'company-anaconda))
-
-  )
+    '(add-to-list 'company-backends 'company-anaconda)))
 
 (use-package qt-pro-mode
   :load-path "site-lisp/"
@@ -846,8 +804,7 @@
   :ensure t
   :bind (("H-j" . ace-window))
   :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-  )
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 (use-package tide
   :ensure t
@@ -856,7 +813,7 @@
   (defun setup-tide-mode ()
     (interactive)
     (when (string-match "\\.ts\\'" buffer-file-name)
-      (setq tide-tsserver-executable "node_modules/typescript/bin/tsserver")
+      ;;(setq tide-tsserver-executable "node_modules/typescript/bin/tsserver")
       (tide-setup)
       (flycheck-mode +1)
       (setq flycheck-check-syntax-automatically '(save mode-enabled)
@@ -868,24 +825,21 @@
 
   ;; aligns annotation to the right hand side
   (setq company-tooltip-align-annotations t)
-  (add-hook 'js2-mode-hook #'setup-tide-mode)
-  )
+  (add-hook 'js2-mode-hook #'setup-tide-mode))
 
 (use-package mocha-snippets
   :ensure t)
 
 (use-package npm-mode
   :ensure t
-  :defer t
-  )
+  :defer t)
 
 (use-package deft
   :ensure
   :bind ([f9] . deft)
   :init
   (setq deft-directory "~/Dropbox/notes")
-  (setq deft-extensions '("org" "md" "txt"))
-  )
+  (setq deft-extensions '("org" "md" "txt")))
 
 (use-package rainbow-mode
   :ensure t)
@@ -895,14 +849,12 @@
   :bind ("C-c t" . google-translate-smooth-translate)
   :init
   (setq
-   google-translate-translation-directions-alist '(("en" . "es") ("es" . "en"))
-   ))
+   google-translate-translation-directions-alist '(("en" . "es") ("es" . "en"))))
 
 (use-package paradox
   :ensure t
   :config
-  (setq paradox-display-download-count t)
-  )
+  (setq paradox-display-download-count t))
 
 
 (use-package geiser
@@ -913,8 +865,7 @@
   :ensure t
   :bind ("C-c d" . zeal-at-point)
   :config
-  (add-to-list 'zeal-at-point-mode-alist '(python-mode . ("python")))
-  )
+  (add-to-list 'zeal-at-point-mode-alist '(python-mode . ("python"))))
 
 (use-package dockerfile-mode
   :ensure t
@@ -927,8 +878,7 @@
   :ensure t
   :init
   (global-set-key [f8] 'ma/neotree-toggle)
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  )
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package  all-the-icons
   :load-path "~/.emacs.d/vendors/all-the-icons/")
@@ -940,8 +890,7 @@
   (volatile-highlights-mode t))
 
 (use-package multiple-cursors
-  :ensure t
-  )
+  :ensure t)
 
 (use-package yaml-mode
   :ensure t
@@ -951,8 +900,8 @@
                               (ethan-wspace-mode 1))))
 
 (use-package xclip
-  :disabled
   :ensure t
+  :disabled
   :init
   (xclip-mode 1))
 
@@ -963,8 +912,7 @@
 (use-package cider
   :ensure t
   :config
-  (add-hook 'cider-mode-hook #'eldoc-mode)
-  )
+  (add-hook 'cider-mode-hook #'eldoc-mode))
 
 (use-package iss-mode
   :mode "\\.iss\\'"
@@ -984,13 +932,11 @@
   (setq scss-compile-at-save nil))
 
 (use-package nginx-mode
-  :ensure t
-  )
+  :ensure t)
 
 (use-package sed-mode
   :load-path "site-lisp/"
-  :mode "\\.sed\\'"
-  )
+  :mode "\\.sed\\'")
 
 (use-package restart-emacs
   :ensure t)
@@ -1077,8 +1023,7 @@
 (use-package beginend
   :ensure t
   :init
-  (beginend-global-mode)
-  )
+  (beginend-global-mode))
 
 (use-package highlight-symbol
   :ensure t
