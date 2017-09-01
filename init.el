@@ -634,6 +634,7 @@
   :init
   (add-hook 'dired-mode-hook 'recentf-add-dired-directory)
   :config
+  (add-to-list 'recentf-exclude "~/.emacs.d/elpa/")
   (recentf-mode 1))
 
 (use-package cc-mode
