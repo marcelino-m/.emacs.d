@@ -1027,13 +1027,18 @@
 
 (use-package highlight-symbol
   :ensure t
-  :bind (("H-h" . highlight-symbol)
+  :bind (("H-h" . ma/highlight-symbol)
          ("H-<mouse-1>" . ma/highlight-symbol-at-point-click))
   :init
-  (defun ma/highlight-symbol-at-point-click (event &optional promote-to-region)
+  (defun ma/highlight-symbol-at-point-click (event)
     "Highlight symbol at point use mouse click"
-    (interactive "e\np")
-    (mouse-set-point event promote-to-region)
-    (highlight-symbol)
-    )
-  )
+    (interactive "e")
+    (mouse-set-point event nil)
+    (unless (ignore-errors (highlight-symbol))
+      (highlight-symbol-remove-all)))
+
+  (defun ma/highlight-symbol (remove)
+    (interactive "P")
+    (if remove
+        (highlight-symbol-remove-all)
+      (highlight-symbol))))
