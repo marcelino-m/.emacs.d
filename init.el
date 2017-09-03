@@ -269,9 +269,9 @@
 (use-package projectile
   :ensure t
   :load-path "./defuns/misc-defuns.el"
-  :bind-keymap ("C-c p" . projectile-command-map)
+  :bind-keymap ("C-," . projectile-command-map)
   :bind (:map projectile-mode-map
-              ("C-c p s a" . helm-projectile-ag))
+              ("C-, s a" . helm-projectile-ag))
   :config
   (use-package helm-projectile
     :ensure t)
@@ -1032,6 +1032,7 @@
 (use-package beginend
   :ensure t
   :init
+  :diminish
   (beginend-global-mode))
 
 (use-package highlight-symbol
