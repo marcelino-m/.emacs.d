@@ -106,6 +106,9 @@
       (other-window 1))))
 
 ;; Setup packages
+(use-package delight
+  :ensure t)
+
 (use-package exec-path-from-shell
   :ensure t
   :defer  2
@@ -271,7 +274,10 @@
   :load-path "./defuns/misc-defuns.el"
   :bind-keymap ("C-," . projectile-command-map)
   :bind (:map projectile-mode-map
-              ("C-, s a" . helm-projectile-ag))
+              ("C-, s a" . helm-projectile-ag)
+              ("C-, o"   . helm-occur))
+  :init
+  (setq projectile-keymap-prefix (kbd "C-,"))
   :config
   (use-package helm-projectile
     :ensure t)
@@ -279,9 +285,6 @@
   (use-package ggtags
     :ensure t)
 
-  (global-set-key [f7] 'ma/make-frame-command)
-  (define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
-  (define-key projectile-mode-map (kbd "C-c p o") 'helm-occur)
   (setq projectile-enable-caching t)
   (setq projectile-mode-line '(:eval (format "❪℘ %s❫" (projectile-project-name))))
   (setq projectile-switch-project-action '(lambda ()
@@ -650,7 +653,7 @@
   :init
   (add-hook 'dired-mode-hook 'recentf-add-dired-directory)
   :config
-  (add-to-list 'recentf-exclude "~/.emacs.d/elpa/")
+  (add-to-list 'recentf-exclude "~/.emacs.d/elpa/.*")
   (recentf-mode 1))
 
 (use-package cc-mode
@@ -690,6 +693,7 @@
 
 (use-package beacon
   :ensure t
+  :delight
   ;; :disabled t
   :init
   (setq
@@ -704,14 +708,14 @@
          ("H-w" . ace-jump-word-mode)))
 
 (use-package misc-defuns
-  :load-path "defuns/"
-  :config
-  (global-set-key (kbd "C-o")           'ma/open-line-and-indent)
-  (global-set-key (kbd "<C-return>")    'ma/open-line-below)
-  (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
-  (global-set-key (kbd "H-l")           'ma/goto-line-with-feedback)
-  (global-set-key (kbd "<M-backspace>") 'ma/kill-line)
-  (global-set-key (kbd "C-c o")         'ma/show-current-buffer-other-windows))
+  :load-path "./defuns/"
+  :bind (("C-c o"         . ma/show-current-buffer-other-windows)
+         ("C-o"           . ma/open-line-and-indent)
+         ("<C-return>"    . ma/open-line-below)
+         ("<C-S-return>"  . ma/open-line-above)
+         ("H-l"           . ma/goto-line-with-feedback)
+         ("<M-backspace>" . ma/kill-line)
+         ([f7]            . ma/make-frame-command)))
 
 
 (use-package sql-indent
@@ -903,6 +907,7 @@
 
 (use-package volatile-highlights
   :ensure t
+  :delight
   :config
   (volatile-highlights-mode t))
 
@@ -1016,6 +1021,7 @@
 
 (use-package guru-mode
   :ensure t
+  :delight
   :init
   (guru-global-mode +1))
 
