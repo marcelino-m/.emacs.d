@@ -1023,10 +1023,8 @@
   :init
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (slime-setup '(slime-fancy slime-company))
-
   :config
-  (use-package slime-company  :ensure t)
-  (slime))
+  (use-package slime-company  :ensure t))
 
 
 (use-package beginend
