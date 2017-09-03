@@ -6,8 +6,16 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; global options
+;; notify when emacs is ready
+;; I run emacs in server mode set a systemd units
+(require 'notifications)
+(add-hook 'after-init-hook #'(lambda ()
+                               (notifications-notify
+                                :title "Emacs"
+                                :body "I am ready to hack!"
+                                :urgency 'low)))
 
+;; global options
 (add-to-list 'default-frame-alist '(height . 45))
 (add-to-list 'default-frame-alist '(width . 190))
 (add-to-list 'default-frame-alist '(cursor-color . "Olivedrab3"))
