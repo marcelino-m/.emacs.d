@@ -1028,8 +1028,6 @@
 (use-package linum-relative
   :ensure t
   :init
-  (linum-relative-mode t)
-  (linum-on)
   (setq linum-relative-current-symbol "->"))
 
 (use-package slime

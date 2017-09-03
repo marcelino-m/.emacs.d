@@ -25,15 +25,19 @@
   "Show line numbers temporarily, while prompting for the line number input, this func
 require linum-relative"
   (interactive)
-  (let ((is-linum-on (bound-and-true-p linum-mode)))
+  (let ((is-linum-on (bound-and-true-p linum-mode))
+        (linum-fn nil))
+    (if (boundp 'linum-relative-mode)
+        (setq linum-fn 'linum-relative-mode)
+      (setq linum-fn 'linum-mode))
     (unwind-protect
         (progn
-          (linum-mode 1)
+          (funcall linum-fn 1)
           (call-interactively (if (eq linum-format 'linum-relative)
                                   (forward-line (read-number "Goto line: " 0))
                                 'goto-line)))
       (unless is-linum-on
-        (linum-mode -1)))))
+        (funcall linum-fn -1)))))
 
 (defun ma/open-line-and-indent ()
   (interactive)
