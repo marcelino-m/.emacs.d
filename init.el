@@ -495,8 +495,6 @@
         (tern-mode 1)))))
 
 
-
-
 (use-package company
   :ensure t
   :defer  t
@@ -516,8 +514,18 @@
    company-idle-delay            0
    company-tooltip-idle-delay    0
    company-minimum-prefix-length 1
-   company-show-numbers          t
-   )
+   company-show-numbers          t)
+
+  (defun  ma/reorder-argument-company-fill-propertize (orig-fun &rest args)
+    "This advice is for show number of company to left side"
+    (if (string= " " (car (last args)))
+        (apply orig-fun args)
+      (apply orig-fun (append (butlast args 2) (reverse (last args 2))))))
+
+  (advice-add
+   #'company-fill-propertize
+   :around
+   #'ma/reorder-argument-company-fill-propertize)
 
   (use-package company-flx
     :ensure t
