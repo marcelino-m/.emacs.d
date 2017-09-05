@@ -50,7 +50,8 @@
  imenu-auto-rescan                    t
  indent-tabs-mode                     nil
  scroll-preserve-screen-position      t
- scroll-step                          1)
+ scroll-step                          1
+ auto-hscroll-mode                    'current-line)
 
 
 (add-to-list 'default-frame-alist '(height . 47))
