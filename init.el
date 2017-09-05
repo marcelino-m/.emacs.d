@@ -1041,8 +1041,8 @@
 
 (use-package beginend
   :ensure t
-  :init
   :diminish
+  :init
   (beginend-global-mode))
 
 (use-package highlight-symbol
