@@ -1043,7 +1043,7 @@
 
 (use-package beginend
   :ensure t
-  :diminish
+  :diminish beginend-global-mode
   :init
   (beginend-global-mode))
 

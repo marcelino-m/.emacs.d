@@ -26,7 +26,7 @@
 require linum-relative"
   (interactive)
   (let ((is-linum-on (bound-and-true-p display-line-numbers-mode))
-        (linumnum-avail (boundp 'display-line-numbers-mode))
+        (linumnum-avail (boundp 'display-line-numbers))
         (linum-fn nil))
     (if linumnum-avail
         (setq linum-fn 'display-line-numbers-mode)
