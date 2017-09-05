@@ -1026,10 +1026,11 @@
   :init
   (guru-global-mode +1))
 
-(use-package linum-relative
-  :ensure t
+(use-package display-line-numbers-mode
   :init
-  (setq linum-relative-current-symbol "->"))
+  (setq
+   display-line-numbers-width-start t
+   display-line-numbers-type        'visual))
 
 (use-package slime
   :ensure t
