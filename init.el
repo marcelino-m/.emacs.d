@@ -378,10 +378,13 @@
   :init
   (setq ispell-dictionary "castellano")
   :config
+  (define-key flyspell-mode-map [(control ?\,)] nil)
+  (define-key flyspell-mode-map [(control ?\.)] nil)
+  (define-key flyspell-mode-map [?\C-c ?$]      nil)
+
   (use-package flyspell-popup
     :ensure t
-    :init
-    :bind (("C-c c" . flyspell-popup-correct))))
+    :bind (:map flyspell-mode-map ("C-c c" . flyspell-popup-correct))))
 
 (use-package magit
   :ensure t
