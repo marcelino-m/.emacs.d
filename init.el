@@ -1067,3 +1067,7 @@
     (if remove
         (highlight-symbol-remove-all)
       (highlight-symbol))))
+
+
+(use-package lorem-ipsum
+  :ensure t)
