@@ -312,10 +312,15 @@
 
 (use-package smex
   :ensure t
+  :disabled
   :config
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   (global-set-key [remap execute-extended-command] 'smex))
 
+(use-package amx
+  :ensure t
+  :init
+  (amx-mode 1))
 
 (use-package ido
   :ensure t
@@ -896,6 +901,9 @@
   :ensure t
   :mode "Dockerfile\\'")
 
+(use-package docker-compose-mode
+  :ensure t)
+
 (use-package font-lock+
   :ensure t)
 
@@ -981,7 +989,9 @@
               (add-hook 'before-save-hook 'gofmt-before-save)
               (setq tab-width 4)))
   :config
-  (use-package go-guru :ensure t)
+  (use-package go-guru :ensure t
+    :config
+    (define-key go-mode-map (kbd "C-c g") 'go-guru-map))
   (use-package go-rename :ensure t
     :config
     (define-key go-mode-map (kbd "C-c C-r") 'go-rename))
@@ -1036,6 +1046,7 @@
    display-line-numbers-type        'visual))
 
 (use-package slime
+  :disabled
   :ensure t
   :init
   (setq inferior-lisp-program "/usr/bin/sbcl")
