@@ -1082,3 +1082,8 @@
 
 (use-package lorem-ipsum
   :ensure t)
+
+;; jade mode
+(use-package pug-mode
+  :ensure t
+  )
