@@ -514,6 +514,7 @@
   :ensure t
   :defer  t
   :diminish company-mode
+  :bind (:map company-mode-map ("<s-tab>" . company-complete))
   :init
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (add-hook 'js2-mode-hook        'company-mode)
@@ -523,6 +524,9 @@
   (add-hook 'cider-repl-mode-hook 'company-mode)
   (add-hook 'cider-mode-hook      'company-mode)
   (add-hook 'sh-mode-hook         'company-mode)
+  (add-hook 'ess-mode-hook        'company-mode)
+  (add-hook 'org-mode-hook        'company-mode)
+  (add-hook 'inferior-ess-mode-hook  'company-mode)
 
 
   (setq
@@ -584,9 +588,13 @@
     (eval-after-load "company-auctex"
       ;; override this function, bad alignament in company
       '(defun company-auctex-symbol-annotation (candidate)
-        nil)))
+         nil)))
 
-  (add-to-list 'company-backend 'company-ispell))
+  (add-to-list 'company-backend 'company-ispell)
+
+  (defun add-pcomplete-to-capf ()
+    (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
+  (add-hook 'org-mode-hook #'add-pcomplete-to-capf))
 
 (use-package winner
   :defer 5
@@ -699,9 +707,26 @@
 (use-package org-mode
   :defer t
   :init
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "DOING(a)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)"))))
-
+  ;; literate programing
+  (setq org-confirm-babel-evaluate nil
+        org-src-fontify-natively t
+        org-src-tab-acts-natively t
+        org-latex-listings 'minted
+        ;; minted (source code highlight)
+        org-latex-packages-alist '(("" "minted"))
+        org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell   . t)
+     (js      . t)
+     (R       . t)
+     (sql     . t)
+     (sqlite  . t)
+     (python  . t)))
+  )
 
 (use-package beacon
   :ensure t
@@ -814,9 +839,9 @@
 (use-package anaconda-mode
   :ensure t
   :init
-  (use-package pyenv-mode
-    :ensure
-    :defer)
+  ;; (use-package pyenv-mode
+  ;;   :ensure
+  ;;   :defer)
 
   (use-package company-anaconda
     :ensure t)
@@ -824,7 +849,7 @@
   (add-hook 'python-mode-hook 'company-mode)
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-  (add-hook 'python-mode-hook 'pyenv-mode)
+  ;; (add-hook 'python-mode-hook 'pyenv-mode)
 
   (eval-after-load "company"
     '(add-to-list 'company-backends 'company-anaconda)))
@@ -1042,11 +1067,11 @@
   :init
   (guru-global-mode +1))
 
-(use-package display-line-numbers-mode
-  :init
-  (setq
-   display-line-numbers-width-start t
-   display-line-numbers-type        'visual))
+;; (use-package display-line-numbers-mode
+;;   :init
+;;   (setq
+;;    display-line-numbers-width-start t
+;;    display-line-numbers-type        'visual))
 
 (use-package slime
   :disabled
@@ -1088,5 +1113,8 @@
 
 ;; jade mode
 (use-package pug-mode
+  :ensure t)
+
+(use-package ess
   :ensure t
-  )
+  :config)
