@@ -24,8 +24,6 @@ echo -e "${RED}Installing:${NC} sqlitebrowser"
 sudo apt-get install sqlitebrowser
 echo -e "${RED}Installing:${NC} Ag silver search"
 sudo apt-get install  silversearcher-ag
-echo -e "${RED}Installing:${NC} Maildir utilities and dependencies"
-sudo apt-get install  html2text guile-2.0-dev  libgmime-2.6-dev libxapian-dev  libwebkitgtk-dev maildir-utils  offlineimap
 echo -e "${RED}Installing:${NC} gnutls"
 sudo apt-get install gnutls-bin
 
