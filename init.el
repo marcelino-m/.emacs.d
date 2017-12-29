@@ -51,7 +51,8 @@
  indent-tabs-mode                     nil
  scroll-preserve-screen-position      t
  scroll-step                          1
- auto-hscroll-mode                    'current-line)
+ auto-hscroll-mode                    'current-line
+ vc-follow-symlinks                   t)
 
 
 (add-to-list 'default-frame-alist '(height . 47))
@@ -312,13 +313,13 @@
 
 (use-package smex
   :ensure t
-  :disabled
   :config
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   (global-set-key [remap execute-extended-command] 'smex))
 
 (use-package amx
   :ensure t
+  :disabled
   :init
   (amx-mode 1))
 
