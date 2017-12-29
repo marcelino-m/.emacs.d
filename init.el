@@ -129,7 +129,9 @@
 
 
 (use-package ethan-wspace
-  :ensure t)
+  :ensure t
+  :init
+  (add-hook org-mode-hook 'ethan-wspace-mode))
 
 (use-package zenburn-theme
   :ensure t)
