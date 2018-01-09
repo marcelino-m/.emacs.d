@@ -51,8 +51,8 @@
  indent-tabs-mode                     nil
  scroll-preserve-screen-position      t
  scroll-step                          1
- auto-hscroll-mode                    'current-line
- vc-follow-symlinks                   t)
+ vc-follow-symlinks                   t
+ auto-hscroll-mode                    'current-line)
 
 
 (add-to-list 'default-frame-alist '(height . 47))
@@ -275,7 +275,7 @@
 
 (use-package projectile
   :ensure t
-  :load-path "./defuns/misc-defuns.el"
+  :load-path "./defuns/"
   :bind-keymap ("C-," . projectile-command-map)
   :bind (:map projectile-mode-map
               ("C-, s a" . helm-projectile-ag)
@@ -746,13 +746,15 @@
 
 (use-package misc-defuns
   :load-path "./defuns/"
-  :bind (("C-c o"         . ma/show-current-buffer-other-windows)
-         ("C-o"           . ma/open-line-and-indent)
-         ("<C-return>"    . ma/open-line-below)
-         ("<C-S-return>"  . ma/open-line-above)
-         ("H-l"           . ma/goto-line-with-feedback)
-         ("<M-backspace>" . ma/kill-line)
-         ([f7]            . ma/make-frame-command)))
+  :init
+  (global-set-key (kbd "C-c o")         'ma/show-current-buffer-other-windows)
+  (global-set-key (kbd "C-o")           'ma/open-line-and-indent)
+  (global-set-key (kbd "<C-return>")    'ma/open-line-below)
+  (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
+  (global-set-key (kbd "H-l")           'ma/goto-line-with-feedback)
+  (global-set-key (kbd "<M-backspace>") 'ma/kill-line)
+  (global-set-key [f7]                  'ma/make-frame-command)
+  (global-set-key (kbd "C-c e")         'ma/eval-and-replace))
 
 
 (use-package sql-indent
@@ -839,9 +841,13 @@
 (use-package anaconda-mode
   :ensure t
   :init
-  ;; (use-package pyenv-mode
-  ;;   :ensure
-  ;;   :defer)
+  (use-package virtualenvwrapper
+    :ensure t
+    :init
+    (setq venv-location "~/.virtualenvs/")
+    :config
+    (venv-initialize-interactive-shells)
+    )
 
   (use-package company-anaconda
     :ensure t)
@@ -849,8 +855,6 @@
   (add-hook 'python-mode-hook 'company-mode)
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-  ;; (add-hook 'python-mode-hook 'pyenv-mode)
-
   (eval-after-load "company"
     '(add-to-list 'company-backends 'company-anaconda)))
 
@@ -1118,3 +1122,6 @@
 (use-package ess
   :ensure t
   :config)
+
+(use-package savekill
+  :ensure)

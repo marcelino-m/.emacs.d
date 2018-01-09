@@ -19,3 +19,6 @@ var/
 /projectile-bookmarks.eld
 /projectile.cache
 /tramp
+/kill-ring-saved.el
+/network-security.data
+/ac-comphist.dat
