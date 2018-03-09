@@ -54,10 +54,6 @@
  vc-follow-symlinks                   t
  auto-hscroll-mode                    'current-line)
 
-
-(add-to-list 'default-frame-alist '(height . 47))
-(add-to-list 'default-frame-alist '(width . 200))
-
 (setq gc-cons-threshold 100000000)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -86,10 +82,6 @@
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file))
 (load custom-file)
-
-
-
-;; Setup packages
 
 (defun ma/neotree-toggle ()
   "Toggle show the NeoTree window."
@@ -753,7 +745,6 @@
   (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
   (global-set-key (kbd "H-l")           'ma/goto-line-with-feedback)
   (global-set-key (kbd "<M-backspace>") 'ma/kill-line)
-  (global-set-key [f7]                  'ma/make-frame-command)
   (global-set-key (kbd "C-c e")         'ma/eval-and-replace))
 
 
@@ -949,12 +940,6 @@
   :load-path "~/.emacs.d/vendors/all-the-icons/")
 
 
-(use-package volatile-highlights
-  :ensure t
-  :delight
-  :config
-  (volatile-highlights-mode t))
-
 (use-package multiple-cursors
   :ensure t)
 
@@ -1065,11 +1050,11 @@
 
 
 
-(use-package guru-mode
-  :ensure t
-  :delight
-  :init
-  (guru-global-mode +1))
+;; (use-package guru-mode
+;;   :ensure t
+;;   :delight
+;;   :init
+;;   (guru-global-mode +1))
 
 ;; (use-package display-line-numbers-mode
 ;;   :init

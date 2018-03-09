@@ -1,8 +1,3 @@
-;; Something taken from magnars .emacs.d (https://github.com/magnars/.emacs.d.git)
-
-;; Misc defuns go here
-;; It wouldn't hurt to look for patterns and extract once in a while
-
 
 ;; Add spaces and proper formatting to linum-mode. It uses more room than
 ;; necessary, but that's not a problem since it's only in use when going to
@@ -120,15 +115,6 @@ prefix argument keep point in curretn position"
   (httpd-start)
   (browse-url (concat "http://localhost:" (number-to-string port) "/")))
 
-;; shorthand for interactive lambdas
-;; (defmacro λ (&rest body)
-;;   `(lambda ()
-;;      (interactive)
-;;      ,@body))
-
-;; (global-set-key (kbd "s-l") (λ (insert "\u03bb")))
-
-
 (defun ma/buffer-to-html (buffer)
   (with-current-buffer (htmlize-buffer buffer)
     (buffer-string)))
@@ -174,9 +160,6 @@ Version 2016-08-11"
   (interactive)
   (dired "~/lab/"))
 
-(defun ma/make-frame-command ()
-  (interactive)
-  (make-frame-command))
 
 (defun ma/delete-frame ()
   (interactive)
@@ -190,7 +173,6 @@ Version 2016-08-11"
      (back-to-indentation)
      (point)))
   )
-
 
 (defun ma/show-current-buffer-other-windows ()
   (interactive)
