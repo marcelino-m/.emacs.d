@@ -199,15 +199,16 @@ Version 2016-08-11"
   (interactive)
   (insert (ma/file-path-to-killring)))
 
-(defun ma/join-line ()
+(defun ma/join-line (&optional joinjoin)
   "Join current line and next"
-  (interactive)
+  (interactive "P")
   (let (pbegin
         pend)
     (save-excursion
       (end-of-line)
       (skip-syntax-backward " ")
-      (insert " ")
+      (unless joinjoin
+        (insert " "))
       (setq pbegin (point))
       (next-line)
       (back-to-indentation)
