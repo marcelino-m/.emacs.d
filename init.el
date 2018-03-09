@@ -6,6 +6,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+
 ;; notify when emacs is ready
 ;; I run emacs in server mode set a systemd units
 (require 'notifications)
@@ -745,8 +748,14 @@
   (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
   (global-set-key (kbd "H-l")           'ma/goto-line-with-feedback)
   (global-set-key (kbd "<M-backspace>") 'ma/kill-line)
-  (global-set-key (kbd "C-c e")         'ma/eval-and-replace))
-
+  (global-set-key (kbd "C-c e")         'ma/eval-and-replace)
+  (global-set-key (kbd "C-c f c")       'make-frame-command)
+  (global-set-key (kbd "C-c i f")       'ma/insert-file-path-at-point)
+  (global-set-key (kbd "C-c c f")       'ma/save-file-path-to-kill-ring)
+  (global-set-key (kbd "C-c j ")        'ma/join-line)
+  (global-set-key (kbd "M-w")           'ma/kill-ring-save-line-or-region)
+  (global-set-key (kbd "C-w")           'ma/kill-line-or-region)
+  (global-set-key (kbd "C-y")           'ma/yank-with-feedback))
 
 (use-package sql-indent
   :ensure t

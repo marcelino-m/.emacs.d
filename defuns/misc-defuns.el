@@ -1,10 +1,8 @@
+(require 'flash-region)
 
 ;; Add spaces and proper formatting to linum-mode. It uses more room than
 ;; necessary, but that's not a problem since it's only in use when going to
 ;; lines.
-
-(provide 'misc-defuns)
-
 (setq linum-format (lambda (line)
                      (propertize
                       (format (concat " %"
@@ -187,3 +185,72 @@ Version 2016-08-11"
              (current-buffer))
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
+
+(defun ma/save-file-path-to-kill-ring ()
+  "Copy file path to kill ring"
+  (interactive)
+  (let ((file (ido-read-file-name "Pick a file: ")))
+    (kill-new file)
+    (message "Copy file to kill ring: %s" file)
+    file))
+
+(defun ma/insert-file-path-at-point ()
+  "Insert file path at point and copy it to kill ring "
+  (interactive)
+  (insert (ma/file-path-to-killring)))
+
+(defun ma/join-line ()
+  "Join current line and next"
+  (interactive)
+  (let (pbegin
+        pend)
+    (save-excursion
+      (end-of-line)
+      (skip-syntax-backward " ")
+      (insert " ")
+      (setq pbegin (point))
+      (next-line)
+      (back-to-indentation)
+      (setq pend (point))
+      (delete-region pbegin pend))))
+
+(defun ma/kill-ring-save-line-or-region (beg end &optional region)
+  "Save current  line to kill ring  if no region is  active, with
+feedback. Otherwise call `mouse-kill-ring-save'"
+ (interactive (list (mark) (point)))
+  (if mark-active
+      (kill-ring-save beg end region)
+    (let (beg end)
+      (save-excursion
+        (back-to-indentation)
+        (setq beg (point))
+        (end-of-line)
+        (skip-syntax-backward " ")
+        (setq end (point))
+        (flash-region beg end 'bold 0.1)
+        (kill-ring-save beg end)))))
+
+
+(defun ma/kill-line-or-region (beg end &optional region)
+  "Kill line if no region is active"
+  (interactive (list (mark) (point)))
+  (if mark-active
+      (kill-region beg end region)
+    (let (beg end)
+      (save-excursion
+        (back-to-indentation)
+        (setq beg (point))
+        (end-of-line)
+        (skip-syntax-backward " ")
+        (setq end (point))
+        (kill-region beg end region)))))
+
+(defun ma/yank-with-feedback (&optional arg)
+  (interactive "*P")
+  (let ((beg (point)))
+    (yank arg)
+    (flash-region beg (point) nil 0.3)))
+
+
+
+(provide 'misc-defuns)
