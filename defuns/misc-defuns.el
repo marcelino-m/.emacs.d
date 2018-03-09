@@ -252,6 +252,8 @@ feedback. Otherwise call `mouse-kill-ring-save'"
     (yank arg)
     (flash-region beg (point) nil 0.3)))
 
+;; in case delete-selection-mode (delsel.el) is being used
+(put 'ma/yank-with-feedback 'delete-selection t)
 
 
 (provide 'misc-defuns)
