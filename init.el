@@ -120,44 +120,16 @@
   (define-key Info-mode-map (kbd "<prior>") 'scroll-down-1)
   (define-key Info-mode-map (kbd "<next>") 'scroll-up-1)
   (use-package info+
-    :ensure t))
+    :load-path "~/.emacs.d/site-lisp/"))
 
 
 (use-package ethan-wspace
-  :ensure t
-  :init
-  (add-hook org-mode-hook 'ethan-wspace-mode))
-
-(use-package zenburn-theme
   :ensure t)
 
-(use-package solarized-theme
-  :ensure t
-  :disabled t
-  :config
-  (setq
-   ;; make the fringe stand out from the background
-   solarized-distinct-fringe-background t
-   ;; make the modeline high contrast
-   solarized-use-variable-pitch nil
-   solarized-high-contrast-mode-line t
-   ;; Use less bolding
-   solarized-use-less-bold t
-   ;; Use more italics
-   solarized-use-more-italic t
-   ;; Use less colors for indicators such as git:gutter, flycheck and similar
-   solarized-emphasize-indicators nil
-   ;; Don't change size of org-mode headlines (but keep other size-changes)
-   solarized-scale-org-headlines nil
-   ;; Avoid all font-size changes
-   solarized-height-minus-1  1
-   solarized-height-plus-1   1
-   solarized-height-plus-2   1
-   solarized-height-plus-3   1
-   solarized-height-plus-4   1
+(use-package zenburn-theme
+  :disabled
+  :ensure t)
 
-   x-underline-at-descent-line t)
-  (load-theme 'solarized-light))
 
 (use-package csv-mode
   :ensure t
@@ -352,12 +324,12 @@
     (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right
           ido-vertical-indicator "•➤")
     :config
-    (set-face-attribute 'ido-vertical-first-match-face nil
-                        :foreground "DarkOliveGreen1" :weight 'bold)
-    (set-face-attribute 'ido-vertical-only-match-face nil
-                        :foreground "DarkOliveGreen1" :weight 'bold)
-    (set-face-attribute 'ido-vertical-match-face nil
-                        :foreground "DarkOliveGreen4")
+    ;; (set-face-attribute 'ido-vertical-first-match-face nil
+    ;;                     :foreground "DarkOliveGreen1" :weight 'bold)
+    ;; (set-face-attribute 'ido-vertical-only-match-face nil
+    ;;                     :foreground "DarkOliveGreen1" :weight 'bold)
+    ;; (set-face-attribute 'ido-vertical-match-face nil
+    ;;                     :foreground "DarkOliveGreen4")
     (ido-vertical-mode))
 
   (use-package ido-completing-read+
@@ -372,6 +344,8 @@
 
 (use-package cmake-mode
   :ensure t
+  :bind ((:map cmake-mode-map
+               ("<f5>" . 'recompile)))
   :mode ("CMakeList.txt" . cmake-mode))
 
 
@@ -766,7 +740,10 @@
 
 (use-package dired
   :init
-  (setq dired-dwim-target t))
+  (setq
+   auto-revert-verbose nil
+   dired-dwim-target t)
+  (add-hook 'dired-mode-hook 'auto-revert-mode))
 
 (use-package dired-narrow
   :ensure t
@@ -937,7 +914,7 @@
   :ensure t)
 
 (use-package font-lock+
-  :ensure t)
+  :load-path "~/.emacs.d/site-lisp/")
 
 (use-package neotree
   :ensure t
@@ -950,7 +927,11 @@
 
 
 (use-package multiple-cursors
-  :ensure t)
+  :ensure t
+  :bind (("C-<mouse-1>" . mc/add-cursor-on-click)
+         ("C-c n" . mc/mark-next-like-this))
+  :init
+  (global-unset-key (kbd "C-<down-mouse-1>")))
 
 (use-package yaml-mode
   :ensure t
@@ -1119,3 +1100,10 @@
 
 (use-package savekill
   :ensure)
+
+(use-package helpful
+  :ensure t
+  :init
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key))
