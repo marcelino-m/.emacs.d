@@ -57,7 +57,7 @@
  vc-follow-symlinks                   t
  auto-hscroll-mode                    'current-line)
 
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold 50000000)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -626,24 +626,13 @@
   (openwith-mode 1))
 
 (use-package recentf
-  :commands (recentf-mode
-             recentf-add-file
-             recentf-apply-filename-handlers)
-  :preface
-  (defun recentf-add-dired-directory ()
-    (if (and dired-directory
-             (file-directory-p dired-directory)
-             (not (string= "/" dired-directory)))
-        (let ((last-idx (1- (length dired-directory))))
-          (recentf-add-file
-           (if (= ?/ (aref dired-directory last-idx))
-               (substring dired-directory 0 last-idx)
-             dired-directory)))))
-  :init
-  (add-hook 'dired-mode-hook 'recentf-add-dired-directory)
   :config
-  (add-to-list 'recentf-exclude "~/.emacs.d/elpa/.*")
-  (recentf-mode 1))
+  (setq recentf-max-saved-items 500
+        recentf-max-menu-items 15
+        ;; disable recentf-cleanup on Emacs start, because it can cause
+        ;; problems with remote files
+        recentf-auto-cleanup 'never)
+(recentf-mode +1))
 
 (use-package cc-mode
   :defer t
@@ -1095,8 +1084,7 @@
   :ensure t)
 
 (use-package ess
-  :ensure t
-  :config)
+  :ensure t)
 
 (use-package savekill
   :ensure)
