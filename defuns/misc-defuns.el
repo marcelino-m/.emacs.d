@@ -237,14 +237,25 @@ feedback. Otherwise call `mouse-kill-ring-save'"
   (interactive (list (mark) (point)))
   (if mark-active
       (kill-region beg end region)
-    (let (beg end)
+    (let (beg end empty-line (cc (current-column)))
       (save-excursion
-        (back-to-indentation)
-        (setq beg (point))
-        (end-of-line)
-        (skip-syntax-backward " ")
-        (setq end (point))
-        (kill-region beg end region)))))
+        (beginning-of-line)
+        (if (= (progn (skip-chars-forward " \t") (point))
+               (progn (end-of-line) (point)))
+            (setq empty-line t)))
+      (if empty-line
+          (progn
+            (beginning-of-line)
+            (kill-line)
+            (move-to-column cc))
+        (progn
+          (back-to-indentation)
+          (setq beg (point))
+          (end-of-line)
+          (skip-syntax-backward " ")
+          (setq end (point))
+          (kill-region beg end region))))))
+
 
 (defun ma/yank-with-feedback (&optional arg)
   (interactive "*P")
