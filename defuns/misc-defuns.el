@@ -228,7 +228,7 @@ feedback. Otherwise call `mouse-kill-ring-save'"
         (end-of-line)
         (skip-syntax-backward " ")
         (setq end (point))
-        (flash-region beg end 'bold 0.1)
+        (flash-region beg end 'shadow 0.1)
         (kill-ring-save beg end)))))
 
 
@@ -250,7 +250,7 @@ feedback. Otherwise call `mouse-kill-ring-save'"
   (interactive "*P")
   (let ((beg (point)))
     (yank arg)
-    (flash-region beg (point) nil 0.3)))
+    (flash-region beg (point) 'highlight 0.3)))
 
 ;; in case delete-selection-mode (delsel.el) is being used
 (put 'ma/yank-with-feedback 'delete-selection t)
