@@ -197,7 +197,7 @@ Version 2016-08-11"
 (defun ma/insert-file-path-at-point ()
   "Insert file path at point and copy it to kill ring "
   (interactive)
-  (insert (ma/file-path-to-killring)))
+  (insert (ma/save-file-path-to-kill-ring)))
 
 (defun ma/join-line (&optional joinjoin)
   "Join current line and next"
