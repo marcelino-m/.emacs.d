@@ -124,7 +124,14 @@
 
 
 (use-package ethan-wspace
-  :ensure t)
+  :ensure t
+  :diminish ethan-wspace-mode
+  :init
+  (add-hook 'org-src-mode-hook   #'ethan-wspace-clean-all)
+  (add-hook 'prog-mode-hook      #'ethan-wspace-mode)
+  (add-hook 'markdown-mode-hook  #'ethan-wspace-mode)
+  (add-hook 'LaTeX-mode-hook     #'ethan-wspace-mode)
+  (add-hook 'yaml-mode-hook      #'ethan-wspace-mode))
 
 (use-package zenburn-theme
   :disabled
@@ -207,10 +214,7 @@
    )
 
   (define-key prog-mode-map (kbd "C-c s") 'ace-jump-char-mode)
-  (add-hook 'prog-mode-hook
-            '(lambda ()
-               (electric-pair-mode)
-               (ethan-wspace-mode 1))))
+  (add-hook 'prog-mode-hook #'electric-pair-mode))
 
 
 
@@ -233,7 +237,6 @@
   :ensure t
   :init
   (add-hook 'markdown-mode-hook (lambda ()
-                                  (ethan-wspace-mode 1)
                                   (flyspell-mode)))
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
@@ -788,7 +791,6 @@
                       (flyspell-mode)
                       (company-mode)
                       (turn-on-reftex)
-                      (ethan-wspace-mode 1)
                       (local-set-key (kbd "<f5>") 'TeX-view)
                       (local-set-key (kbd "<f6>") 'ma/run-latex)
                       (local-set-key (kbd "<f7>") 'ma/run-biber))))
@@ -925,10 +927,7 @@
 
 (use-package yaml-mode
   :ensure t
-  :mode "\\.yml\\'"
-  :init
-  (add-hook 'yaml-mode-hook (lambda ()
-                              (ethan-wspace-mode 1))))
+  :mode "\\.yml\\'")
 
 (use-package xclip
   :ensure t
