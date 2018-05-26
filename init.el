@@ -106,6 +106,9 @@
 (use-package delight
   :ensure t)
 
+(use-package diminish
+  :ensure t)
+
 (use-package exec-path-from-shell
   :ensure t
   :defer  2
@@ -131,12 +134,28 @@
   (add-hook 'prog-mode-hook      #'ethan-wspace-mode)
   (add-hook 'markdown-mode-hook  #'ethan-wspace-mode)
   (add-hook 'LaTeX-mode-hook     #'ethan-wspace-mode)
-  (add-hook 'yaml-mode-hook      #'ethan-wspace-mode))
+  (add-hook 'yaml-mode-hook      #'ethan-wspace-mode)
+  (add-hook 'see-mode-hook       #'ethan-wspace-mode))
 
 (use-package zenburn-theme
   :disabled
   :ensure t)
 
+(use-package spacemacs-theme
+  :ensure t
+  :defer
+  :preface
+  (defun ma/load-theme ()
+    (remove-hook 'server-after-make-frame-hook #'ma/load-theme)
+    (load-theme 'spacemacs-light t))
+  :init
+  (setq
+   spacemacs-theme-comment-bg nil
+   spacemacs-theme-org-height nil)
+  (custom-set-variables '(spacemacs-theme-custom-colors
+                          '((cblk-bg . "#ffffff")
+                            (cblk-ln-bg . "#d4c793"))))
+  (add-hook 'server-after-make-frame-hook #'ma/load-theme))
 
 (use-package csv-mode
   :ensure t
@@ -160,12 +179,24 @@
   (powerline-default-theme))
 
 
-(use-package swiper
+(use-package ivy
   :ensure t
-  :bind ("C-s" . swiper)
-  :init
+  :init (ivy-mode)
   (setq
-   ivy-use-virtual-buffers t))
+   ivy-use-virtual-buffers t
+   enable-recursive-minibuffers t))
+
+(use-package counsel
+  :ensure t
+  :requires ivy
+  :bind (:map ivy-mode-map
+              ("C-c M-x" . ivy-resume)
+              ("C-c <menu>" . ivy-resume)
+              ("C-s" . swiper)
+              ("M-x" . counsel-M-x)
+              ;; ("C-c W" . ivy-pop-view) Remove window configuration from `ivy-views'
+              ;; ("C-c w" . ivy-push-view) Push window configuration to `ivy-views'
+              ))
 
 (use-package smooth-scroll
   :ensure t
@@ -204,6 +235,10 @@
                                '("~/.emacs.d/snippets/")))
 
   (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :ensure t)
+
 
 (use-package prog-mode
   :init
