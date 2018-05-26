@@ -267,4 +267,13 @@ feedback. Otherwise call `mouse-kill-ring-save'"
 (put 'ma/yank-with-feedback 'delete-selection t)
 
 
+(defun ma/deft-in-new-frame (&optional arg)
+  "Launch deft in a new frame"
+  (interactive "P")
+  (if (not arg)
+      (deft)
+    (select-frame (make-frame-command))
+    (deft)))
+
+
 (provide 'misc-defuns)

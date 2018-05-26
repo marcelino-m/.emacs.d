@@ -864,7 +864,8 @@
 
 (use-package deft
   :ensure
-  :bind ([f9] . deft)
+  :load-path "./defuns/"
+  :bind ([f9] . ma/deft-in-new-frame)
   :init
   (setq deft-directory "~/Dropbox/notes")
   (setq deft-extensions '("org" "md" "txt")))
