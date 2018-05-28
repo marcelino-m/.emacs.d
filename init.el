@@ -242,15 +242,14 @@
 
 (use-package prog-mode
   :init
-  (setq
-   tab-width 4
-   ;; disable electric pairing in minibuffer
-   electric-pair-inhibit-predicate (lambda (char) (window-minibuffer-p))
-   )
+  (setq tab-width 4))
 
-  (define-key prog-mode-map (kbd "C-c s") 'ace-jump-char-mode)
+
+(use-package elec-pair
+  :init
+  ;; disable electric pairing in minibuffer
+  (setq electric-pair-inhibit-predicate #'(lambda (char) (window-minibuffer-p)))
   (add-hook 'prog-mode-hook #'electric-pair-mode))
-
 
 
 (use-package saveplace
