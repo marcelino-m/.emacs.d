@@ -144,20 +144,56 @@
   :ensure t)
 
 (use-package spacemacs-theme
+  :disabled
   :ensure t
   :defer
   :preface
   (defun ma/load-theme ()
     (remove-hook 'server-after-make-frame-hook #'ma/load-theme)
     (load-theme 'spacemacs-light t))
+
   :init
-  (setq
-   spacemacs-theme-comment-bg nil
-   spacemacs-theme-org-height nil)
+  (setq spacemacs-theme-comment-bg nil
+        spacemacs-theme-org-height nil)
+
   (custom-set-variables '(spacemacs-theme-custom-colors
-                          '((cblk-bg . "#ffffff")
-                            (cblk-ln-bg . "#d4c793"))))
+                          '((cblk-bg    . "#ffffff")
+                            (cblk-ln-bg . "#d4c793")
+                            (cursor     . "#eead0e"))))
+
   (add-hook 'server-after-make-frame-hook #'ma/load-theme))
+
+(use-package solarized-theme
+  :ensure t
+  :init
+  ;; (custom-set-faces
+  ;;  '(org-block-begin-line
+  ;;    ((t (:underline "#d33682" :background ))))
+  ;;  '(org-block-end-line
+  ;;    ((t (:overline "#d33682")))))
+
+  (custom-set-faces
+   '(org-block
+     ((t :background "#f4eddb")))
+   '(org-block-begin-line
+     ((t (:underline "#6c71c4"))))
+   '(org-block-end-line
+     ((t (:overline nil :underline "#6c71c4")))))
+
+
+  (setq solarized-use-variable-pitch      nil
+        solarized-high-contrast-mode-line t
+        solarized-use-less-bold           t
+        solarized-use-more-italic         t
+        solarized-emphasize-indicators    nil
+        solarized-scale-org-headlines     nil
+        solarized-height-minus-1  1.0
+        solarized-height-plus-1   1.0
+        solarized-height-plus-2   1.0
+        solarized-height-plus-3   1.0
+        solarized-height-plus-4   1.0)
+  (load-theme 'solarized-light t))
+
 
 (use-package csv-mode
   :ensure t
