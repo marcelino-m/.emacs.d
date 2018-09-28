@@ -1,5 +1,6 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -8,7 +9,7 @@
 
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
-
+(add-to-list 'exec-path "~/.local/bin/")
 ;; notify when emacs is ready
 ;; I run emacs in server mode set a systemd units
 (require 'notifications)
@@ -17,13 +18,12 @@
                                 :title "Emacs"
                                 :body "I am ready to hack!"
                                 :urgency 'low)))
-
 ;; global options
-(add-to-list 'default-frame-alist '(height . 45))
-(add-to-list 'default-frame-alist '(width . 190))
-(add-to-list 'default-frame-alist '(cursor-color . "Olivedrab3"))
-;; (add-to-list 'default-frame-alist '(cursor-type . bar))
-(add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
+(setq default-frame-alist
+      (list
+       (cons 'width 180)
+       (cons 'height 50)
+       (cons 'vertical-scroll-bars nil)))
 
 (tool-bar-mode     -1)
 (menu-bar-mode     -1)
@@ -55,14 +55,16 @@
  scroll-preserve-screen-position      t
  scroll-step                          1
  vc-follow-symlinks                   t
- auto-hscroll-mode                    'current-line)
+ auto-hscroll-mode                    'current-line
+ hscroll-step 1)
 
 (setq gc-cons-threshold 50000000)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (custom-set-faces
- '(default ((t (:family "Inconsolata" :foundry "unknown" :slant normal :weight normal :height 119 :width normal)))))
+ '(default ((t (:family "Inconsolata" :foundry "unknown" :slant normal :weight normal :height 140 :width normal)))))
+
 
 ;; more useful frame title, that show either a file or a
 ;; buffer name (if the buffer isn't visiting a file)
