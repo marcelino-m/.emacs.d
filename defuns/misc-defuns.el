@@ -210,9 +210,8 @@ Version 2016-08-11"
       (unless joinjoin
         (insert " "))
       (setq pbegin (point))
-      (next-line)
-      (back-to-indentation)
-      (setq pend (point))
+      (re-search-forward "[[:graph:]]" nil t)
+      (setq pend (1- (point)))
       (delete-region pbegin pend))))
 
 (defun ma/kill-ring-save-line-or-region (beg end &optional region)
@@ -274,6 +273,13 @@ feedback. Otherwise call `mouse-kill-ring-save'"
       (deft)
     (select-frame (make-frame-command))
     (deft)))
+
+
+(defun ma/org-toggle-view ()
+  (interactive)
+  (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+  (org-do-emphasis-faces nil))
+
 
 
 (provide 'misc-defuns)

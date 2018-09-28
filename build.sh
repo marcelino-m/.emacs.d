@@ -42,3 +42,7 @@ npm install tern -g
 mkdir -p $HOME_USER/.fonts
 ln -sf $(readlink -f vendors/inconsolata-font/) $HOME_USER/.fonts
 ln -sf $(readlink -f vendors/all-the-icons/fonts) $HOME_USER/.fonts/all-the-icons
+
+# python
+pip install --user  pipenv
+pip install --user  virtualenvwrapper
