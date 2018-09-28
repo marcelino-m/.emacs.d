@@ -203,22 +203,21 @@
   :ensure t
   :bind ("C-=" . er/expand-region))
 
-
 (use-package drag-stuff
   :ensure t
   :bind (([(hyper  up)] . drag-stuff-up)
-         ([(hyper  down)] . drag-stuff-down)))
-
-
+         ([(hyper  down)] . drag-stuff-down)
+         ([(hyper  left)] . drag-stuff-left)
+         ([(hyper  right)] . drag-stuff-right)))
 
 (use-package powerline
   :ensure t
   :config
   (powerline-default-theme))
 
-
 (use-package ivy
   :ensure t
+  :diminish ivy-mode
   :init (ivy-mode)
   (setq
    ivy-use-virtual-buffers t
@@ -232,16 +231,24 @@
               ("C-c <menu>" . ivy-resume)
               ("C-s" . swiper)
               ("M-x" . counsel-M-x)
-              ;; ("C-c W" . ivy-pop-view) Remove window configuration from `ivy-views'
-              ;; ("C-c w" . ivy-push-view) Push window configuration to `ivy-views'
-              ))
+              ("C-c W" . ivy-pop-view)
+              ("C-c w" . ivy-push-view))
+  :init
+  (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
+
+
 
 (use-package smooth-scroll
   :ensure t
   :diminish smooth-scroll-mode
-  :init
   :bind (("M-p"   . scroll-down-1)
          ("M-n"   . scroll-up-1)))
+
+(use-package smooth-scrolling
+  :disabled
+  :ensure t
+  :init
+  (smooth-scrolling-mode -1))
 
 (use-package uniquify
   :init
@@ -259,20 +266,21 @@
   :commands (yas-expand yas-minor-mode)
   :functions (yas-guess-snippet-directories yas-table-name)
   :defines (yas-guessed-modes)
-  :bind (
-         ([backtab]   . yas-expand)
+  :bind (([backtab]   . yas-expand)
          ("C-c y s"   . yas-insert-snippet)
          ("C-c y n"   . yas-new-snippet)
-         ("C-c y v"   . yas-visit-snippet-file)
-         )
+         ("C-c y v"   . yas-visit-snippet-file))
   :config
   (define-key yas-minor-mode-map [(tab)] nil)
   (define-key yas-minor-mode-map (kbd "TAB") nil)
 
   (setq yas-snippet-dirs (append yas-snippet-dirs
-                               '("~/.emacs.d/snippets/")))
+                                 '("~/.emacs.d/snippets/")))
 
   (yas-global-mode 1))
+
+
+
 
 (use-package yasnippet-snippets
   :ensure t)
@@ -302,8 +310,8 @@
   :ensure t
   :diminish undo-tree-mode
   :init
-  (global-undo-tree-mode)
-  (global-set-key (kbd "C-\\") 'undo-tree-redo))
+  (global-undo-tree-mode))
+
 
 (use-package markdown-mode
   :ensure t
@@ -321,10 +329,16 @@
   :bind-keymap ("C-," . projectile-command-map)
   :bind (:map projectile-mode-map
               ("C-, s a" . helm-projectile-ag)
-              ("C-, o"   . helm-occur))
+              ("C-, o"   . helm-occur)
+              ("C-, 5 p" . ma/projectile-switch-to-project-other-frame))
   :init
   (setq projectile-keymap-prefix (kbd "C-,"))
   :config
+  (defun ma/projectile-switch-to-project-other-frame (&optional arg)
+    (interactive "P")
+    (select-frame (make-frame-command))
+    (projectile-switch-project arg))
+
   (use-package helm-projectile
     :ensure t)
 
@@ -332,11 +346,13 @@
     :ensure t)
 
   (setq projectile-enable-caching t)
-  (setq projectile-mode-line '(:eval (format "❪℘ %s❫" (projectile-project-name))))
-  (setq projectile-switch-project-action '(lambda ()
-                                            (projectile-dired)
-                                            (ma/update-neotree-root)
-                                            (projectile-commander)))
+  (setq projectile-completion-system 'ivy)
+
+  ;;(setq projectile-mode-line '(:eval (format "❪℘ %s❫" (projectile-project-name))))
+  (setq projectile-switch-project-action #'(lambda ()
+                                             (projectile-dired)
+                                             (ma/update-neotree-root)
+                                             (projectile-commander)))
 
 
   ;;
@@ -369,7 +385,6 @@
 
 (use-package ido
   :ensure t
-  :defer  3
   :init
   (setq ido-enable-prefix nil
         ido-enable-flex-matching t
@@ -386,8 +401,6 @@
                                                     ((looking-back "/") (insert "~/"))
                                                     (:else (call-interactively 'self-insert-command)))))
   :config
-  (ido-mode t)
-
   (use-package flx-ido
     :ensure t
     :config
@@ -408,6 +421,7 @@
     (ido-vertical-mode))
 
   (use-package ido-completing-read+
+    :disabled
     :ensure t
     :config
     (ido-ubiquitous-mode 1)))
@@ -472,23 +486,32 @@
                `(,(rx bos "*helm" (* not-newline) "*" eos)
                  (display-buffer-in-side-window)
                  (inhibit-same-window . t)
-                 (window-height . 0.4)))
+                 (window-height . 0.4))))
 
-  (use-package helm-gtags
-    :ensure t
-    :config
-    (setq  helm-gtags-pulse-at-cursor nil)
-    (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
-    (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
-    (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
-    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack))
 
-  (use-package helm-ag
-    :ensure t
-    :config
-    (setq helm-ag-fuzzy-match     t
-          helm-ag-insert-at-point 'symbol)))
+(use-package helm-ag
+  :ensure t
+  :config
+  (setq helm-ag-fuzzy-match     t
+        helm-ag-insert-at-point 'symbol))
+
+(use-package helm-gtags
+  :ensure t
+  :diminish helm-gtags-mode
+  :config
+  (setq  helm-gtags-pulse-at-cursor nil)
+  (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+  (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+  (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+  (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+  (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack))
+
+(use-package helm-descbinds
+  :ensure t
+  :bind ("C-h b" . helm-descbinds)
+  :config
+  (helm-descbinds-mode))
+
 
 (use-package windmove
   :ensure t
@@ -535,19 +558,20 @@
   :interpreter "node"
   :bind (:map js2-mode-map
               ("C-'" . toggle-quotes)
-              ("C->" . ma/insert-arrow))
+              ;; ("C->" . ma/insert-arrow)
+              )
   :init
   (add-hook 'js2-mode-hook 'subword-mode)
   (add-hook 'js2-mode-hook 'tern-setup)
 
   :config
   (use-package toggle-quotes :ensure t)
+
   (use-package tern :ensure t
     :defer  t
-    :load-path (lambda () (expand-file-name
-                           (concat (getenv "NVM_PATH")
-                                   "/../node_modules/tern/emacs/")))
+    :load-path "~/.nvm/versions/node/v10.5.0/lib/node_modules/tern/emacs/"
     :init
+    (add-to-list 'exec-path "~/.nvm/versions/node/v10.5.0/bin/")
     (defun tern-setup ()
       (interactive)
       (when (string-match "\\.js\\'" buffer-file-name)
@@ -569,7 +593,8 @@
   (add-hook 'cider-mode-hook      'company-mode)
   (add-hook 'sh-mode-hook         'company-mode)
   (add-hook 'ess-mode-hook        'company-mode)
-  (add-hook 'org-mode-hook        'company-mode)
+  (add-hook 'python-mode-hook     'company-mode)
+  (add-hook 'typescript-mode-hook 'company-mode)
   (add-hook 'inferior-ess-mode-hook  'company-mode)
 
 
@@ -577,7 +602,12 @@
    company-idle-delay            0
    company-tooltip-idle-delay    0
    company-minimum-prefix-length 1
-   company-show-numbers          t)
+   company-show-numbers          t
+   company-dabbrev-downcase      nil)
+
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (set (make-local-variable 'company-backends) '(company-anaconda company-files))))
 
   (defun  ma/reorder-argument-company-fill-propertize (orig-fun &rest args)
     "This advice is for show number of company to left side"
@@ -589,13 +619,6 @@
    #'company-fill-propertize
    :around
    #'ma/reorder-argument-company-fill-propertize)
-
-  (use-package company-flx
-    :ensure t
-    :defer  t
-    :init
-    (with-eval-after-load 'company
-      (company-flx-mode +1)))
 
   :config
   (use-package company-tern
@@ -634,11 +657,7 @@
       '(defun company-auctex-symbol-annotation (candidate)
          nil)))
 
-  (add-to-list 'company-backend 'company-ispell)
-
-  (defun add-pcomplete-to-capf ()
-    (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
-  (add-hook 'org-mode-hook #'add-pcomplete-to-capf))
+  (add-to-list 'company-backend 'company-ispell))
 
 (use-package winner
   :defer 5
@@ -707,18 +726,24 @@
         ;; disable recentf-cleanup on Emacs start, because it can cause
         ;; problems with remote files
         recentf-auto-cleanup 'never)
-(recentf-mode +1))
+  (add-to-list 'recentf-exclude
+               (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
+  (add-to-list 'recentf-exclude
+               (format "%s/\\.emacs\\.d/\\(ido\\.last\\|recentf\\|\\.gitignore\\)" (getenv "HOME")))
+  (recentf-mode +1))
 
 (use-package cc-mode
   :defer t
   :init
   (setq compilation-ask-about-save nil)
   (add-hook 'c++-mode-hook 'helm-gtags-mode)
+  (add-hook 'c-mode-hook 'helm-gtags-mode)
   (c-add-style "my-style"
                '("k&r"
                  (c-offsets-alist . ((innamespace . [0])))))
   (add-hook 'c++-mode-hook (lambda ()
                              (c-set-style "my-style")
+                             (subword-mode 1)
                              (setq c-basic-offset 4
                                    tab-width 4
                                    indent-tabs-mode nil)
@@ -726,31 +751,87 @@
                              (setq compilation-skip-threshold 2)
                              (setq compilation-scroll-output 'first-error)))
   :config
-  (define-key c++-mode-map (kbd "<f5>") 'recompile)
-  (define-key c++-mode-map (kbd "C->")  'ma/insert-arrow))
+  (define-key c++-mode-map (kbd "<f5>") #'recompile)
+  ;; (define-key c++-mode-map (kbd "C->")  #'ma/insert-arrow)
+  (define-key c++-mode-map (kbd "C-c '") #'see-edit-src-at-point))
 
 
 
 (use-package org-bullets
   :ensure t
-  :defer  t
   :init
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  (add-hook 'org-mode-hook #'org-bullets-mode))
 
-(use-package org-mode
-  :defer t
+(use-package org
+  :pin gnu
+  :ensure t
+  :bind (:map org-mode-map
+              ("C-c t" . ma/toggle-current-src-block))
+  :preface
+  (defun ma/toggle-current-src-block ()
+    (interactive)
+    (let ((head (org-babel-where-is-src-block-head)))
+      (if head
+          (progn
+            (goto-char head)
+            (org-cycle))
+        (error "Not currently in a code block"))))
+
+  (defun ma/org-table-map-tables (function &optional quietly)
+    "Apply FUNCTION to the start of all tables in the buffer. no widen buffer."
+    (goto-char (point-min))
+    (while (re-search-forward org-table-any-line-regexp nil t)
+      (unless quietly
+        (message "Mapping tables: %d%%"
+                 (floor (* 100.0 (point)) (buffer-size))))
+      (beginning-of-line 1)
+      (when (and (looking-at org-table-line-regexp)
+                 ;; Exclude tables in src/example/verbatim/clocktable blocks
+                 (not (org-in-block-p '("src" "example" "verbatim" "clocktable"))))
+        (save-excursion (funcall function))
+        (or (looking-at org-table-line-regexp)
+            (forward-char 1)))
+      (re-search-forward org-table-any-border-regexp nil 1))
+    (unless quietly (message "Mapping tables: done")))
+
+  (defun ma/org-table-recalculate-tables ()
+    "Recalculate all tables in buffer. no widen buffer."
+    (interactive)
+    (ma/org-table-map-tables
+     (lambda ()
+       ;; Reason for separate `org-table-align': When repeating
+       ;; (org-table-recalculate t) `org-table-may-need-update' gets in
+       ;; the way.
+       (org-table-recalculate t t)
+       (org-table-align))
+     t))
+
   :init
-  ;; literate programing
-  (setq org-confirm-babel-evaluate nil
-        org-src-fontify-natively t
-        org-src-tab-acts-natively t
-        org-latex-listings 'minted
-        ;; minted (source code highlight)
-        org-latex-packages-alist '(("" "minted"))
-        org-latex-pdf-process
+
+  (add-hook 'org-mode-hook #'org-indent-mode)
+  (diminish 'org-indent-mode)
+  (setq org-cycle-separator-lines 0)
+  (setq org-highlight-latex-and-related '(latex))
+
+  (setq org-export-async-init-file "~/.emacs.d/org-init-async")
+
+
+  (setq org-latex-packages-alist '(("cachedir=.tmpfiles/minted" "minted") ("" "float")))
+  (setq org-latex-listings 'minted)
+  (setq org-latex-create-formula-image-program 'dvipng)
+
+  (setq org-latex-pdf-process
         '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+
+  (setq org-babel-python-command "ipython --no-banner --nosep --simple-prompt  -i")
+  (setq org-confirm-babel-evaluate nil
+        org-src-fontify-natively   t
+        org-src-tab-acts-natively  t
+        org-src-window-setup       'current-window)
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell   . t)
@@ -758,24 +839,44 @@
      (R       . t)
      (sql     . t)
      (sqlite  . t)
-     (python  . t)))
-  )
+     (python  . t)
+     (latex   . t)
+     (ditaa   . t)
+     (calc    . t)))
+
+  (add-to-list 'org-structure-template-alist '("p"  "#+BEGIN_SRC python ?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("pf" "#+BEGIN_SRC python :exports results :results file ?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("po" "#+BEGIN_SRC python :exports results :results output ?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("pv" "#+BEGIN_SRC python :exports results :results value ?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("pd" "#+BEGIN_SRC python :exports results :results drawer ?\n\n#+END_SRC"))
+
+  (mapc (lambda (elm) (setcdr elm (list (downcase (cadr elm)))))
+        org-structure-template-alist)
+  (setq org-babel-results-keyword "results")
+
+  ;; use ivy with org-goto
+  (setq org-goto-interface 'outline-path-completion)
+  (setq org-outline-path-complete-in-steps nil)
+
+  (setq org-refile-targets '((nil :level . 2)))
+  (setq org-ditaa-jar-path "/usr/bin/ditaa")
+
+  :config
+  (plist-put org-format-latex-options :scale 1.7))
 
 (use-package beacon
   :ensure t
-  :delight
-  ;; :disabled t
+  :diminish beacon-mode
   :init
   (setq
-   beacon-color "olive drab"
+   beacon-color       "#eead0e"
+   beacon-blink-delay 0.1
    beacon-dont-blink-commands '(next-line previous-line forward-line mwheel-scroll scroll-down-1 scroll-up-1))
-
   (beacon-mode 1))
 
-(use-package ace-jump-mode
+(use-package avy
   :ensure t
-  :bind (("H-s" . ace-jump-char-mode)
-         ("H-w" . ace-jump-word-mode)))
+  :bind (("H-a" . avy-goto-char)))
 
 (use-package misc-defuns
   :load-path "./defuns/"
@@ -788,8 +889,8 @@
   (global-set-key (kbd "<M-backspace>") 'ma/kill-line)
   (global-set-key (kbd "C-c e")         'ma/eval-and-replace)
   (global-set-key (kbd "C-c f c")       'make-frame-command)
-  (global-set-key (kbd "C-c i f")       'ma/insert-file-path-at-point)
-  (global-set-key (kbd "C-c c f")       'ma/save-file-path-to-kill-ring)
+  ;; (global-set-key (kbd "C-c i f")       'ma/insert-file-path-at-point)
+  ;; (global-set-key (kbd "C-c c f")       'ma/save-file-path-to-kill-ring)
   (global-set-key (kbd "C-c j ")        'ma/join-line)
   (global-set-key (kbd "M-w")           'ma/kill-ring-save-line-or-region)
   (global-set-key (kbd "C-w")           'ma/kill-line-or-region)
@@ -797,16 +898,33 @@
 
 (use-package sql-indent
   :ensure t
-  :defer t
+  :pin gnu
+  :hook (sql-mode . sqlind-minor-mode)
+  :config
+  (defvar my-sql-indentation-offsets-alist
+    `((select-clause 0)
+      (insert-clause 0)
+      (delete-clause 0)
+      (update-clause 0)
+      ,@sqlind-default-indentation-offsets-alist))
+
+  (add-hook 'sqlind-minor-mode-hook
+            (lambda ()
+              (setq sqlind-indentation-offsets-alist
+                    my-sql-indentation-offsets-alist))))
+
+(use-package dired-x
   :init
-  (eval-after-load "sql"
-    '(load-library "sql-indent")))
+  (add-hook 'dired-mode-hook #'dired-omit-mode)
+  :config
+  (setq  dired-omit-verbose nil))
 
 (use-package dired
   :init
   (setq
    auto-revert-verbose nil
-   dired-dwim-target t)
+   dired-dwim-target t
+   wdired-allow-to-change-permissions t)
   (add-hook 'dired-mode-hook 'auto-revert-mode))
 
 (use-package dired-narrow
@@ -835,6 +953,7 @@
   ;; AUCTeX configuration
   (setq TeX-master      nil
         TeX-auto-save   t
+        TeX-auto-local  ".tmpfiles/"
         TeX-parse-self  t
         TeX-save-query nil
         ;; use pdflatex
@@ -878,25 +997,18 @@
   :ensure t)
 
 
+(use-package pyvenv
+    :ensure t)
+
+
 (use-package anaconda-mode
   :ensure t
   :init
-  (use-package virtualenvwrapper
-    :ensure t
-    :init
-    (setq venv-location "~/.virtualenvs/")
-    :config
-    (venv-initialize-interactive-shells)
-    )
+  (add-hook 'python-mode-hook 'anaconda-mode)
 
   (use-package company-anaconda
-    :ensure t)
+    :ensure t))
 
-  (add-hook 'python-mode-hook 'company-mode)
-  (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-  (eval-after-load "company"
-    '(add-to-list 'company-backends 'company-anaconda)))
 
 (use-package qt-pro-mode
   :load-path "site-lisp/"
@@ -908,26 +1020,36 @@
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
+
+(use-package typescript-mode
+  :ensure t)
+
+
 (use-package tide
   :ensure t
-  :mode ("\\.ts\\'" . js2-mode)
-  :init
-  (defun setup-tide-mode ()
-    (interactive)
-    (when (string-match "\\.ts\\'" buffer-file-name)
-      ;;(setq tide-tsserver-executable "node_modules/typescript/bin/tsserver")
-      (tide-setup)
-      (flycheck-mode +1)
-      (setq flycheck-check-syntax-automatically '(save mode-enabled)
-            js2-mode-show-parse-errors          nil
-            js2-mode-show-strict-warnings       nil
-            )
-      (eldoc-mode +1)
-      (company-mode +1)))
+  :after (typescript-mode company)
+  :hook ((typescript-mode . tide-setup)))
 
-  ;; aligns annotation to the right hand side
-  (setq company-tooltip-align-annotations t)
-  (add-hook 'js2-mode-hook #'setup-tide-mode))
+;; (use-package tide
+;;   :ensure t
+;;   ;; :mode ("\\.ts\\'" . js2-mode)
+;;   :init
+;;   (defun setup-tide-mode ()
+;;     (interactive)
+;;     (when (string-match "\\.ts\\'" buffer-file-name)
+;;       ;;(setq tide-tsserver-executable "node_modules/typescript/bin/tsserver")
+;;       (tide-setup)
+;;       (flycheck-mode +1)
+;;       (setq flycheck-check-syntax-automatically '(save mode-enabled)
+;;             js2-mode-show-parse-errors          nil
+;;             js2-mode-show-strict-warnings       nil
+;;             )
+;;       (eldoc-mode +1)
+;;       (company-mode +1)))
+
+;;   ;; aligns annotation to the right hand side
+;;   (setq company-tooltip-align-annotations t)
+;;   (add-hook 'js2-mode-hook #'setup-tide-mode))
 
 (use-package mocha-snippets
   :ensure t)
@@ -993,7 +1115,9 @@
 (use-package multiple-cursors
   :ensure t
   :bind (("C-<mouse-1>" . mc/add-cursor-on-click)
-         ("C-c n" . mc/mark-next-like-this))
+         ("C->"     . mc/mark-next-like-this)
+         ("C-<"     . mc/mark-previous-like-this)
+         ("C-c C-<" . mc/mark-all-like-this))
   :init
   (global-unset-key (kbd "C-<down-mouse-1>")))
 
@@ -1013,6 +1137,7 @@
 
 (use-package cider
   :ensure t
+  :disabled
   :config
   (add-hook 'cider-mode-hook #'eldoc-mode))
 
@@ -1075,20 +1200,20 @@
     (add-hook 'go-mode-hook 'go-eldoc-setup))
 
 
-  (defun godef-jump (point &optional other-window)
-    "Redefine with prefix argument"
-    (interactive "d\nP")
-    (condition-case nil
-        (let ((file (car (godef--call point))))
-          (if (not (godef--successful-p file))
-              (message "%s" (godef--error file))
-            (push-mark)
-            (if (eval-when-compile (fboundp 'xref-push-marker-stack))
-                ;; TODO: Integrate this facility with XRef.
-                (xref-push-marker-stack)
-              (ring-insert find-tag-marker-ring (point-marker)))
-            (godef--find-file-line-column file other-window)))
-      (file-error (message "Could not run godef binary"))))
+  ;; (defun godef-jump (point &optional other-window)
+  ;;   "Redefine with prefix argument"
+  ;;   (interactive "d\nP")
+  ;;   (condition-case nil
+  ;;       (let ((file (car (godef--call point))))
+  ;;         (if (not (godef--successful-p file))
+  ;;             (message "%s" (godef--error file))
+  ;;           (push-mark)
+  ;;           (if (eval-when-compile (fboundp 'xref-push-marker-stack))
+  ;;               ;; TODO: Integrate this facility with XRef.
+  ;;               (xref-push-marker-stack)
+  ;;             (ring-insert find-tag-marker-ring (point-marker)))
+  ;;           (godef--find-file-line-column file other-window)))
+  ;;     (file-error (message "Could not run godef binary"))))
 
   (define-key go-mode-map (kbd "C-c C-e") 'go-remove-unused-imports)
   (define-key go-mode-map (kbd "C-<") (lambda ()
@@ -1113,18 +1238,36 @@
 ;;    display-line-numbers-width-start t
 ;;    display-line-numbers-type        'visual))
 
+(use-package lisp-mode
+  :disable
+  :mode ("\\.cl\\'"  "\\.lisp\\'"))
+
 (use-package slime
-  :disabled
+  :disable
   :ensure t
   :init
-  (setq inferior-lisp-program "/usr/bin/sbcl")
-  (slime-setup '(slime-fancy slime-company))
-  :config
-  (use-package slime-company  :ensure t))
+  (setq slime-lisp-implementations
+      '((sbcl ("sbcl" "--core" "/home/marcelo/sbcl.core-for-slime"))))
+  ;;(setq inferior-lisp-program "/usr/bin/sbcl")
+  (defun ma/slime-switch-to-output-buffer-advice (orig-fun &rest args)
+    (let ((split-width-threshold nil))
+      (apply orig-fun args)))
 
+
+  :config
+  ;;(add-to-list ' slime-contribs 'slime-asdf)
+  (slime-setup '(slime-fancy slime-company slime-asdf))
+
+  (advice-add #'slime-switch-to-output-buffer
+              :around
+              #'ma/slime-switch-to-output-buffer-advice))
+
+(use-package slime-company
+  :ensure t)
 
 (use-package beginend
   :ensure t
+  :disabled
   :diminish beginend-global-mode
   :init
   (beginend-global-mode))
@@ -1159,11 +1302,97 @@
   :ensure t)
 
 (use-package savekill
-  :ensure)
+  :load-path "~/lab/savekill"
+  :init
+  (setq savekill-keep-text-properties t
+        savekill-max-saved-items 100))
 
-(use-package helpful
+;; (use-package git-undo
+;;   :load-path "site-lisp/")
+
+
+(use-package auto-yasnippet
   :ensure t
   :init
-  (global-set-key (kbd "C-h f") #'helpful-callable)
-  (global-set-key (kbd "C-h v") #'helpful-variable)
-  (global-set-key (kbd "C-h k") #'helpful-key))
+  (global-set-key (kbd "H-w") #'aya-create)
+  (global-set-key (kbd "H-y") #'aya-expand))
+
+(use-package paredit
+  :ensure t
+  :disabled
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'paredit-mode))
+
+
+(use-package uuidgen
+  :ensure t)
+
+(use-package see-mode
+  :ensure t
+  :init
+  (setq see-use-align-quotes t))
+
+
+(use-package adoc-mode
+  :ensure)
+
+(use-package python
+  :preface
+  (defun ma/python-eval-current-line (&optional keep)
+    (interactive "P")
+    (let ((beg (line-beginning-position))
+          (end (line-end-position)))
+      (python-shell-send-region beg end nil t)
+      (unless keep
+        (forward-line))))
+
+  :bind
+  (:map python-mode-map
+        ("C-c C-n" . ma/python-eval-current-line))
+  :init
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "--nosep --simple-prompt -i"))
+
+
+(use-package julia-mode
+  :ensure t)
+
+(use-package htmlize
+  :ensure t)
+
+(use-package elfeed
+  :ensure t
+  :init
+  (setq shr-width 100)
+  (setq elfeed-feeds
+        '("https://karl-voit.at/feeds/lazyblorg-all.atom_1.0.links-and-teaser.xml"
+          "https://blog.codinghorror.com/rss/"
+          "https://www.joelonsoftware.com/feed/"
+          "http://irreal.org/blog/?feed=rss2"
+          "http://sachachua.com/blog/feed/"
+          "http://cherian.net/rss.xml"
+          "http://emacsninja.com/feed.atom"
+          "http://mbork.pl/?action=rss;days=30;all=0;showedit=0;full=1")))
+
+
+(use-package qml-mode
+  :ensure t
+  :mode "\\.qml\\'")
+
+
+(use-package ledger-mode
+  :ensure t
+  :init
+  (setq ledger-reports
+        '(("bal" "%(binary) -f %(ledger-file) bal")
+          ("bal cost" "%(binary) -f %(ledger-file) bal -X $")
+          ("liquidity (med)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement\\\) \\\)  or  \\\(^Liabilities and not /Credits:Mortgage/\\\) -X $")
+          ("liquidity (short)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement\\\) \\\)  or  \\\(^Liabilities and not \\\(/Credits:Mortgage/ or /Security:Credits/ \\\)\\\) -X $")
+          ("reg" "%(binary) -f %(ledger-file) reg")
+          ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
+          ("account" "%(binary) -f %(ledger-file) reg %(account)")
+          ("account ($)" "%(binary) -f %(ledger-file) reg %(account) -X $"))))
+
+
+(use-package commify
+  :ensure t)
