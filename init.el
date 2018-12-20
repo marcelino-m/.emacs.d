@@ -7,9 +7,15 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(use-package use-package-ensure-system-package
+  :ensure t)
+
+(use-package use-package-chords
+  :ensure t
+  :config (key-chord-mode 1))
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
-(add-to-list 'exec-path "~/.local/bin/")
+
 ;; notify when emacs is ready
 ;; I run emacs in server mode set a systemd units
 (require 'notifications)
@@ -56,7 +62,11 @@
  scroll-step                          1
  vc-follow-symlinks                   t
  auto-hscroll-mode                    'current-line
- hscroll-step 1)
+ hscroll-step 1
+ async-shell-command-buffer           'new-buffer
+ browse-url-browser-function          'browse-url-firefox)
+
+
 
 (setq gc-cons-threshold 50000000)
 
@@ -104,20 +114,24 @@
       (neotree-dir (projectile-project-root))
       (other-window 1))))
 
+
 ;; Setup packages
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (dolist (var '("PATH" "GOPATH" "GOROOT"  "TIMLIB_SRC_ROOT"))
+    (add-to-list 'exec-path-from-shell-variables var))
+  (exec-path-from-shell-initialize)
+
+  (add-to-list 'exec-path "~/.local/bin/")
+  (add-to-list 'exec-path (concat (getenv "GOROOT") "/bin")))
+
 (use-package delight
   :ensure t)
 
 (use-package diminish
   :ensure t)
-
-(use-package exec-path-from-shell
-  :ensure t
-  :defer  2
-  :config
-  (dolist (var '("GOPATH"  "NVM_BIN"))
-    (add-to-list 'exec-path-from-shell-variables var))
-  (exec-path-from-shell-initialize))
 
 (use-package info
   :defer t
@@ -137,7 +151,9 @@
   (add-hook 'markdown-mode-hook  #'ethan-wspace-mode)
   (add-hook 'LaTeX-mode-hook     #'ethan-wspace-mode)
   (add-hook 'yaml-mode-hook      #'ethan-wspace-mode)
-  (add-hook 'see-mode-hook       #'ethan-wspace-mode))
+  (add-hook 'see-mode-hook       #'ethan-wspace-mode)
+  (add-hook 'ledger-mode-hook    #'ethan-wspace-mode)
+  (add-hook 'yaml-mode-hook      #'ethan-wspace-mode))
 
 (use-package zenburn-theme
   :disabled
@@ -373,9 +389,11 @@
 
 (use-package smex
   :ensure t
+  :bind (("M-x" . #'smex)
+         ("M-X" . #'smex-major-mode-commands))
   :config
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
-  (global-set-key [remap execute-extended-command] 'smex))
+  (run-with-idle-timer (* 10 60) t #'smex-save-to-file))
 
 (use-package amx
   :ensure t
@@ -443,14 +461,19 @@
   :defer  t
   :init
   (setq ispell-dictionary "castellano")
+  (add-hook 'org-mode-hook 'flyspell-prog-mode)
   :config
   (define-key flyspell-mode-map [(control ?\,)] nil)
   (define-key flyspell-mode-map [(control ?\.)] nil)
-  (define-key flyspell-mode-map [?\C-c ?$]      nil)
+  (define-key flyspell-mode-map [?\C-c ?$]      nil))
 
-  (use-package flyspell-popup
-    :ensure t
-    :bind (:map flyspell-mode-map ("C-c c" . flyspell-popup-correct))))
+
+(use-package flyspell-correct
+  :ensure t
+  :bind (:map flyspell-mode-map ("C-c c" . flyspell-correct-wrapper)))
+
+(use-package flyspell-correct-ivy
+  :ensure t)
 
 (use-package magit
   :ensure t
@@ -527,7 +550,7 @@
 
 (use-package web-mode
   :ensure t
-  :defer  t
+  :bind (:map web-mode-map ("C-=" . web-mode-mark-and-expand))
   :init
   (setq web-mode-engines-alist '(("angular"    . "\\.html\\'"))
         web-mode-enable-current-element-highlight     t
@@ -684,7 +707,7 @@
 
 (use-package transpose-frame
   :ensure t
-  :defer 5)
+  :bind ("C-c f t" . transpose-frame))
 
 (use-package json-mode
   :ensure t
@@ -716,11 +739,16 @@
          (list (openwith-make-extension-regexp
                 '("odg"))
                "lodraw"
+               '(file))
+         (list (openwith-make-extension-regexp
+                '("pdf"))
+               "okular"
                '(file))))
   (openwith-mode 1))
 
 (use-package recentf
   :config
+  (run-at-time nil (* 10 60) (lambda () (let ((inhibit-message t)) (recentf-save-list))))
   (setq recentf-max-saved-items 500
         recentf-max-menu-items 15
         ;; disable recentf-cleanup on Emacs start, because it can cause
@@ -764,51 +792,13 @@
 
 (use-package org
   :pin gnu
+  :load-path "./defuns/"
   :ensure t
   :bind (:map org-mode-map
-              ("C-c t" . ma/toggle-current-src-block))
-  :preface
-  (defun ma/toggle-current-src-block ()
-    (interactive)
-    (let ((head (org-babel-where-is-src-block-head)))
-      (if head
-          (progn
-            (goto-char head)
-            (org-cycle))
-        (error "Not currently in a code block"))))
-
-  (defun ma/org-table-map-tables (function &optional quietly)
-    "Apply FUNCTION to the start of all tables in the buffer. no widen buffer."
-    (goto-char (point-min))
-    (while (re-search-forward org-table-any-line-regexp nil t)
-      (unless quietly
-        (message "Mapping tables: %d%%"
-                 (floor (* 100.0 (point)) (buffer-size))))
-      (beginning-of-line 1)
-      (when (and (looking-at org-table-line-regexp)
-                 ;; Exclude tables in src/example/verbatim/clocktable blocks
-                 (not (org-in-block-p '("src" "example" "verbatim" "clocktable"))))
-        (save-excursion (funcall function))
-        (or (looking-at org-table-line-regexp)
-            (forward-char 1)))
-      (re-search-forward org-table-any-border-regexp nil 1))
-    (unless quietly (message "Mapping tables: done")))
-
-  (defun ma/org-table-recalculate-tables ()
-    "Recalculate all tables in buffer. no widen buffer."
-    (interactive)
-    (ma/org-table-map-tables
-     (lambda ()
-       ;; Reason for separate `org-table-align': When repeating
-       ;; (org-table-recalculate t) `org-table-may-need-update' gets in
-       ;; the way.
-       (org-table-recalculate t t)
-       (org-table-align))
-     t))
-
+              ("C-c C-v t" . ma/toggle-current-src-block))
   :init
-
   (add-hook 'org-mode-hook #'org-indent-mode)
+  (add-hook 'org-src-mode-hook #'(lambda () (setq org-src--saved-temp-window-config nil)))
   (diminish 'org-indent-mode)
   (setq org-cycle-separator-lines 0)
   (setq org-highlight-latex-and-related '(latex))
@@ -842,13 +832,21 @@
      (python  . t)
      (latex   . t)
      (ditaa   . t)
-     (calc    . t)))
+     (calc    . t)
+     (ruby    . t)))
 
-  (add-to-list 'org-structure-template-alist '("p"  "#+BEGIN_SRC python ?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("pf" "#+BEGIN_SRC python :exports results :results file ?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("po" "#+BEGIN_SRC python :exports results :results output ?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("pv" "#+BEGIN_SRC python :exports results :results value ?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("pd" "#+BEGIN_SRC python :exports results :results drawer ?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("p"      "#+BEGIN_SRC python?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("penrn"  "#+BEGIN_SRC python :exports none :results none?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("perrf"  "#+BEGIN_SRC python :exports results :results file?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("perro"  "#+BEGIN_SRC python :exports results :results output?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("perrv"  "#+BEGIN_SRC python :exports results :results value?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("perrd"  "#+BEGIN_SRC python :exports results :results drawer?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("psenrn" "#+BEGIN_SRC python :session :exports none :results none?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("pserrf" "#+BEGIN_SRC python :session :exports results :results file?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("pserro" "#+BEGIN_SRC python :session :exports results :results output?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("pserrv" "#+BEGIN_SRC python :session :exports results :results value?\n\n#+END_SRC"))
+  (add-to-list 'org-structure-template-alist '("pserrd" "#+BEGIN_SRC python :session :exports results :results drawer?\n\n#+END_SRC"))
+
 
   (mapc (lambda (elm) (setcdr elm (list (downcase (cadr elm)))))
         org-structure-template-alist)
@@ -862,6 +860,9 @@
   (setq org-ditaa-jar-path "/usr/bin/ditaa")
 
   :config
+  (require 'org-defun)
+  (unbind-key "C-c C->" org-mode-map)
+  (unbind-key "C-," org-mode-map)
   (plist-put org-format-latex-options :scale 1.7))
 
 (use-package beacon
@@ -876,7 +877,7 @@
 
 (use-package avy
   :ensure t
-  :bind (("H-a" . avy-goto-char)))
+  :chords (("jj" . avy-goto-char-2)))
 
 (use-package misc-defuns
   :load-path "./defuns/"
@@ -1016,7 +1017,7 @@
 
 (use-package ace-window
   :ensure t
-  :bind (("H-j" . ace-window))
+  :chords (("ww" . ace-window))
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
@@ -1117,13 +1118,17 @@
   :bind (("C-<mouse-1>" . mc/add-cursor-on-click)
          ("C->"     . mc/mark-next-like-this)
          ("C-<"     . mc/mark-previous-like-this)
-         ("C-c C-<" . mc/mark-all-like-this))
+         ("C-c C->" . mc/mark-next-like-this-word))
   :init
   (global-unset-key (kbd "C-<down-mouse-1>")))
 
 (use-package yaml-mode
   :ensure t
   :mode "\\.yml\\'")
+
+(use-package toml-mode
+  :ensure t
+  :mode "\\.toml\\'")
 
 (use-package xclip
   :ensure t
@@ -1133,6 +1138,7 @@
 
 
 (use-package clojure-mode
+  :disabled
   :ensure t)
 
 (use-package cider
@@ -1176,7 +1182,15 @@
 
 (use-package go-mode
   :ensure t
+  :ensure-system-package ((dep       . "curl -s https://raw.githubusercontent.com/golang/dep/master/install.sh | sh")
+                          (godoc     . "go get -u github.com/nsf/gocode")
+                          (goimports . "go get -u golang.org/x/tools/cmd/goimports")
+                          (gorename  . "go get -u golang.org/x/tools/cmd/gorename")
+                          (godef     . "go get -u github.com/rogpeppe/godef")
+                          (gocode    . "go get -u github.com/visualfc/gocode"))
   :init
+  (setq gofmt-command "goimports")
+
   (add-hook 'go-mode-hook
             (lambda ()
               (add-hook 'before-save-hook 'gofmt-before-save)
@@ -1238,12 +1252,9 @@
 ;;    display-line-numbers-width-start t
 ;;    display-line-numbers-type        'visual))
 
-(use-package lisp-mode
-  :disable
-  :mode ("\\.cl\\'"  "\\.lisp\\'"))
 
 (use-package slime
-  :disable
+  :disabled
   :ensure t
   :init
   (setq slime-lisp-implementations
@@ -1265,13 +1276,6 @@
 (use-package slime-company
   :ensure t)
 
-(use-package beginend
-  :ensure t
-  :disabled
-  :diminish beginend-global-mode
-  :init
-  (beginend-global-mode))
-
 (use-package highlight-symbol
   :ensure t
   :bind (("H-h" . ma/highlight-symbol)
@@ -1290,6 +1294,10 @@
         (highlight-symbol-remove-all)
       (highlight-symbol))))
 
+(use-package highlight-numbers
+  :ensure t
+  :hook (prog-mode . highlight-numbers-mode))
+
 
 (use-package lorem-ipsum
   :ensure t)
@@ -1306,10 +1314,6 @@
   :init
   (setq savekill-keep-text-properties t
         savekill-max-saved-items 100))
-
-;; (use-package git-undo
-;;   :load-path "site-lisp/")
-
 
 (use-package auto-yasnippet
   :ensure t
@@ -1396,3 +1400,23 @@
 
 (use-package commify
   :ensure t)
+
+(use-package popwin
+  :ensure t
+  :config
+  (push '(inferior-python-mode :height 20 :noselect t :tail t :stick t) popwin:special-display-config)
+  (popwin-mode 1))
+
+(use-package protobuf-mode
+  :ensure t)
+
+(use-package iy-go-to-char
+  :after (:all multiple-cursors)
+  :ensure t
+  :init
+  (add-to-list 'mc/cursor-specific-vars 'iy-go-to-char-start-pos))
+
+(use-package eros
+  :ensure t
+  :init
+  (eros-mode 1))
