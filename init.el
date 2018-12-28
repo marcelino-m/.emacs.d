@@ -343,12 +343,11 @@
   :ensure t
   :load-path "./defuns/"
   :bind-keymap ("C-," . projectile-command-map)
-  :bind (:map projectile-mode-map
-              ("C-, s a" . helm-projectile-ag)
-              ("C-, o"   . helm-occur)
-              ("C-, 5 p" . ma/projectile-switch-to-project-other-frame))
-  :init
-  (setq projectile-keymap-prefix (kbd "C-,"))
+  :bind (:map projectile-command-map
+              ("s a" . helm-projectile-ag)
+              ("o"   . helm-occur)
+              ("5 p" . ma/projectile-switch-to-project-other-frame))
+
   :config
   (defun ma/projectile-switch-to-project-other-frame (&optional arg)
     (interactive "P")
@@ -1182,12 +1181,10 @@
 
 (use-package go-mode
   :ensure t
-  :ensure-system-package ((dep       . "curl -s https://raw.githubusercontent.com/golang/dep/master/install.sh | sh")
-                          (godoc     . "go get -u github.com/nsf/gocode")
-                          (goimports . "go get -u golang.org/x/tools/cmd/goimports")
+  :ensure-system-package ((goimports . "go get -u golang.org/x/tools/cmd/goimports")
                           (gorename  . "go get -u golang.org/x/tools/cmd/gorename")
                           (godef     . "go get -u github.com/rogpeppe/godef")
-                          (gocode    . "go get -u github.com/visualfc/gocode"))
+                          (gocode    . "go get -u github.com/stamblerre/gocode"))
   :init
   (setq gofmt-command "goimports")
 
@@ -1196,38 +1193,30 @@
               (add-hook 'before-save-hook 'gofmt-before-save)
               (setq tab-width 4)))
   :config
-  (use-package go-guru :ensure t
+  (use-package go-guru
+    :ensure t
+    :bind (:map go-mode-map
+                ("M-." . go-guru-definition)
+                ("C-u M-." . go-guru-definition-other-window))
     :config
     (define-key go-mode-map (kbd "C-c g") 'go-guru-map))
-  (use-package go-rename :ensure t
+
+  (use-package go-rename
+    :ensure t
     :config
     (define-key go-mode-map (kbd "C-c C-r") 'go-rename))
 
-  (use-package company-go :ensure t
+  (use-package company-go
+    :ensure t
     :init
     (add-hook 'go-mode-hook (lambda ()
                               (set (make-local-variable 'company-backends) '(company-go))
                               (company-mode))))
 
-  (use-package go-eldoc  :ensure t
+  (use-package go-eldoc
+    :ensure t
     :init
     (add-hook 'go-mode-hook 'go-eldoc-setup))
-
-
-  ;; (defun godef-jump (point &optional other-window)
-  ;;   "Redefine with prefix argument"
-  ;;   (interactive "d\nP")
-  ;;   (condition-case nil
-  ;;       (let ((file (car (godef--call point))))
-  ;;         (if (not (godef--successful-p file))
-  ;;             (message "%s" (godef--error file))
-  ;;           (push-mark)
-  ;;           (if (eval-when-compile (fboundp 'xref-push-marker-stack))
-  ;;               ;; TODO: Integrate this facility with XRef.
-  ;;               (xref-push-marker-stack)
-  ;;             (ring-insert find-tag-marker-ring (point-marker)))
-  ;;           (godef--find-file-line-column file other-window)))
-  ;;     (file-error (message "Could not run godef binary"))))
 
   (define-key go-mode-map (kbd "C-c C-e") 'go-remove-unused-imports)
   (define-key go-mode-map (kbd "C-<") (lambda ()
@@ -1387,11 +1376,13 @@
 (use-package ledger-mode
   :ensure t
   :init
+  (setq ledger-clear-whole-transactions t)
+  (setq ledger-accounts-file "~/documents/finanzas/definitions.ledger")
   (setq ledger-reports
         '(("bal" "%(binary) -f %(ledger-file) bal")
           ("bal cost" "%(binary) -f %(ledger-file) bal -X $")
-          ("liquidity (med)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement\\\) \\\)  or  \\\(^Liabilities and not /Credits:Mortgage/\\\) -X $")
-          ("liquidity (short)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement\\\) \\\)  or  \\\(^Liabilities and not \\\(/Credits:Mortgage/ or /Security:Credits/ \\\)\\\) -X $")
+          ("liquidity (med)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre\\\) \\\)  or  \\\(^Liabilities and not /Credits:Mortgage/\\\) -X $")
+          ("liquidity (short)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre \\\) \\\)  or  \\\(^Liabilities and not \\\(/Credits:Mortgage/ or /Security:Credits/\\\)\\\) -X $")
           ("reg" "%(binary) -f %(ledger-file) reg")
           ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
           ("account" "%(binary) -f %(ledger-file) reg %(account)")
