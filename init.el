@@ -1108,10 +1108,6 @@
   (global-set-key [f8] 'ma/neotree-toggle)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
-(use-package  all-the-icons
-  :load-path "~/.emacs.d/vendors/all-the-icons/")
-
-
 (use-package multiple-cursors
   :ensure t
   :bind (("C-<mouse-1>" . mc/add-cursor-on-click)

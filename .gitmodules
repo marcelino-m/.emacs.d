@@ -1,9 +1,6 @@
 [submodule "vendors/ycmd"]
 	path = vendors/ycmd
 	url = git@github.com:Valloric/ycmd.git
-[submodule "vendors/all-the-icons"]
-	path = vendors/all-the-icons
-	url = git@github.com:domtronn/all-the-icons.el.git
 [submodule "vendors/pdf-tools"]
 	path = vendors/pdf-tools
 	url = git@github.com:politza/pdf-tools.git
