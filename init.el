@@ -27,8 +27,8 @@
 ;; global options
 (setq default-frame-alist
       (list
-       (cons 'width 180)
-       (cons 'height 50)
+       (cons 'width 0.8)
+       (cons 'height 0.7)
        (cons 'vertical-scroll-bars nil)))
 
 (tool-bar-mode     -1)
