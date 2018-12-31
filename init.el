@@ -25,11 +25,21 @@
                                 :body "I am ready to hack!"
                                 :urgency 'low)))
 ;; global options
+
+(defun ma/font-pixelsize ()
+  "Try to set fontsize wich look equal in all my machines"
+  (let ((base-font-pixelsize 20.0)
+        (base-dpi       101.6)
+        (current-dpi    (/ (x-display-pixel-width ":0") (/ (x-display-mm-width ":0") 25.4)))
+        (magic-factor   4.0))
+    (floor
+     (* base-font-pixelsize (- 1 (* magic-factor (/ (- base-dpi current-dpi) base-dpi)))))))
+
 (setq default-frame-alist
       (list
        (cons 'width 0.85)
        (cons 'height 0.75)
-       (cons 'font "Inconsolata-12")
+       (cons 'font (format "Inconsolata:pixelsize=%d" (ma/font-pixelsize)))
        (cons 'vertical-scroll-bars nil)))
 
 (tool-bar-mode     -1)
