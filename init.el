@@ -27,8 +27,9 @@
 ;; global options
 (setq default-frame-alist
       (list
-       (cons 'width 0.8)
-       (cons 'height 0.7)
+       (cons 'width 0.85)
+       (cons 'height 0.75)
+       (cons 'font "Inconsolata-12")
        (cons 'vertical-scroll-bars nil)))
 
 (tool-bar-mode     -1)
@@ -71,10 +72,6 @@
 (setq gc-cons-threshold 50000000)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
-
-(custom-set-faces
- '(default ((t (:family "Inconsolata" :foundry "unknown" :slant normal :weight normal :height 140 :width normal)))))
-
 
 ;; more useful frame title, that show either a file or a
 ;; buffer name (if the buffer isn't visiting a file)
