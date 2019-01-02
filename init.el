@@ -28,10 +28,13 @@
 
 (defun ma/font-pixelsize ()
   "Try to set fontsize wich look equal in all my machines"
-  (let ((base-font-pixelsize 20.0)
-        (base-dpi       101.6)
-        (current-dpi    (/ (x-display-pixel-width ":0") (/ (x-display-mm-width ":0") 25.4)))
-        (magic-factor   4.0))
+  (let* ((base-font-pixelsize 22.0)
+         (base-dpi            101.6)
+         (mon                 (nth 0 (x-display-monitor-attributes-list ":0")))
+         (px-width            (nth 3 (assoc 'geometry mon)))
+         (in-width            (/ (nth 1 (assoc 'mm-size  mon)) 25.4))
+         (current-dpi         (/ px-width in-width))
+         (magic-factor   4.0))
     (floor
      (* base-font-pixelsize (- 1 (* magic-factor (/ (- base-dpi current-dpi) base-dpi)))))))
 
