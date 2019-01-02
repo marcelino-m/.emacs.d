@@ -49,7 +49,6 @@
 (menu-bar-mode     -1)
 (blink-cursor-mode  1)
 (delete-selection-mode)
-(toggle-frame-maximized)
 (show-paren-mode t)
 (xterm-mouse-mode)
 
