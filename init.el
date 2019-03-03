@@ -26,24 +26,32 @@
                                 :urgency 'low)))
 ;; global options
 
-(defun ma/font-pixelsize ()
+(defun ma/font-pixelsize (frame)
   "Try to set fontsize wich look equal in all my machines"
-  (let* ((base-font-pixelsize 22.0)
-         (base-dpi            101.6)
-         (mon                 (nth 0 (x-display-monitor-attributes-list ":0")))
+  (remove-hook 'after-make-frame-functions  #'ma/font-pixelsize)
+
+  (let* ((mon                 (nth 0 (display-monitor-attributes-list ":0")))
+         (base-pixelsize      17.0)
+         (base-dpi            141.76)
          (px-width            (nth 3 (assoc 'geometry mon)))
          (in-width            (/ (nth 1 (assoc 'mm-size  mon)) 25.4))
          (current-dpi         (/ px-width in-width))
-         (magic-factor   4.0))
-    (floor
-     (* base-font-pixelsize (- 1 (* magic-factor (/ (- base-dpi current-dpi) base-dpi)))))))
+         (magic-m             0.0831)
+         (psize               (ceiling (+ (* magic-m (- current-dpi base-dpi)) base-pixelsize)))
+         (wz                  0.85)
+         (hz                  0.75))
 
-(setq default-frame-alist
-      (list
-       (cons 'width 0.85)
-       (cons 'height 0.75)
-       (cons 'font (format "Inconsolata:pixelsize=%d" (ma/font-pixelsize)))
-       (cons 'vertical-scroll-bars nil)))
+    (setq default-frame-alist
+          (list
+           (cons 'width  wz)
+           (cons 'height hz)
+           (cons 'font (format "DejaVu Sans Mono:pixelsize=%d" psize))
+           (cons 'vertical-scroll-bars nil)))
+
+    (modify-frame-parameters frame default-frame-alist)))
+
+(add-hook 'after-make-frame-functions  #'ma/font-pixelsize)
+
 
 (tool-bar-mode     -1)
 (menu-bar-mode     -1)
@@ -165,8 +173,10 @@
   (add-hook 'yaml-mode-hook      #'ethan-wspace-mode))
 
 (use-package zenburn-theme
+  :ensure t
   :disabled
-  :ensure t)
+  :init
+  (set-cursor-color "#b8860b"))
 
 (use-package spacemacs-theme
   :disabled
@@ -292,6 +302,7 @@
   :functions (yas-guess-snippet-directories yas-table-name)
   :defines (yas-guessed-modes)
   :bind (([backtab]   . yas-expand)
+         ("C-c y e"   . yas-expand)
          ("C-c y s"   . yas-insert-snippet)
          ("C-c y n"   . yas-new-snippet)
          ("C-c y v"   . yas-visit-snippet-file))
@@ -372,7 +383,7 @@
   (setq projectile-enable-caching t)
   (setq projectile-completion-system 'ivy)
 
-  ;;(setq projectile-mode-line '(:eval (format "❪℘ %s❫" (projectile-project-name))))
+  (setq projectile-mode-line-function '(lambda () (format " ((prj: %s))" (projectile-project-name))))
   (setq projectile-switch-project-action #'(lambda ()
                                              (projectile-dired)
                                              (ma/update-neotree-root)
@@ -885,7 +896,8 @@
 
 (use-package avy
   :ensure t
-  :chords (("jj" . avy-goto-char-2)))
+  :chords (("jj" . avy-goto-char-2)
+           ("jk" . avy-goto-char)))
 
 (use-package misc-defuns
   :load-path "./defuns/"
@@ -1109,6 +1121,7 @@
   :ensure t)
 
 (use-package font-lock+
+  :disabled
   :load-path "~/.emacs.d/site-lisp/")
 
 (use-package neotree
@@ -1202,7 +1215,8 @@
     :ensure t
     :bind (:map go-mode-map
                 ("M-." . go-guru-definition)
-                ("C-u M-." . go-guru-definition-other-window))
+                ;; ("C-u M-." . go-guru-definition-other-window)
+                )
     :config
     (define-key go-mode-map (kbd "C-c g") 'go-guru-map))
 
@@ -1353,7 +1367,13 @@
 
 
 (use-package julia-mode
-  :ensure t)
+  :ensure t
+  :init
+  (add-hook 'julia-mode-hook #'lsp-mode))
+
+(use-package lsp-julia
+  :load-path "~/.emacs.d/site-lisp")
+
 
 (use-package htmlize
   :ensure t)
@@ -1370,7 +1390,8 @@
           "http://sachachua.com/blog/feed/"
           "http://cherian.net/rss.xml"
           "http://emacsninja.com/feed.atom"
-          "http://mbork.pl/?action=rss;days=30;all=0;showedit=0;full=1")))
+          "http://mbork.pl/?action=rss;days=30;all=0;showedit=0;full=1"
+          "https://simblob.blogspot.com/feeds/posts/default")))
 
 
 (use-package qml-mode
@@ -1382,16 +1403,19 @@
   :ensure t
   :init
   (setq ledger-clear-whole-transactions t)
-  (setq ledger-accounts-file "~/documents/finanzas/definitions.ledger")
+  ;; (setq ledger-accounts-file "~/documents/finanzas/definitions.ledger")
   (setq ledger-reports
         '(("bal" "%(binary) -f %(ledger-file) bal")
           ("bal cost" "%(binary) -f %(ledger-file) bal -X $")
+          ("home expenses" "%(binary) -f %(ledger-file) reg -b %(currentmonth)  ^Expenses:Home  or ^Liabilities:Home --subtotal")
           ("liquidity (med)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre\\\) \\\)  or  \\\(^Liabilities and not /Credits:Mortgage/\\\) -X $")
           ("liquidity (short)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre \\\) \\\)  or  \\\(^Liabilities and not \\\(/Credits:Mortgage/ or /Security:Credits/\\\)\\\) -X $")
           ("reg" "%(binary) -f %(ledger-file) reg")
           ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
           ("account" "%(binary) -f %(ledger-file) reg %(account)")
-          ("account ($)" "%(binary) -f %(ledger-file) reg %(account) -X $"))))
+          ("account ($)" "%(binary) -f %(ledger-file) reg %(account) -X $")))
+  :config
+  (add-to-list 'ledger-report-format-specifiers '("currentmonth" . (lambda () (format-time-string "%Y-%m-01")))))
 
 
 (use-package commify
@@ -1416,3 +1440,17 @@
   :ensure t
   :init
   (eros-mode 1))
+
+
+(use-package lsp-mode
+  :ensure t
+  :commands lsp)
+
+(use-package lsp-ui
+  :disabled
+  :ensure t
+  :commands lsp-ui-mode)
+
+(use-package company-lsp
+  :ensure t
+  :commands company-lsp)
