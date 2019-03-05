@@ -238,12 +238,12 @@
   :ensure t
   :bind ("C-=" . er/expand-region))
 
-(use-package drag-stuff
+
+(use-package move-text
   :ensure t
-  :bind (([(hyper  up)] . drag-stuff-up)
-         ([(hyper  down)] . drag-stuff-down)
-         ([(hyper  left)] . drag-stuff-left)
-         ([(hyper  right)] . drag-stuff-right)))
+  :bind
+  (([(hyper up)] . move-text-up)
+   ([(hyper down)] . move-text-down)))
 
 (use-package powerline
   :ensure t
