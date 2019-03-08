@@ -1458,3 +1458,6 @@
 (use-package systemd
   :ensure t
   :mode (("\\.service\\'" . systemd-mode)))
+
+(use-package goto-line-preview
+  :ensure t)
