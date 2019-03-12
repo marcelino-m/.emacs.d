@@ -945,7 +945,8 @@
   (setq
    auto-revert-verbose nil
    dired-dwim-target t
-   wdired-allow-to-change-permissions t)
+   wdired-allow-to-change-permissions t
+   dired-listing-switches "-alh")
   (add-hook 'dired-mode-hook 'auto-revert-mode))
 
 (use-package dired-narrow
