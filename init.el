@@ -1464,3 +1464,8 @@
 (use-package goto-line-preview
   :ensure t
   :bind ("H-p" . goto-line-preview))
+
+(use-package tramp
+  :config
+  (tramp-set-completion-function "ssh"
+                                 '((tramp-parse-sconfig "~/.ssh/config"))))
