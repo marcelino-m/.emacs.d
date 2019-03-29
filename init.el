@@ -1462,4 +1462,5 @@
   :mode (("\\.service\\'" . systemd-mode)))
 
 (use-package goto-line-preview
-  :ensure t)
+  :ensure t
+  :bind ("H-p" . goto-line-preview))
