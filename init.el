@@ -267,7 +267,8 @@
               ("C-s" . swiper)
               ("M-x" . counsel-M-x)
               ("C-c W" . ivy-pop-view)
-              ("C-c w" . ivy-push-view))
+              ("C-c w" . ivy-push-view)
+              ("C-<return>" . ivy-immediate-done))
   :init
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
 
