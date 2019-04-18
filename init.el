@@ -604,7 +604,6 @@
               ;; ("C->" . ma/insert-arrow)
               )
   :init
-  (add-hook 'js2-mode-hook 'subword-mode)
   (add-hook 'js2-mode-hook 'tern-setup)
 
   :config
@@ -791,7 +790,6 @@
                  (c-offsets-alist . ((innamespace . [0])))))
   (add-hook 'c++-mode-hook (lambda ()
                              (c-set-style "my-style")
-                             (subword-mode 1)
                              (setq c-basic-offset 4
                                    tab-width 4
                                    indent-tabs-mode nil)
@@ -1198,6 +1196,9 @@
   :init
   (setq flymd-output-directory "/tmp"))
 
+
+(use-package subword-mode
+  :hook (go-mode cc-mode js2-mode))
 
 (use-package go-mode
   :ensure t
