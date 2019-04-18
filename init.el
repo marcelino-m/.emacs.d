@@ -253,6 +253,8 @@
 (use-package ivy
   :ensure t
   :diminish ivy-mode
+  :bind (:map ivy-minibuffer-map
+              ("C-<return>" . ivy-immediate-done))
   :init (ivy-mode)
   (setq
    ivy-use-virtual-buffers t
@@ -267,8 +269,7 @@
               ("C-s" . swiper)
               ("M-x" . counsel-M-x)
               ("C-c W" . ivy-pop-view)
-              ("C-c w" . ivy-push-view)
-              ("C-<return>" . ivy-immediate-done))
+              ("C-c w" . ivy-push-view))
   :init
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
 
