@@ -1201,7 +1201,7 @@
 
 
 (use-package subword-mode
-  :hook (go-mode cc-mode js2-mode))
+  :hook (prog-mode))
 
 (use-package go-mode
   :ensure t
@@ -1372,12 +1372,6 @@
         python-shell-interpreter-args "--nosep --simple-prompt -i"))
 
 
-(use-package julia-mode
-  :ensure t
-  :init
-  (add-hook 'julia-mode-hook #'lsp-mode))
-
-
 (use-package htmlize
   :ensure t)
 
@@ -1447,7 +1441,8 @@
 
 (use-package lsp-mode
   :ensure t
-  :commands lsp)
+  :commands lsp
+  :hook ((go-mode) . lsp))
 
 (use-package lsp-ui
   :disabled
