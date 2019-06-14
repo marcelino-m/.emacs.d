@@ -142,6 +142,7 @@
   (exec-path-from-shell-initialize)
 
   (add-to-list 'exec-path "~/.local/bin/")
+  (add-to-list 'exec-path (concat (getenv "PYTHONUSERBASE") "/bin"))
   (add-to-list 'exec-path (concat (getenv "GOROOT") "/bin")))
 
 (use-package delight
@@ -339,7 +340,7 @@
 (use-package saveplace
   :init
   (setq-default
-   save-place t
+   save-place-mode t
    save-place-file "~/.emacs.d/saveplace")
   :config
   (save-place-mode))
@@ -824,6 +825,7 @@
 
   (setq org-export-async-init-file "~/.emacs.d/org-init-async")
 
+  (setq org-hierarchical-todo-statistics t)
 
   (setq org-latex-packages-alist '(("cachedir=.tmpfiles/minted" "minted") ("" "float")))
   (setq org-latex-listings 'minted)
