@@ -1375,9 +1375,6 @@
   :init
   (add-hook 'julia-mode-hook #'lsp-mode))
 
-(use-package lsp-julia
-  :load-path "~/.emacs.d/site-lisp")
-
 
 (use-package htmlize
   :ensure t)
@@ -1468,6 +1465,15 @@
   :bind ("H-p" . goto-line-preview))
 
 (use-package tramp
+  :ensure t
   :config
   (tramp-set-completion-function "ssh"
                                  '((tramp-parse-sconfig "~/.ssh/config"))))
+
+(use-package gnuplot
+  :ensure t
+  :init
+  (add-to-list 'interpreter-mode-alist '("gnuplot" . gnuplot-mode)))
+
+(use-package crontab-mode
+  :ensure t)
