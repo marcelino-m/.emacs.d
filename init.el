@@ -1,29 +1,36 @@
+;;  adjust the garbage collection param
+(setq gc-cons-threshold (* 50 1024 1024))
+
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(package-initialize)
+
+(defmacro append-to-list (target suffix)
+  "Append SUFFIX to TARGET in place."
+  `(setq ,target (append ,target ,suffix)))
+
+(append-to-list package-archives
+                '(("melpa" . "http://melpa.org/packages/")
+                  ("marmalade" . "http://marmalade-repo.org/packages/")))
+
+
+;;(package-initialize)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
-(use-package use-package-ensure-system-package
-  :ensure t)
-
-(use-package use-package-chords
-  :ensure t
-  :config (key-chord-mode 1))
-
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 ;; notify when emacs is ready
 ;; I run emacs in server mode set a systemd units
-(require 'notifications)
-(add-hook 'after-init-hook #'(lambda ()
-                               (notifications-notify
-                                :title "Emacs"
-                                :body "I am ready to hack!"
-                                :urgency 'low)))
+
+(use-package notifications
+  :init
+  (add-hook 'after-init-hook #'(lambda ()
+                                 (notifications-notify
+                                  :title "Emacs"
+                                  :body "I am ready to hack!"
+                                  :urgency 'low))))
+
 ;; global options
 
 (defun ma/font-pixelsize (frame)
@@ -89,7 +96,7 @@
 
 
 
-(setq gc-cons-threshold 50000000)
+
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -500,11 +507,6 @@
 (use-package magit
   :ensure t
   :init
-  (use-package gitignore-mode
-    :ensure t)
-  (use-package git-timemachine
-    :ensure t)
-
   (setq
    magit-save-repository-buffers 'dontask
    magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
@@ -514,7 +516,11 @@
 
   :bind (([f12] . magit-status)))
 
+(use-package gitignore-mode
+  :ensure t)
 
+(use-package git-timemachine
+  :ensure t)
 
 (use-package helm
   :ensure t
