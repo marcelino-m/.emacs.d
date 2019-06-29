@@ -474,15 +474,28 @@
 
 (use-package magit
   :ensure t
-  :init
-  (setq
-   magit-save-repository-buffers 'dontask
-   magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
+  :bind (([f12] . magit-status))
+  :custom
+  (magit-save-repository-buffers      'dontask)
+  (magit-display-buffer-function      'magit-display-buffer-fullframe-status-v1)
+  (magit-section-visibility-indicator nil)
 
-  (add-hook 'git-commit-mode-hook 'git-commit-turn-on-flyspell)
+  :hook (git-commit-mode . git-commit-turn-on-flyspell)
+
+  :config
   (global-git-commit-mode)
 
-  :bind (([f12] . magit-status)))
+  (magit-add-section-hook 'magit-status-sections-hook
+                          'magit-insert-unpushed-to-upstream
+                          'magit-insert-unpushed-to-upstream-or-recent
+                          'replace)
+
+  (magit-add-section-hook 'magit-status-sections-hook
+                          'magit-insert-recent-commits
+                          'magit-insert-unpushed-to-upstream
+                          'append)
+
+  )
 
 (use-package gitignore-mode
   :ensure t)
@@ -1060,7 +1073,7 @@
   :load-path "./defuns/"
   :bind ([f9] . ma/deft-in-new-frame)
   :init
-  (setq deft-directory "~/Dropbox/notes")
+  (setq deft-directory "~/.deft")
   (setq deft-extensions '("org" "md" "txt")))
 
 (use-package rainbow-mode
@@ -1171,11 +1184,12 @@
   :hook (prog-mode))
 
 (use-package go-mode
+  ;;"go get -u github.com/heschik/goimports"
+  ;;"go get -u golang.org/x/tools/cmd/gorename"
+  ;;"go get -u github.com/rogpeppe/godef"
+  ;;"go get -u github.com/visualfc/gocode"
+
   :ensure t
-  :ensure-system-package ((goimports . "go get -u golang.org/x/tools/cmd/goimports")
-                          (gorename  . "go get -u golang.org/x/tools/cmd/gorename")
-                          (godef     . "go get -u github.com/rogpeppe/godef")
-                          (gocode    . "go get -u github.com/stamblerre/gocode"))
   :init
   (setq gofmt-command "goimports")
 
@@ -1365,21 +1379,26 @@
 
 (use-package ledger-mode
   :ensure t
+  :mode "\\.journal\\'"
   :init
-  (setq ledger-clear-whole-transactions t)
+  (setq ledger-clear-whole-transactions t
+        ledger-binary-path (expand-file-name "~/.local/bin/hledger")
+        ledger-mode-should-check-version nil
+        ledger-init-file-name " ")
   ;; (setq ledger-accounts-file "~/documents/finanzas/definitions.ledger")
-  (setq ledger-reports
-        '(("bal" "%(binary) -f %(ledger-file) bal")
-          ("bal cost" "%(binary) -f %(ledger-file) bal -X $")
-          ("home expenses" "%(binary) -f %(ledger-file) reg -b %(currentmonth)  ^Expenses:Home  or ^Liabilities:Home --subtotal")
-          ("liquidity (med)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre\\\) \\\)  or  \\\(^Liabilities and not /Credits:Mortgage/\\\) -X $")
-          ("liquidity (short)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre \\\) \\\)  or  \\\(^Liabilities and not \\\(/Credits:Mortgage/ or /Security:Credits/\\\)\\\) -X $")
-          ("reg" "%(binary) -f %(ledger-file) reg")
-          ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
-          ("account" "%(binary) -f %(ledger-file) reg %(account)")
-          ("account ($)" "%(binary) -f %(ledger-file) reg %(account) -X $")))
-  :config
-  (add-to-list 'ledger-report-format-specifiers '("currentmonth" . (lambda () (format-time-string "%Y-%m-01")))))
+  ;; (setq ledger-reports
+  ;;       '(("bal" "%(binary) -f %(ledger-file) bal")
+  ;;         ("bal cost" "%(binary) -f %(ledger-file) bal -X $")
+  ;;         ("home expenses" "%(binary) -f %(ledger-file) reg -b %(currentmonth)  ^Expenses:Home  or ^Liabilities:Home --subtotal")
+  ;;         ("liquidity (med)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre\\\) \\\)  or  \\\(^Liabilities and not /Credits:Mortgage/\\\) -X $")
+  ;;         ("liquidity (short)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre \\\) \\\)  or  \\\(^Liabilities and not \\\(/Credits:Mortgage/ or /Security:Credits/\\\)\\\) -X $")
+  ;;         ("reg" "%(binary) -f %(ledger-file) reg")
+  ;;         ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
+  ;;         ("account" "%(binary) -f %(ledger-file) reg %(account)")
+  ;;         ("account ($)" "%(binary) -f %(ledger-file) reg %(account) -X $")))
+  ;; :config
+  ;; (add-to-list 'ledger-report-format-specifiers '("currentmonth" . (lambda () (format-time-string "%Y-%m-01"))))
+  )
 
 
 (use-package commify
