@@ -818,8 +818,7 @@
      (latex   . t)
      (ditaa   . t)
      (calc    . t)
-     (ruby    . t)
-     (yaml    . t)))
+     (ruby    . t)))
 
   (add-to-list 'org-structure-template-alist '("p"      "#+BEGIN_SRC python?\n\n#+END_SRC"))
   (add-to-list 'org-structure-template-alist '("penrn"  "#+BEGIN_SRC python :exports none :results none?\n\n#+END_SRC"))
