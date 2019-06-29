@@ -18,11 +18,12 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+(use-package use-package-chords
+  :ensure t
+  :config (key-chord-mode 1))
 
 ;; notify when emacs is ready
 ;; I run emacs in server mode set a systemd units
-
 (use-package notifications
   :init
   (add-hook 'after-init-hook #'(lambda ()
@@ -30,6 +31,10 @@
                                   :title "Emacs"
                                   :body "I am ready to hack!"
                                   :urgency 'low))))
+
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+
 
 ;; global options
 
@@ -486,11 +491,12 @@
 
 
 (use-package flyspell
-  :ensure t
-  :defer  t
+  :hook ((org-mode      . flyspell-prog-mode)
+         (markdown-mode . flyspell-mode))
   :init
   (setq ispell-dictionary "castellano")
   (add-hook 'org-mode-hook 'flyspell-prog-mode)
+
   :config
   (define-key flyspell-mode-map [(control ?\,)] nil)
   (define-key flyspell-mode-map [(control ?\.)] nil)
@@ -565,7 +571,6 @@
 
 
 (use-package windmove
-  :ensure t
   :bind (("s-d"       . windmove-right)
          ("s-a"       . windmove-left)
          ("s-w"       . windmove-up)
