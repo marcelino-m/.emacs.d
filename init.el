@@ -435,53 +435,6 @@
   :init
   (amx-mode 1))
 
-(use-package ido
-  :ensure t
-  :init
-  (setq ido-enable-prefix nil
-        ido-enable-flex-matching t
-        ido-case-fold nil
-        ido-auto-merge-work-directories-length -1
-        ido-create-new-buffer 'always
-        ido-use-filename-at-point nil
-        ido-max-prospects 10
-        ido-use-faces t)
-
-  (define-key ido-file-completion-map (kbd "~") '(lambda ()
-                                                   (interactive)
-                                                   (cond
-                                                    ((looking-back "/") (insert "~/"))
-                                                    (:else (call-interactively 'self-insert-command)))))
-  :config
-  (use-package flx-ido
-    :ensure t
-    :config
-    (flx-ido-mode 1))
-
-  (use-package ido-vertical-mode
-    :ensure t
-    :init
-    (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right
-          ido-vertical-indicator "•➤")
-    :config
-    ;; (set-face-attribute 'ido-vertical-first-match-face nil
-    ;;                     :foreground "DarkOliveGreen1" :weight 'bold)
-    ;; (set-face-attribute 'ido-vertical-only-match-face nil
-    ;;                     :foreground "DarkOliveGreen1" :weight 'bold)
-    ;; (set-face-attribute 'ido-vertical-match-face nil
-    ;;                     :foreground "DarkOliveGreen4")
-    (ido-vertical-mode))
-
-  (use-package ido-completing-read+
-    :disabled
-    :ensure t
-    :config
-    (ido-ubiquitous-mode 1)))
-
-
-(use-package imenu-anywhere :ensure t
-  :bind (("C-." . imenu-anywhere)))
-
 
 (use-package cmake-mode
   :ensure t
