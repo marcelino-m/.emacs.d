@@ -860,7 +860,8 @@
      (latex   . t)
      (ditaa   . t)
      (calc    . t)
-     (ruby    . t)))
+     (ruby    . t)
+     (yaml    . t)))
 
   (add-to-list 'org-structure-template-alist '("p"      "#+BEGIN_SRC python?\n\n#+END_SRC"))
   (add-to-list 'org-structure-template-alist '("penrn"  "#+BEGIN_SRC python :exports none :results none?\n\n#+END_SRC"))
@@ -1150,7 +1151,8 @@
 
 (use-package yaml-mode
   :ensure t
-  :mode "\\.yml\\'")
+  :mode (("\\.yml\\'"  . yaml-mode)
+         ("\\.yaml\\'" . yaml-mode)))
 
 (use-package toml-mode
   :ensure t
