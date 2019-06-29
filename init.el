@@ -1116,13 +1116,6 @@
 (use-package geiser
   :ensure t)
 
-
-(use-package zeal-at-point
-  :ensure t
-  :bind ("C-c d" . zeal-at-point)
-  :config
-  (add-to-list 'zeal-at-point-mode-alist '(python-mode . ("python"))))
-
 (use-package dockerfile-mode
   :ensure t
   :mode "Dockerfile\\'")
