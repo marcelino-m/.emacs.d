@@ -905,8 +905,8 @@
 
 (use-package avy
   :ensure t
-  :chords (("jj" . avy-goto-char-2)
-           ("jk" . avy-goto-char)))
+  :config
+  :chords (("jj" . avy-goto-char)))
 
 (use-package misc-defuns
   :load-path "./defuns/"
