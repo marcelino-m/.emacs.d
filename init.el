@@ -367,8 +367,6 @@
 (use-package markdown-mode
   :ensure t
   :init
-  (add-hook 'markdown-mode-hook (lambda ()
-                                  (flyspell-mode)))
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 
@@ -460,8 +458,19 @@
   :ensure t
   :bind (:map flyspell-mode-map ("C-c c" . flyspell-correct-wrapper)))
 
+
 (use-package flyspell-correct-ivy
-  :ensure t)
+  :disabled
+  :ensure t
+  :init
+  (setq flyspell-correct-interface #'flyspell-correct-ivy))
+
+
+(use-package flyspell-correct-popup
+  :ensure t
+  :init
+  (setq flyspell-correct-interface #'flyspell-correct-popup))
+
 
 (use-package magit
   :ensure t
