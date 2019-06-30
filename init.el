@@ -22,6 +22,9 @@
   :ensure t
   :config (key-chord-mode 1))
 
+(use-package delight :ensure t)
+(use-package diminish :ensure t)
+
 ;; notify when emacs is ready
 ;; I run emacs in server mode set a systemd units
 (use-package notifications
@@ -98,9 +101,6 @@
  hscroll-step 1
  async-shell-command-buffer           'new-buffer
  browse-url-browser-function          'browse-url-firefox)
-
-
-
 
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -458,7 +458,8 @@
   (magit-display-buffer-function      'magit-display-buffer-fullframe-status-v1)
   (magit-section-visibility-indicator nil)
 
-  :hook (git-commit-mode . git-commit-turn-on-flyspell)
+  :hook
+  (git-commit-mode . git-commit-turn-on-flyspell)
 
   :config
   (global-git-commit-mode)
@@ -471,9 +472,7 @@
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-recent-commits
                           'magit-insert-unpushed-to-upstream
-                          'append)
-
-  )
+                          'append))
 
 (use-package gitignore-mode
   :ensure t)
