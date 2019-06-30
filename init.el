@@ -1206,43 +1206,6 @@
                                         (insert ":="))))
 
 
-
-;; (use-package guru-mode
-;;   :ensure t
-;;   :delight
-;;   :init
-;;   (guru-global-mode +1))
-
-;; (use-package display-line-numbers-mode
-;;   :init
-;;   (setq
-;;    display-line-numbers-width-start t
-;;    display-line-numbers-type        'visual))
-
-
-(use-package slime
-  :disabled
-  :ensure t
-  :init
-  (setq slime-lisp-implementations
-      '((sbcl ("sbcl" "--core" "/home/marcelo/sbcl.core-for-slime"))))
-  ;;(setq inferior-lisp-program "/usr/bin/sbcl")
-  (defun ma/slime-switch-to-output-buffer-advice (orig-fun &rest args)
-    (let ((split-width-threshold nil))
-      (apply orig-fun args)))
-
-
-  :config
-  ;;(add-to-list ' slime-contribs 'slime-asdf)
-  (slime-setup '(slime-fancy slime-company slime-asdf))
-
-  (advice-add #'slime-switch-to-output-buffer
-              :around
-              #'ma/slime-switch-to-output-buffer-advice))
-
-(use-package slime-company
-  :ensure t)
-
 (use-package highlight-symbol
   :ensure t
   :bind (("H-h" . ma/highlight-symbol)
