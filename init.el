@@ -127,22 +127,6 @@
   (write-region "" nil custom-file))
 (load custom-file)
 
-(defun ma/neotree-toggle ()
-  "Toggle show the NeoTree window."
-  (interactive)
-  (if (neo-global--window-exists-p)
-      (neotree-hide)
-    (or (ignore-errors
-          (neotree-dir (projectile-project-root)))
-        (neotree-show))))
-
-(defun ma/update-neotree-root ()
-  (interactive)
-  (when (neo-global--window-exists-p)
-    (progn
-      (neotree-dir (projectile-project-root))
-      (other-window 1))))
-
 
 ;; Setup packages
 
@@ -157,11 +141,6 @@
   (add-to-list 'exec-path (concat (getenv "PYTHONUSERBASE") "/bin"))
   (add-to-list 'exec-path (concat (getenv "GOROOT") "/bin")))
 
-(use-package delight
-  :ensure t)
-
-(use-package diminish
-  :ensure t)
 
 (use-package info
   :defer t
@@ -399,7 +378,6 @@
   (setq projectile-mode-line-function '(lambda () (format " ((prj: %s))" (projectile-project-name))))
   (setq projectile-switch-project-action #'(lambda ()
                                              (projectile-dired)
-                                             (ma/update-neotree-root)
                                              (projectile-commander)))
 
 
@@ -1106,11 +1084,6 @@
   :disabled
   :load-path "~/.emacs.d/site-lisp/")
 
-(use-package neotree
-  :ensure t
-  :init
-  (global-set-key [f8] 'ma/neotree-toggle)
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package multiple-cursors
   :ensure t
