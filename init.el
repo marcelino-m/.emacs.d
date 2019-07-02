@@ -861,7 +861,6 @@
 
 (use-package avy
   :ensure t
-  :config
   :chords (("jj" . avy-goto-char)))
 
 (use-package misc-defuns
