@@ -1142,8 +1142,6 @@
   :load-path "site-lisp/"
   :mode "\\.sed\\'")
 
-(use-package restart-emacs
-  :ensure t)
 
 (use-package flymd
   :ensure t
