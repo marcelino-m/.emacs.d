@@ -1328,7 +1328,7 @@
 
 (use-package lsp-mode
   :ensure t
-  :hook (go-mode . lsp-deferred)
+  :hook ((go-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-prefer-flymake :none))
@@ -1336,6 +1336,9 @@
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode
+  :bind (:map lsp-mode-map
+              ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+              ([remap xref-find-references]  . lsp-ui-peek-find-references))
   :custom
   (lsp-ui-sideline-enable nil))
 
