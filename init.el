@@ -1156,54 +1156,21 @@
   :hook (prog-mode))
 
 (use-package go-mode
-  ;;"go get -u github.com/heschik/goimports"
-  ;;"go get -u golang.org/x/tools/cmd/gorename"
-  ;;"go get -u github.com/rogpeppe/godef"
-  ;;"go get -u github.com/visualfc/gocode"
-
   :ensure t
+  :bind (:map go-mode-map
+              ("C-:" . (lambda () (interactive) (insert ":="))))
   :init
   (setq gofmt-command "goimports")
-
   (add-hook 'go-mode-hook
             (lambda ()
               (add-hook 'before-save-hook 'gofmt-before-save)
-              (setq tab-width 4)))
-  :config
-  (use-package go-guru
-    :ensure t
-    :bind (:map go-mode-map
-                ("M-." . go-guru-definition)
-                ;; ("C-u M-." . go-guru-definition-other-window)
-                )
-    :config
-    (define-key go-mode-map (kbd "C-c g") 'go-guru-map))
+              (setq tab-width 4))))
 
-  (use-package go-rename
-    :ensure t
-    :config
-    (define-key go-mode-map (kbd "C-c C-r") 'go-rename))
+(use-package go-eldoc
+  :disabled
+  :ensure t
+  :hook (go-mode . go-eldoc-setup))
 
-  (use-package company-go
-    :ensure t
-    :init
-    (add-hook 'go-mode-hook (lambda ()
-                              (set (make-local-variable 'company-backends) '(company-go))
-                              (company-mode))))
-
-  (use-package go-eldoc
-    :ensure t
-    :init
-    (add-hook 'go-mode-hook 'go-eldoc-setup))
-
-  (define-key go-mode-map (kbd "C-c C-e") 'go-remove-unused-imports)
-  (define-key go-mode-map (kbd "C-<") (lambda ()
-                                        (interactive)
-                                        (insert "<-")))
-
-  (define-key go-mode-map (kbd "C-:") (lambda ()
-                                        (interactive)
-                                        (insert ":="))))
 
 
 (use-package highlight-symbol
@@ -1362,13 +1329,16 @@
 
 (use-package lsp-mode
   :ensure t
-  :commands lsp
-  :hook ((go-mode) . lsp))
+  :hook (go-mode . lsp-deferred)
+  :commands (lsp lsp-deferred)
+  :custom
+  (lsp-prefer-flymake :none))
 
 (use-package lsp-ui
-  :disabled
   :ensure t
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-sideline-enable nil))
 
 (use-package company-lsp
   :ensure t
