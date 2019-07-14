@@ -1296,7 +1296,10 @@
 
 (use-package ledger-mode
   :ensure t
-  :mode "\\.journal\\'"
+  :mode ("\\.journal\\'" "\\.hledger\\'")
+  :custom
+  (ledger-default-date-format           "%Y.%m.%d")
+  (ledger-highlight-xact-under-point           nil)
   :init
   (setq ledger-clear-whole-transactions t
         ledger-binary-path (expand-file-name "~/.local/bin/hledger")
