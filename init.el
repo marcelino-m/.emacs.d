@@ -587,24 +587,24 @@
 
 (use-package company
   :ensure t
-  :defer  t
   :diminish company-mode
   :bind (:map company-mode-map ("<s-tab>" . company-complete))
+  :hook ((emacs-lisp-mode    . company-mode)
+         (js2-mode           . company-mode)
+         (web-mode           . company-mode)
+         (css-mode           . company-mode)
+         (c++-mode           . company-mode)
+         (cider-repl-mode    . company-mode)
+         (cider-mode         . company-mode)
+         (sh-mode            . company-mode)
+         (ess-mode           . company-mode)
+         (python-mode        . company-mode)
+         (typescript-mode    . company-mode)
+         (inferior-ess-mode  . company-mode)
+         (ledger-mode        . company-mode))
+
+
   :init
-  (add-hook 'emacs-lisp-mode-hook 'company-mode)
-  (add-hook 'js2-mode-hook        'company-mode)
-  (add-hook 'web-mode-hook        'company-mode)
-  (add-hook 'css-mode-hook        'company-mode)
-  (add-hook 'c++-mode-hook        'company-mode)
-  (add-hook 'cider-repl-mode-hook 'company-mode)
-  (add-hook 'cider-mode-hook      'company-mode)
-  (add-hook 'sh-mode-hook         'company-mode)
-  (add-hook 'ess-mode-hook        'company-mode)
-  (add-hook 'python-mode-hook     'company-mode)
-  (add-hook 'typescript-mode-hook 'company-mode)
-  (add-hook 'inferior-ess-mode-hook  'company-mode)
-
-
   (setq
    company-idle-delay            0
    company-tooltip-idle-delay    0
