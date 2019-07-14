@@ -898,25 +898,43 @@
               (setq sqlind-indentation-offsets-alist
                     my-sql-indentation-offsets-alist))))
 
+(use-package autorever
+  :hook ((dired-mode) . auto-revert-mode)
+  :custom
+  (auto-revert-verbose                   nil))
+
 (use-package dired-x
+  :custom
+  (dired-omit-verbose nil)
   :init
-  (add-hook 'dired-mode-hook #'dired-omit-mode)
-  :config
-  (setq  dired-omit-verbose nil))
+  (add-hook 'dired-mode-hook #'dired-omit-mode))
 
 (use-package dired
-  :init
-  (setq
-   auto-revert-verbose nil
-   dired-dwim-target t
-   wdired-allow-to-change-permissions t
-   dired-listing-switches "-alh")
-  (add-hook 'dired-mode-hook 'auto-revert-mode))
+  :custom
+  (dired-dwim-target                       t)
+  (wdired-allow-to-change-permissions      t)
+  (dired-listing-switches             "-alh"))
+
 
 (use-package dired-narrow
   :ensure t
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
+
+(use-package dired-subtree
+  :ensure t
+  :bind (:map dired-mode-map
+              ("i"  . dired-subtree-insert)
+              ("r"  . dired-subtree-remove))
+  :custom
+  (dired-subtree-use-backgrounds  t)
+  :custom-face
+  (dired-subtree-depth-1-face ((t (:background "#f4eddb"))))
+  (dired-subtree-depth-2-face ((t (:background "#f2e9d3"))))
+  (dired-subtree-depth-3-face ((t (:background "#efe5cb"))))
+  (dired-subtree-depth-4-face ((t (:background "#ede1c4"))))
+  (dired-subtree-depth-5-face ((t (:background "#eaddbc"))))
+  (dired-subtree-depth-6-face ((t (:background "#e8d9b4")))))
 
 (use-package tex
   :ensure auctex
