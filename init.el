@@ -925,7 +925,7 @@
   :ensure t
   :bind (:map dired-mode-map
               ("i"  . dired-subtree-insert)
-              ("r"  . dired-subtree-remove))
+              ("k"  . dired-subtree-remove))
   :custom
   (dired-subtree-use-backgrounds  t)
   :custom-face
