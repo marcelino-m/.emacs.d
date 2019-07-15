@@ -898,10 +898,11 @@
               (setq sqlind-indentation-offsets-alist
                     my-sql-indentation-offsets-alist))))
 
-(use-package autorever
+(use-package autorevert
+  :delight auto-revert-mode
   :hook ((dired-mode) . auto-revert-mode)
   :custom
-  (auto-revert-verbose                   nil))
+  (auto-revert-verbose  nil))
 
 (use-package dired-x
   :custom
