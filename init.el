@@ -141,6 +141,8 @@
   (add-to-list 'exec-path (concat (getenv "PYTHONUSERBASE") "/bin"))
   (add-to-list 'exec-path (concat (getenv "GOROOT") "/bin")))
 
+(use-package eldoc
+  :diminish eldoc-mode)
 
 (use-package info
   :defer t
@@ -353,6 +355,7 @@
 
 (use-package projectile
   :ensure t
+  :delight '(:eval (format " (:prj %s)" (projectile-project-name)))
   :load-path "./defuns/"
   :bind-keymap ("C-," . projectile-command-map)
   :bind (:map projectile-command-map
@@ -375,7 +378,6 @@
   (setq projectile-enable-caching t)
   (setq projectile-completion-system 'ivy)
 
-  (setq projectile-mode-line-function '(lambda () (format " ((prj: %s))" (projectile-project-name))))
   (setq projectile-switch-project-action #'(lambda ()
                                              (projectile-dired)
                                              (projectile-commander)))
@@ -908,7 +910,10 @@
   :custom
   (dired-omit-verbose nil)
   :init
-  (add-hook 'dired-mode-hook #'dired-omit-mode))
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (dired-omit-mode)
+              (diminish 'dired-omit-mode))))
 
 (use-package dired
   :custom
@@ -1168,8 +1173,9 @@
   (setq flymd-output-directory "/tmp"))
 
 
-(use-package subword-mode
-  :hook (prog-mode))
+(use-package subword
+  :diminish
+  :hook ((prog-mode) .  subword-mode))
 
 (use-package go-mode
   :ensure t
