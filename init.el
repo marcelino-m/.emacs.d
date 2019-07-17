@@ -858,7 +858,9 @@
 
 (use-package avy
   :ensure t
-  :chords (("jj" . avy-goto-char)))
+  :bind (("C-. ,"  . avy-goto-word-1-above)
+         ("C-. /"  . avy-goto-word-1-below)
+         ("C-. ."  . avy-goto-char-in-line)))
 
 (use-package misc-defuns
   :load-path "./defuns/"
