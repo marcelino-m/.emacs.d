@@ -352,38 +352,21 @@
          ("\\.markdown\\'" . markdown-mode)))
 
 
-
 (use-package projectile
   :ensure t
-  :delight '(:eval (format " (:prj %s)" (projectile-project-name)))
+  :delight '(:eval (format " [:prj %s]" (projectile-project-name)))
   :load-path "./defuns/"
   :bind-keymap ("C-," . projectile-command-map)
   :bind (:map projectile-command-map
               ("s a" . helm-projectile-ag)
               ("o"   . helm-occur)
               ("5 p" . ma/projectile-switch-to-project-other-frame))
+  :custom
+  (projectile-enable-caching            t)
+  (projectile-completion-system      'ivy)
+  (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
 
   :config
-  (defun ma/projectile-switch-to-project-other-frame (&optional arg)
-    (interactive "P")
-    (select-frame (make-frame-command))
-    (projectile-switch-project arg))
-
-  (use-package helm-projectile
-    :ensure t)
-
-  (use-package ggtags
-    :ensure t)
-
-  (setq projectile-enable-caching t)
-  (setq projectile-completion-system 'ivy)
-
-  (setq projectile-switch-project-action #'(lambda ()
-                                             (projectile-dired)
-                                             (projectile-commander)))
-
-
-  ;;
   (defun projectile--file-name-sans-extensions (file-name)
     "Return FILE-NAME sans any extensions."
     (file-name-base file-name))
@@ -392,12 +375,24 @@
     "Return FILE-NAME's extensions."
     (file-name-extension file-name))
 
+  (defun ma/projectile-switch-to-project-other-frame (&optional arg)
+    (interactive "P")
+    (select-frame (make-frame-command))
+    (projectile-switch-project arg))
+
+
   (add-to-list 'projectile-other-file-alist '("ts"   . ("css" "html")))
   (add-to-list 'projectile-other-file-alist '("html" . ("css" "ts")))
   (add-to-list 'projectile-other-file-alist '("css"  . ("ts" "html")))
 
   (projectile-global-mode))
 
+
+(use-package helm-projectile
+  :ensure t)
+
+(use-package ggtags
+  :ensure t)
 
 (use-package smex
   :ensure t
