@@ -1398,3 +1398,9 @@
   :custom
   (xref-after-jump-hook  '(recenter))
   (xref-after-return-hook  nil))
+
+(use-package page-break-lines
+  :ensure t
+  :diminish page-break-lines-mode
+  :init
+  (global-page-break-lines-mode))
