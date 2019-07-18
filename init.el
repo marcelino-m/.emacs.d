@@ -858,9 +858,11 @@
 
 (use-package avy
   :ensure t
-  :bind (("C-. ,"  . avy-goto-word-1-above)
-         ("C-. /"  . avy-goto-word-1-below)
-         ("C-. ."  . avy-goto-char-in-line)))
+  :bind (("C-z z"  . avy-goto-word-1)
+         ("C-z x"  . avy-goto-char)
+         ("C-z l"  . avy-goto-line))
+  :init
+  (global-set-key (kbd "C-z") nil))
 
 (use-package misc-defuns
   :load-path "./defuns/"
@@ -1361,7 +1363,8 @@
   :commands lsp-ui-mode
   :bind (:map lsp-mode-map
               ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-              ([remap xref-find-references]  . lsp-ui-peek-find-references))
+              ([remap xref-find-references]  . lsp-ui-peek-find-references)
+              ("C-."                         . lsp-ui-imenu))
   :custom
   (lsp-ui-sideline-enable nil))
 
