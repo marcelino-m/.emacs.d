@@ -908,6 +908,7 @@
 (use-package dired-x
   :custom
   (dired-omit-verbose nil)
+  (dired-omit-files"^\\.")
   :init
   (add-hook 'dired-mode-hook
             (lambda ()
