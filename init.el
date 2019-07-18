@@ -1390,3 +1390,8 @@
 
 (use-package crontab-mode
   :ensure t)
+
+(use-package xref
+  :custom
+  (xref-after-jump-hook  '(recenter))
+  (xref-after-return-hook  nil))
