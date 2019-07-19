@@ -447,9 +447,14 @@
   :ensure t
   :bind (([f12] . magit-status))
   :custom
-  (magit-save-repository-buffers      'dontask)
-  (magit-display-buffer-function      'magit-display-buffer-fullframe-status-v1)
-  (magit-section-visibility-indicator nil)
+  (magit-save-repository-buffers          'dontask)
+  (magit-display-buffer-function          'magit-display-buffer-fullframe-status-v1)
+  (magit-section-visibility-indicator     nil)
+  (magit-section-initial-visibility-alist '((untracked . hide)
+                                            (unstaged  . show)
+                                            (staged    . show)
+                                            (stashes   . hide)
+                                            (recent    . show)))
 
   :hook
   (git-commit-mode . git-commit-turn-on-flyspell)
