@@ -195,11 +195,7 @@
 (use-package solarized-theme
   :ensure t
   :init
-  ;; (custom-set-faces
-  ;;  '(org-block-begin-line
-  ;;    ((t (:underline "#d33682" :background ))))
-  ;;  '(org-block-end-line
-  ;;    ((t (:overline "#d33682")))))
+  (set-face-attribute 'region nil :background "#2aa198")
 
   (custom-set-faces
    '(org-block
