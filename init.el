@@ -195,7 +195,7 @@
 (use-package solarized-theme
   :ensure t
   :init
-  (set-face-attribute 'region nil :background "#2aa198")
+  (set-face-attribute 'region nil :background "#fcebe4" :foreground "#cb4b16")
 
   (custom-set-faces
    '(org-block
