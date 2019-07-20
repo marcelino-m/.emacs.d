@@ -194,30 +194,27 @@
 
 (use-package solarized-theme
   :ensure t
-  :init
-  (set-face-attribute 'region nil :background "#fcebe4" :foreground "#cb4b16")
+  :custom
+  (solarized-use-variable-pitch      nil)
+  (solarized-high-contrast-mode-line t)
+  (solarized-use-less-bold           t)
+  (solarized-use-more-italic         t)
+  (solarized-emphasize-indicators    nil)
+  (solarized-scale-org-headlines     nil)
+  (solarized-height-minus-1          1.0)
+  (solarized-height-plus-1           1.0)
+  (solarized-height-plus-2           1.0)
+  (solarized-height-plus-3           1.0)
+  (solarized-height-plus-4           1.0)
 
-  (custom-set-faces
-   '(org-block
-     ((t :background "#f4eddb")))
-   '(org-block-begin-line
-     ((t (:underline "#6c71c4"))))
-   '(org-block-end-line
-     ((t (:overline nil :underline "#6c71c4")))))
+  :custom-face
+  (org-block            ((t :background "#f4eddb")))
+  (org-block-begin-line ((t (:underline "#6c71c4"))))
+  (org-block-end-line   ((t (:overline nil :underline "#6c71c4"))))
 
-
-  (setq solarized-use-variable-pitch      nil
-        solarized-high-contrast-mode-line t
-        solarized-use-less-bold           t
-        solarized-use-more-italic         t
-        solarized-emphasize-indicators    nil
-        solarized-scale-org-headlines     nil
-        solarized-height-minus-1  1.0
-        solarized-height-plus-1   1.0
-        solarized-height-plus-2   1.0
-        solarized-height-plus-3   1.0
-        solarized-height-plus-4   1.0)
-  (load-theme 'solarized-light t))
+  :config
+  (set-face-attribute 'region nil :background "#fcebe4" :foreground "#cb4b16"))
+  (load-theme 'solarized-light t)
 
 
 (use-package csv-mode
