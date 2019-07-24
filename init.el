@@ -447,6 +447,7 @@
   (magit-save-repository-buffers          'dontask)
   (magit-display-buffer-function          'magit-display-buffer-fullframe-status-v1)
   (magit-section-visibility-indicator     nil)
+  (magit-diff-adjust-tab-width            'always)
   (magit-section-initial-visibility-alist '((untracked . hide)
                                             (unstaged  . show)
                                             (staged    . show)
