@@ -475,6 +475,10 @@
 (use-package git-timemachine
   :ensure t)
 
+(use-package smerge-mode
+  :custom
+  (smerge-command-prefix  "\C-cm"))
+
 (use-package helm
   :ensure t
   :init
