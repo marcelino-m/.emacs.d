@@ -1403,3 +1403,8 @@
   :diminish page-break-lines-mode
   :init
   (global-page-break-lines-mode))
+
+
+(use-package restclient
+  :ensure t
+  :mode ("\\.http\\'" . restclient-mode))
