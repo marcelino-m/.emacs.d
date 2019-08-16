@@ -307,11 +307,6 @@
 
 
 
-
-(use-package yasnippet-snippets
-  :ensure t)
-
-
 (use-package prog-mode
   :init
   (setq tab-width 4))
