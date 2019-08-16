@@ -1115,6 +1115,14 @@
   :init
   (global-unset-key (kbd "C-<down-mouse-1>")))
 
+
+(use-package iy-go-to-char
+  :after (:all multiple-cursors)
+  :ensure t
+  :init
+  (add-to-list 'mc/cursor-specific-vars 'iy-go-to-char-start-pos))
+
+
 (use-package yaml-mode
   :ensure t
   :mode (("\\.yml\\'"  . yaml-mode)
@@ -1338,12 +1346,6 @@
 
 (use-package protobuf-mode
   :ensure t)
-
-(use-package iy-go-to-char
-  :after (:all multiple-cursors)
-  :ensure t
-  :init
-  (add-to-list 'mc/cursor-specific-vars 'iy-go-to-char-start-pos))
 
 (use-package eros
   :ensure t
