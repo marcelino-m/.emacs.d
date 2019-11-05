@@ -258,7 +258,7 @@
               ("M-x" . counsel-M-x)
               ("C-c W" . ivy-pop-view)
               ("C-c w" . ivy-push-view))
-  :init
+  :config
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
 
 
