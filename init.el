@@ -258,7 +258,7 @@
               ("M-x" . counsel-M-x)
               ("C-c W" . ivy-pop-view)
               ("C-c w" . ivy-push-view))
-  :init
+  :config
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
 
 
@@ -843,6 +843,11 @@
   (require 'org-defun)
   (unbind-key "C-c C->" org-mode-map)
   (unbind-key "C-," org-mode-map)
+
+  ;; prevent org mode repositioning text when cicle visibility
+  (remove-hook 'org-cycle-hook
+               #'org-optimize-window-after-visibility-change)
+
   (plist-put org-format-latex-options :scale 1.7))
 
 (use-package beacon
