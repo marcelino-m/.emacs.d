@@ -208,7 +208,7 @@
   (solarized-height-plus-4           1.0)
 
   :custom-face
-  (org-block            ((t :background "#f4eddb")))
+  (org-block            ((t :background "#f4eddb" :extend t)))
   (org-block-begin-line ((t (:underline "#6c71c4"))))
   (org-block-end-line   ((t (:overline nil :underline "#6c71c4"))))
 
