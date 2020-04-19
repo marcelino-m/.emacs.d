@@ -41,33 +41,6 @@
 
 ;; global options
 
-(defun ma/font-pixelsize (frame)
-  "Try to set fontsize wich look equal in all my machines"
-  (remove-hook 'after-make-frame-functions  #'ma/font-pixelsize)
-
-  (let* ((mon                 (nth 0 (display-monitor-attributes-list ":0")))
-         (base-pixelsize      17.0)
-         (base-dpi            141.76)
-         (px-width            (nth 3 (assoc 'geometry mon)))
-         (in-width            (/ (nth 1 (assoc 'mm-size  mon)) 25.4))
-         (current-dpi         (/ px-width in-width))
-         (magic-m             0.0831)
-         (psize               (ceiling (+ (* magic-m (- current-dpi base-dpi)) base-pixelsize)))
-         (wz                  0.85)
-         (hz                  0.75))
-
-    (setq default-frame-alist
-          (list
-           (cons 'width  wz)
-           (cons 'height hz)
-           (cons 'font (format "DejaVu Sans Mono:pixelsize=%d" psize))
-           (cons 'vertical-scroll-bars nil)))
-
-    (modify-frame-parameters frame default-frame-alist)))
-
-(add-hook 'after-make-frame-functions  #'ma/font-pixelsize)
-
-
 (tool-bar-mode     -1)
 (menu-bar-mode     -1)
 (blink-cursor-mode  1)
@@ -100,7 +73,12 @@
  auto-hscroll-mode                    'current-line
  hscroll-step 1
  async-shell-command-buffer           'new-buffer
- browse-url-browser-function          'browse-url-firefox)
+ browse-url-browser-function          'browse-url-firefox
+ default-frame-alist                  (list
+                                       (cons 'width  0.8)
+                                       (cons 'height 0.75)
+                                       (cons 'font (format "Inconsolata Medium %d" 12))
+                                       (cons 'vertical-scroll-bars nil)))
 
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -170,27 +148,9 @@
   :ensure t
   :disabled
   :init
-  (set-cursor-color "#b8860b"))
-
-(use-package spacemacs-theme
-  :disabled
-  :ensure t
-  :defer
-  :preface
-  (defun ma/load-theme ()
-    (remove-hook 'server-after-make-frame-hook #'ma/load-theme)
-    (load-theme 'spacemacs-light t))
-
-  :init
-  (setq spacemacs-theme-comment-bg nil
-        spacemacs-theme-org-height nil)
-
-  (custom-set-variables '(spacemacs-theme-custom-colors
-                          '((cblk-bg    . "#ffffff")
-                            (cblk-ln-bg . "#d4c793")
-                            (cursor     . "#eead0e"))))
-
-  (add-hook 'server-after-make-frame-hook #'ma/load-theme))
+  (set-cursor-color "#b8860b")
+  :config
+  (load-theme 'zenburn t))
 
 (use-package solarized-theme
   :ensure t
@@ -216,8 +176,6 @@
   (set-face-attribute 'region nil :background "#2aa198"  :foreground "#ffffff")
   (load-theme 'solarized-light t))
 
-
-
 (use-package csv-mode
   :ensure t
   :mode   "\\.csv\\'")
@@ -225,7 +183,6 @@
 (use-package expand-region
   :ensure t
   :bind ("C-=" . er/expand-region))
-
 
 (use-package move-text
   :ensure t
@@ -260,8 +217,6 @@
               ("C-c w" . ivy-push-view))
   :config
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
-
-
 
 (use-package smooth-scroll
   :ensure t
@@ -369,6 +324,10 @@
     (select-frame (make-frame-command))
     (projectile-switch-project arg))
 
+  ;; projectile realentiza tramp-mode
+  ;; ttps://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
+  (defadvice projectile-project-root (around ignore-remote first activate)
+    (unless (file-remote-p default-directory) ad-do-it))
 
   (add-to-list 'projectile-other-file-alist '("ts"   . ("css" "html")))
   (add-to-list 'projectile-other-file-alist '("html" . ("css" "ts")))
@@ -703,6 +662,7 @@
 
 
 (use-package openwith
+  :disabled
   :ensure t
   :defer  3
   :config
@@ -815,21 +775,7 @@
      (calc    . t)
      (ruby    . t)))
 
-  (add-to-list 'org-structure-template-alist '("p"      "#+BEGIN_SRC python?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("penrn"  "#+BEGIN_SRC python :exports none :results none?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("perrf"  "#+BEGIN_SRC python :exports results :results file?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("perro"  "#+BEGIN_SRC python :exports results :results output?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("perrv"  "#+BEGIN_SRC python :exports results :results value?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("perrd"  "#+BEGIN_SRC python :exports results :results drawer?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("psenrn" "#+BEGIN_SRC python :session :exports none :results none?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("pserrf" "#+BEGIN_SRC python :session :exports results :results file?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("pserro" "#+BEGIN_SRC python :session :exports results :results output?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("pserrv" "#+BEGIN_SRC python :session :exports results :results value?\n\n#+END_SRC"))
-  (add-to-list 'org-structure-template-alist '("pserrd" "#+BEGIN_SRC python :session :exports results :results drawer?\n\n#+END_SRC"))
 
-
-  (mapc (lambda (elm) (setcdr elm (list (downcase (cadr elm)))))
-        org-structure-template-alist)
   (setq org-babel-results-keyword "results")
 
   ;; use ivy with org-goto
@@ -848,6 +794,8 @@
   (remove-hook 'org-cycle-hook
                #'org-optimize-window-after-visibility-change)
 
+  ;; redisply omages inline when image change
+  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
   (plist-put org-format-latex-options :scale 1.7))
 
 (use-package beacon
@@ -1030,9 +978,7 @@
 
 (use-package ace-window
   :ensure t
-  :chords (("ww" . ace-window))
-  :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+  :chords (("ww" . ace-window)))
 
 
 (use-package typescript-mode
@@ -1341,7 +1287,8 @@
 
 
 (use-package commify
-  :ensure t)
+  :ensure t
+  :bind ("H-," . commify-toggle))
 
 (use-package popwin
   :ensure t
@@ -1390,6 +1337,13 @@
 (use-package tramp
   :ensure t
   :config
+  (setq tramp-default-method "ssh")
+  (setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+  (setq remote-file-name-inhibit-cache nil)
+  (setq emote-file-name-inhibit-cache  nil)
   (tramp-set-completion-function "ssh"
                                  '((tramp-parse-sconfig "~/.ssh/config"))))
 
@@ -1416,3 +1370,7 @@
 (use-package restclient
   :ensure t
   :mode ("\\.http\\'" . restclient-mode))
+
+
+(use-package glsl-mode
+  :ensure t)
