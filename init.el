@@ -12,7 +12,7 @@
                   ("marmalade" . "http://marmalade-repo.org/packages/")))
 
 
-;;(package-initialize)
+;; (package-initialize)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -672,10 +672,10 @@
                 '("db"))
                "sqlitebrowser"
                '(file))
-         (list (openwith-make-extension-regexp
-                '("ui"))
-               "designer"
-               '(file))
+         ;; (list (openwith-make-extension-regexp
+         ;;        '("ui"))
+         ;;       "designer"
+         ;;       '(file))
          (list (openwith-make-extension-regexp
                 '("odg"))
                "lodraw"
@@ -683,7 +683,12 @@
          (list (openwith-make-extension-regexp
                 '("pdf"))
                "okular"
-               '(file))))
+               '(file))
+         ;; (list (openwith-make-extension-regexp
+         ;;        '("dbm"))
+         ;;       "pgmodeler"
+         ;;       '(file))
+         ))
   (openwith-mode 1))
 
 (use-package recentf
@@ -774,7 +779,6 @@
      (ditaa   . t)
      (calc    . t)
      (ruby    . t)))
-
 
   (setq org-babel-results-keyword "results")
 
@@ -1023,7 +1027,7 @@
   :load-path "./defuns/"
   :bind ([f9] . ma/deft-in-new-frame)
   :init
-  (setq deft-directory "~/.deft")
+  (setq deft-directory "~/Dropbox/notes/")
   (setq deft-extensions '("org" "md" "txt")))
 
 (use-package rainbow-mode
@@ -1310,7 +1314,7 @@
   :hook ((go-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
-  (lsp-prefer-flymake :none))
+  (lsp-diagnostic-package :none))
 
 (use-package lsp-ui
   :ensure t
@@ -1320,7 +1324,9 @@
               ([remap xref-find-references]  . lsp-ui-peek-find-references)
               ("C-."                         . lsp-ui-imenu))
   :custom
-  (lsp-ui-sideline-enable nil))
+  (lsp-ui-sideline-enable nil)
+  (lsp-ui-doc-position   'top)
+  (lsp-ui-doc-enable      nil))
 
 (use-package company-lsp
   :ensure t

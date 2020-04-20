@@ -22,3 +22,5 @@ var/
 /kill-ring-saved.el
 /network-security.data
 /ac-comphist.dat
+/transient/
+/.mc-lists.el
