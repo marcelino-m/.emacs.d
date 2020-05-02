@@ -477,7 +477,21 @@
   (helm-descbinds-mode))
 
 
+(use-package window
+  :config
+  :bind (("s-x" . delete-window)
+         ("s-c" . delete-other-windows)))
+
+(use-package ace-window
+  :ensure t
+  :custom
+  (aw-ignore-current t)
+  (aw-keys '(?z ?x ?c ?v ?b ?n ?m))
+  :bind (("s-z" . ace-window)))
+
 (use-package windmove
+  :custom
+  (windmove-create-window  t)
   :bind (("s-d"       . windmove-right)
          ("s-a"       . windmove-left)
          ("s-w"       . windmove-up)
@@ -823,7 +837,6 @@
 (use-package misc-defuns
   :load-path "./defuns/"
   :init
-  (global-set-key (kbd "C-c o")         'ma/show-current-buffer-other-windows)
   (global-set-key (kbd "C-o")           'ma/open-line-and-indent)
   (global-set-key (kbd "<C-return>")    'ma/open-line-below)
   (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
@@ -979,10 +992,6 @@
 (use-package qt-pro-mode
   :load-path "site-lisp/"
   :mode "\\.pro\\'" )
-
-(use-package ace-window
-  :ensure t
-  :chords (("ww" . ace-window)))
 
 
 (use-package typescript-mode

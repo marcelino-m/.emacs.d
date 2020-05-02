@@ -172,9 +172,6 @@ Version 2016-08-11"
      (point)))
   )
 
-(defun ma/show-current-buffer-other-windows ()
-  (interactive)
-  (switch-to-buffer-other-window (current-buffer)))
 
 (defun ma/eval-and-replace ()
   "Replace the preceding sexp with its value."
