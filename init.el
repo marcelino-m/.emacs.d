@@ -566,7 +566,6 @@
          (cider-repl-mode    . company-mode)
          (cider-mode         . company-mode)
          (sh-mode            . company-mode)
-         (ess-mode           . company-mode)
          (python-mode        . company-mode)
          (typescript-mode    . company-mode)
          (inferior-ess-mode  . company-mode)
@@ -1194,9 +1193,6 @@
 
 ;; jade mode
 (use-package pug-mode
-  :ensure t)
-
-(use-package ess
   :ensure t)
 
 (use-package savekill
