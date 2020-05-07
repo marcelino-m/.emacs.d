@@ -566,7 +566,6 @@
          (cider-repl-mode    . company-mode)
          (cider-mode         . company-mode)
          (sh-mode            . company-mode)
-         (python-mode        . company-mode)
          (typescript-mode    . company-mode)
          (inferior-ess-mode  . company-mode)
          (ledger-mode        . company-mode))
@@ -579,10 +578,6 @@
    company-minimum-prefix-length 1
    company-show-numbers          t
    company-dabbrev-downcase      nil)
-
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (set (make-local-variable 'company-backends) '(company-anaconda company-files))))
 
   (defun  ma/reorder-argument-company-fill-propertize (orig-fun &rest args)
     "This advice is for show number of company to left side"
@@ -609,14 +604,6 @@
     :disabled
     :init
     (add-to-list 'company-backends 'company-shell))
-
-  (use-package ycmd
-    :ensure t
-    :defer    f
-    :diminish ycmd-mode
-    :init
-    (setq ycmd-server-command '("python" "/home/marcelo/.emacs.d/vendors/ycmd/ycmd"))
-    (add-hook 'c++-mode-hook 'ycmd-mode))
 
   (use-package company-ycmd
     :ensure
@@ -974,28 +961,15 @@
 (use-package simple-httpd
   :ensure t)
 
-
 (use-package pyvenv
-    :ensure t)
-
-
-(use-package anaconda-mode
   :ensure t
-  :init
-  (add-hook 'python-mode-hook 'anaconda-mode)
-
-  (use-package company-anaconda
-    :ensure t))
-
 
 (use-package qt-pro-mode
   :load-path "site-lisp/"
   :mode "\\.pro\\'" )
 
-
 (use-package typescript-mode
   :ensure t)
-
 
 (use-package tide
   :ensure t
