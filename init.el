@@ -1290,10 +1290,11 @@
 
 (use-package lsp-mode
   :ensure t
-  :hook ((go-mode) . lsp-deferred)
+  :hook ((go-mode python-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
-  (lsp-diagnostic-package :none))
+  (lsp-diagnostic-package :none)
+  (lsp-signature-auto-activate nil))
 
 (use-package lsp-ui
   :ensure t
@@ -1304,8 +1305,8 @@
               ("C-."                         . lsp-ui-imenu))
   :custom
   (lsp-ui-sideline-enable nil)
-  (lsp-ui-doc-position   'top)
-  (lsp-ui-doc-enable      nil))
+  (lsp-ui-doc-enable      nil)
+  (lsp-ui-doc-position   'top))
 
 (use-package company-lsp
   :ensure t
