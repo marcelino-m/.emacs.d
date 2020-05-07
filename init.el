@@ -963,6 +963,8 @@
 
 (use-package pyvenv
   :ensure t
+  :config
+  (pyvenv-mode 1))
 
 (use-package qt-pro-mode
   :load-path "site-lisp/"
