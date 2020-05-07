@@ -1069,7 +1069,7 @@
 
 (use-package toml-mode
   :ensure t
-  :mode "\\.toml\\'")
+  :mode ("\\.toml\\'" "/Pipfile\\'"))
 
 (use-package xclip
   :ensure t
