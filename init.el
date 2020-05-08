@@ -591,11 +591,6 @@
    #'ma/reorder-argument-company-fill-propertize)
 
   :config
-  (use-package company-tern
-    :ensure t
-    :init
-    (add-to-list 'company-backends 'company-tern))
-
   (use-package company-web
     :ensure t)
 
