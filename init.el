@@ -1357,3 +1357,100 @@
 
 (use-package glsl-mode
   :ensure t)
+
+(use-package visual-fill-column
+  :ensure t)
+
+
+(use-package gnus-dired
+  :preface
+  ;; make the `gnus-dired-mail-buffers' function also work on
+  ;; message-mode derived modes, such as mu4e-compose-mode
+  (defun gnus-dired-mail-buffers ()
+    "Return a list of active message buffers."
+    (let (buffers)
+      (save-current-buffer
+        (dolist (buffer (buffer-list t))
+          (set-buffer buffer)
+          (when (and (derived-mode-p 'message-mode)
+                     (null message-sent-message-via))
+            (push (buffer-name buffer) buffers))))
+      (nreverse buffers)))
+
+  :config
+  (setq gnus-dired-mail-mode 'mu4e-user-agent)
+  (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode))
+
+
+(use-package smtpmail
+  :config
+  (setq  message-send-mail-function 'smtpmail-send-it))
+
+(use-package mu4e
+  :after smtpmail
+  :load-path "~/.local/share/emacs/site-lisp/mu4e"
+  :preface
+  (defun ma/toggle-visual-line ()
+    (interactive)
+    (visual-fill-column-mode 'toggle)
+    (visual-line-mode 'toggle))
+
+  :bind (:map  mu4e-view-mode-map
+         ("w" . #'ma/toggle-visual-line)
+         :map  mu4e-headers-mode-map
+         ("M" . #'mu4e-headers-mark-for-move)
+         ("m" . #'mu4e-headers-mark-for-something)
+         )
+  :config
+  (setq
+   mu4e-completing-read-function 'completing-read
+   mu4e-get-mail-command    "offlineimap"
+   mu4e-update-interval     300
+   mu4e-context-policy      'pick-first
+   compose-context-policy   'nil
+   mu4e-headers-date-format "%F"
+   mu4e-headers-time-format "%R"
+   mu4e-headers-include-related nil
+   ;; mu4e contex!
+   mu4e-contexts
+   `(,(make-mu4e-context
+       :name "proton"
+
+       :match-func (lambda (msg)
+                     (when msg
+                       (mu4e-message-contact-field-matches msg
+                               :to "protonmail")))
+
+       :vars `((user-full-name         . "Marcelo Muñoz Araya")
+               (mu4e-compose-signature . "Marcelo\n")
+               (user-mail-address      . ,(setq user-mail-address  "protonmail"))
+               (mu4e-sent-folder       . ,(concat "/" user-mail-address "/sent"))
+               (mu4e-drafts-folder     . ,(concat "/" user-mail-address "/drafts"))
+               (mu4e-trash-folder      . ,(concat "/" user-mail-address "/trash"))
+               (mu4e-refile-folder     . ,(concat "/" user-mail-address "/archive"))
+               ;; smtp
+               (smtpmail-smtp-server   . "127.0.0.1")
+               (smtpmail-stream-type   . starttls)
+               (smtpmail-smtp-service  . 1025)
+               (smtpmail-queue-mail    . nil)))
+
+     ,(make-mu4e-context
+       :name "gmail"
+       :match-func (lambda (msg)
+                     (when msg
+                       (mu4e-message-contact-field-matches msg
+                               :to "gmail")))
+
+       :vars `((user-full-name         . "Marcelo Muñoz Araya")
+               (mu4e-compose-signature . "Marcelo\n")
+               (user-mail-address      . ,(setq user-mail-address  "gmail"))
+               (mu4e-sent-folder       . ,(concat "/" user-mail-address "/sent"))
+               (mu4e-drafts-folder     . ,(concat "/" user-mail-address "/drafts"))
+               (mu4e-trash-folder      . ,(concat "/" user-mail-address "/trash"))
+               (mu4e-refile-folder     . ,(concat "/" user-mail-address "/archive"))
+               (mu4e-sent-messages-behavior .  delete)
+               ;; smtp
+               (smtpmail-smtp-server   . "smtp.gmail.com")
+               (smtpmail-stream-type   . ssl)
+               (smtpmail-smtp-service  . 465)
+               (smtpmail-queue-mail    . nil))))))
