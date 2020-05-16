@@ -74,11 +74,10 @@
  hscroll-step 1
  async-shell-command-buffer           'new-buffer
  browse-url-browser-function          'browse-url-firefox
- default-frame-alist                  (list
-                                       (cons 'width  0.8)
-                                       (cons 'height 0.75)
-                                       (cons 'font (format "Inconsolata Medium %d" 12))
-                                       (cons 'vertical-scroll-bars nil)))
+ default-frame-alist                  '((width                . 0.80)
+                                        (height               . 0.75)
+                                        (vertical-scroll-bars .  nil)
+                                        (font                 . "Source Code Pro-10.1:weight=semi-bold:width=normal")))
 
 
 (defalias 'yes-or-no-p 'y-or-n-p)
