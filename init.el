@@ -701,29 +701,6 @@
                (format "%s/\\.emacs\\.d/\\(ido\\.last\\|recentf\\|\\.gitignore\\)" (getenv "HOME")))
   (recentf-mode +1))
 
-(use-package cc-mode
-  :defer t
-  :init
-  (setq compilation-ask-about-save nil)
-  (add-hook 'c++-mode-hook 'helm-gtags-mode)
-  (add-hook 'c-mode-hook 'helm-gtags-mode)
-  (c-add-style "my-style"
-               '("k&r"
-                 (c-offsets-alist . ((innamespace . [0])))))
-  (add-hook 'c++-mode-hook (lambda ()
-                             (c-set-style "my-style")
-                             (setq c-basic-offset 4
-                                   tab-width 4
-                                   indent-tabs-mode nil)
-
-                             (setq compilation-skip-threshold 2)
-                             (setq compilation-scroll-output 'first-error)))
-  :config
-  (define-key c++-mode-map (kbd "<f5>") #'recompile)
-  ;; (define-key c++-mode-map (kbd "C->")  #'ma/insert-arrow)
-  (define-key c++-mode-map (kbd "C-c '") #'see-edit-src-at-point))
-
-
 
 (use-package org-bullets
   :ensure t
