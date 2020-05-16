@@ -73,7 +73,9 @@
  auto-hscroll-mode                    'current-line
  hscroll-step 1
  async-shell-command-buffer           'new-buffer
+ frame-resize-pixelwise                t
  browse-url-browser-function          'browse-url-firefox
+ browse-url-firefox-program           "~/.src/firefox/firefox"
  default-frame-alist                  '((width                . 0.80)
                                         (height               . 0.75)
                                         (vertical-scroll-bars .  nil)
