@@ -984,7 +984,7 @@
   :load-path "./defuns/"
   :bind ([f9] . ma/deft-in-new-frame)
   :init
-  (setq deft-directory "~/Dropbox/notes/")
+  (setq deft-directory "~/syncthing/notes")
   (setq deft-extensions '("org" "md" "txt")))
 
 (use-package rainbow-mode
