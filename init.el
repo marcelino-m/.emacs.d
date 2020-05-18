@@ -1341,7 +1341,7 @@
 
 
 (use-package gnus-dired
-  :preface
+  :config
   ;; make the `gnus-dired-mail-buffers' function also work on
   ;; message-mode derived modes, such as mu4e-compose-mode
   (defun gnus-dired-mail-buffers ()
@@ -1355,7 +1355,6 @@
             (push (buffer-name buffer) buffers))))
       (nreverse buffers)))
 
-  :config
   (setq gnus-dired-mail-mode 'mu4e-user-agent)
   (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode))
 
