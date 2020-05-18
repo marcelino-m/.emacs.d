@@ -174,7 +174,6 @@
   (org-block-end-line   ((t (:overline nil :underline "#6c71c4"))))
 
   :config
-  (set-face-attribute 'region nil :background "#2aa198"  :foreground "#ffffff")
   (load-theme 'solarized-light t))
 
 (use-package csv-mode
