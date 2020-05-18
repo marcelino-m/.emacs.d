@@ -1210,6 +1210,11 @@
           "http://mbork.pl/?action=rss;days=30;all=0;showedit=0;full=1"
           "https://simblob.blogspot.com/feeds/posts/default")))
 
+(use-package shr
+  :config
+  (setq shr-use-fonts nil)
+  (setq shr-max-image-proportion 0.5)
+  (setq shr-width (current-fill-column)))
 
 (use-package qml-mode
   :ensure t
