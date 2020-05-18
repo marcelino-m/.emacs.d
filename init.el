@@ -1378,6 +1378,8 @@
          ("M" . #'mu4e-headers-mark-for-move)
          ("m" . #'mu4e-headers-mark-for-something)
          )
+  :init
+  (load "~/.emacs.d/.no-shared.el")
   :config
   (setq
    mu4e-completing-read-function 'completing-read
@@ -1396,11 +1398,11 @@
        :match-func (lambda (msg)
                      (when msg
                        (mu4e-message-contact-field-matches msg
-                               :to "protonmail")))
+                               :to ma/email-address-proton)))
 
        :vars `((user-full-name         . "Marcelo Muñoz Araya")
                (mu4e-compose-signature . "Marcelo\n")
-               (user-mail-address      . ,(setq user-mail-address  "protonmail"))
+               (user-mail-address      . ,(setq user-mail-address ma/email-address-proton))
                (mu4e-sent-folder       . ,(concat "/" user-mail-address "/sent"))
                (mu4e-drafts-folder     . ,(concat "/" user-mail-address "/drafts"))
                (mu4e-trash-folder      . ,(concat "/" user-mail-address "/trash"))
@@ -1416,11 +1418,11 @@
        :match-func (lambda (msg)
                      (when msg
                        (mu4e-message-contact-field-matches msg
-                               :to "gmail")))
+                               :to ma/email-address-gmail)))
 
        :vars `((user-full-name         . "Marcelo Muñoz Araya")
                (mu4e-compose-signature . "Marcelo\n")
-               (user-mail-address      . ,(setq user-mail-address  "gmail"))
+               (user-mail-address      . ,(setq user-mail-address  ma/email-address-gmail))
                (mu4e-sent-folder       . ,(concat "/" user-mail-address "/sent"))
                (mu4e-drafts-folder     . ,(concat "/" user-mail-address "/drafts"))
                (mu4e-trash-folder      . ,(concat "/" user-mail-address "/trash"))
