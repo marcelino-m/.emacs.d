@@ -25,3 +25,4 @@ var/
 /transient/
 /.mc-lists.el
 /.lsp-session-v1
+/.no-shared.el
