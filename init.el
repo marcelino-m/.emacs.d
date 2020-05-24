@@ -1437,3 +1437,7 @@
                (smtpmail-stream-type   . ssl)
                (smtpmail-smtp-service  . 465)
                (smtpmail-queue-mail    . nil))))))
+
+
+(use-package backup-walker
+  :ensure t)
