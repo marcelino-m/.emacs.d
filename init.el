@@ -74,6 +74,8 @@
  hscroll-step 1
  async-shell-command-buffer           'new-buffer
  frame-resize-pixelwise                t
+ ;; disable screen jump when the cursor moves out of the screen
+ scroll-conservatively                101
  browse-url-browser-function          'browse-url-firefox
  browse-url-firefox-program           "~/.src/firefox/firefox"
  default-frame-alist                  '((width                . 0.80)
