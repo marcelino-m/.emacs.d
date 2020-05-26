@@ -73,6 +73,7 @@
  auto-hscroll-mode                    'current-line
  hscroll-step 1
  async-shell-command-buffer           'new-buffer
+ default-input-method                 "latin-prefix"
  frame-resize-pixelwise                t
  ;; disable screen jump when the cursor moves out of the screen
  scroll-conservatively                101
