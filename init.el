@@ -1200,33 +1200,6 @@
   :mode "\\.qml\\'")
 
 
-(use-package ledger-mode
-  :ensure t
-  :mode ("\\.journal\\'" "\\.hledger\\'")
-  :custom
-  (ledger-default-date-format           "%Y.%m.%d")
-  (ledger-highlight-xact-under-point           nil)
-  :init
-  (setq ledger-clear-whole-transactions t
-        ledger-binary-path (expand-file-name "~/.local/bin/hledger")
-        ledger-mode-should-check-version nil
-        ledger-init-file-name " ")
-  ;; (setq ledger-accounts-file "~/documents/finanzas/definitions.ledger")
-  ;; (setq ledger-reports
-  ;;       '(("bal" "%(binary) -f %(ledger-file) bal")
-  ;;         ("bal cost" "%(binary) -f %(ledger-file) bal -X $")
-  ;;         ("home expenses" "%(binary) -f %(ledger-file) reg -b %(currentmonth)  ^Expenses:Home  or ^Liabilities:Home --subtotal")
-  ;;         ("liquidity (med)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre\\\) \\\)  or  \\\(^Liabilities and not /Credits:Mortgage/\\\) -X $")
-  ;;         ("liquidity (short)" "%(binary) -f %(ledger-file) bal \\\(^Assets and not \\\(^Assets:Fixed or ^Assets:Retirement or ^Assets:Unemployment or ^Assets:Isapre \\\) \\\)  or  \\\(^Liabilities and not \\\(/Credits:Mortgage/ or /Security:Credits/\\\)\\\) -X $")
-  ;;         ("reg" "%(binary) -f %(ledger-file) reg")
-  ;;         ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
-  ;;         ("account" "%(binary) -f %(ledger-file) reg %(account)")
-  ;;         ("account ($)" "%(binary) -f %(ledger-file) reg %(account) -X $")))
-  ;; :config
-  ;; (add-to-list 'ledger-report-format-specifiers '("currentmonth" . (lambda () (format-time-string "%Y-%m-01"))))
-  )
-
-
 (use-package commify
   :ensure t
   :bind ("H-," . commify-toggle))
