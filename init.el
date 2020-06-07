@@ -1200,10 +1200,6 @@
   :mode "\\.qml\\'")
 
 
-(use-package commify
-  :ensure t
-  :bind ("H-," . commify-toggle))
-
 (use-package popwin
   :ensure t
   :config
