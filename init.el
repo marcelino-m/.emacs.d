@@ -67,6 +67,8 @@
  mouse-wheel-scroll-amount            '(2 ((shift) . 1) ((control) . nil))
  imenu-auto-rescan                    t
  indent-tabs-mode                     nil
+ ;; disable screen jump when the cursor moves out of the screen
+ scroll-conservatively                101
  scroll-preserve-screen-position      t
  scroll-step                          1
  vc-follow-symlinks                   t
@@ -75,8 +77,6 @@
  async-shell-command-buffer           'new-buffer
  default-input-method                 "latin-prefix"
  frame-resize-pixelwise                t
- ;; disable screen jump when the cursor moves out of the screen
- scroll-conservatively                101
  browse-url-browser-function          'browse-url-firefox
  browse-url-firefox-program           "~/.src/firefox/firefox"
  default-frame-alist                  '((width                . 0.80)
