@@ -698,43 +698,43 @@
   (recentf-mode +1))
 
 
-(use-package org-bullets
-  :ensure t
-  :init
-  (add-hook 'org-mode-hook #'org-bullets-mode))
+(use-package org-indent
+  :diminish
+  :hook (org-mode . org-indent-mode)
+  :custom
+  (org-indent-indentation-per-level 4))
 
 (use-package org
-  :pin gnu
-  :load-path "./defuns/"
-  :ensure t
+  :load-path "./defuns"
+  :mode (("\\.org\\'" . org-mode))
   :bind (:map org-mode-map
               ("C-c C-v t" . ma/toggle-current-src-block))
-  :init
-  (add-hook 'org-mode-hook #'org-indent-mode)
-  (add-hook 'org-src-mode-hook #'(lambda () (setq org-src--saved-temp-window-config nil)))
-  (diminish 'org-indent-mode)
+
+  :config
+  (require 'org-defun)
+
+  (unbind-key "C-c C->" org-mode-map)
+  (unbind-key "C-," org-mode-map)
+
   (setq org-cycle-separator-lines 0)
-  (setq org-highlight-latex-and-related '(latex))
+  ;; prevent org mode repositioning text when cicle visibility
+  (remove-hook 'org-cycle-hook #'org-optimize-window-after-visibility-change)
 
-  (setq org-export-async-init-file "~/.emacs.d/org-init-async")
+  (add-hook
+   'org-src-mode-hook
+   (lambda () (setq org-src--saved-temp-window-config nil)))
 
-  (setq org-hierarchical-todo-statistics t)
-
-  (setq org-latex-packages-alist '(("cachedir=.tmpfiles/minted" "minted") ("" "float")))
-  (setq org-latex-listings 'minted)
-  (setq org-latex-create-formula-image-program 'dvipng)
-
-  (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-
-  (setq org-babel-python-command "ipython --no-banner --nosep --simple-prompt  -i")
-  (setq org-confirm-babel-evaluate nil
-        org-src-fontify-natively   t
+  (setq org-src-fontify-natively   t
         org-src-tab-acts-natively  t
         org-src-window-setup       'current-window)
+
+
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-babel-python-command "ipython --no-banner --nosep --simple-prompt  -i")
+  (setq org-babel-results-keyword "results")
+
+  ;; redisply omages inline when image change
+  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -749,27 +749,9 @@
      (calc    . t)
      (ruby    . t)))
 
-  (setq org-babel-results-keyword "results")
-
   ;; use ivy with org-goto
   (setq org-goto-interface 'outline-path-completion)
-  (setq org-outline-path-complete-in-steps nil)
-
-  (setq org-refile-targets '((nil :level . 2)))
-  (setq org-ditaa-jar-path "/usr/bin/ditaa")
-
-  :config
-  (require 'org-defun)
-  (unbind-key "C-c C->" org-mode-map)
-  (unbind-key "C-," org-mode-map)
-
-  ;; prevent org mode repositioning text when cicle visibility
-  (remove-hook 'org-cycle-hook
-               #'org-optimize-window-after-visibility-change)
-
-  ;; redisply omages inline when image change
-  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
-  (plist-put org-format-latex-options :scale 1.7))
+  (setq org-outline-path-complete-in-steps nil))
 
 (use-package beacon
   :ensure t
