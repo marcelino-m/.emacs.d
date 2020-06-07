@@ -130,8 +130,7 @@ prefix argument keep point in curretn position"
          (change (if (string= dic "castellano") "english" "castellano")))
     (ispell-change-dictionary change)
     (flyspell-buffer)
-    (message "Dictionary switched from %s to %s" dic change)
-    ))
+    (message "Dictionary switched from %s to %s" dic change)))
 
 ;; Create a new empy buffer
 (defun ma/new-empty-buffer ()
@@ -169,8 +168,7 @@ Version 2016-08-11"
    (point)
    (progn
      (back-to-indentation)
-     (point)))
-  )
+     (point))))
 
 
 (defun ma/eval-and-replace ()

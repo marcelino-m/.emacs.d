@@ -82,7 +82,7 @@
  default-frame-alist                  '((width                . 0.80)
                                         (height               . 0.75)
                                         (vertical-scroll-bars .  nil)
-                                        (font                 . "Source Code Pro-10.1:weight=semi-bold:width=normal")))
+                                        (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
 
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -175,6 +175,7 @@
   (org-block            ((t :background "#f4eddb" :extend t)))
   (org-block-begin-line ((t (:underline "#6c71c4"))))
   (org-block-end-line   ((t (:overline nil :underline "#6c71c4"))))
+  (org-checkbox         ((t :box nil)))
 
   :config
   (load-theme 'solarized-light t))
@@ -362,8 +363,6 @@
 
 
 (use-package flyspell
-  :hook ((org-mode      . flyspell-prog-mode)
-         (markdown-mode . flyspell-mode))
   :init
   (setq ispell-dictionary "castellano")
   (add-hook 'org-mode-hook 'flyspell-prog-mode)
@@ -969,11 +968,11 @@
   :ensure t)
 
 (use-package google-translate
-  :ensure t
+  :load-path "./site-lisp/google-translate"
   :bind ("C-c t" . google-translate-smooth-translate)
   :init
-  (setq
-   google-translate-translation-directions-alist '(("en" . "es") ("es" . "en"))))
+  (use-package google-translate-smooth-ui)
+  (setq google-translate-translation-directions-alist '(("en" . "es") ("es" . "en"))))
 
 (use-package paradox
   :ensure t
@@ -1187,7 +1186,8 @@
           "http://cherian.net/rss.xml"
           "http://emacsninja.com/feed.atom"
           "http://mbork.pl/?action=rss;days=30;all=0;showedit=0;full=1"
-          "https://simblob.blogspot.com/feeds/posts/default")))
+          "https://simblob.blogspot.com/feeds/posts/default"
+          "http://cachestocaches.com/feed")))
 
 (use-package shr
   :config
