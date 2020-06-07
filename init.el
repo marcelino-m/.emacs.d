@@ -321,8 +321,8 @@
     (select-frame (make-frame-command))
     (projectile-switch-project arg))
 
-  ;; projectile realentiza tramp-mode
-  ;; ttps://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
+  ;; projectile slows down tramp-mode
+  ;; https://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
   (defadvice projectile-project-root (around ignore-remote first activate)
     (unless (file-remote-p default-directory) ad-do-it))
 
