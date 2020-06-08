@@ -470,7 +470,7 @@
   :ensure t
   :custom
   (aw-ignore-current t)
-  (aw-keys '(?z ?x ?c ?v ?b ?n ?m))
+  (aw-keys '(?x ?c ?v ?b ?n ?m ?a))
   :bind (("s-z" . ace-window)))
 
 (use-package windmove
@@ -710,7 +710,9 @@
   (setq org-journal-file-format "%Y-%m-%d.journal")
   (setq org-journal-file-header 'org-journal-file-header-func)
   (setq org-journal-date-format "%A, %Y/%m/%d")
-  (setq org-journal-dir "~/syncthing/journal/personal/"))
+  (if (string= (system-name) "jaylah")
+      (setq org-journal-dir "~/syncthing/journal/personal/")
+    (setq org-journal-dir "~/syncthing/journal/work/")))
 
 (use-package org
   :load-path "./defuns"
@@ -1061,17 +1063,6 @@
   :disabled
   :init
   (xclip-mode 1))
-
-
-(use-package clojure-mode
-  :disabled
-  :ensure t)
-
-(use-package cider
-  :ensure t
-  :disabled
-  :config
-  (add-hook 'cider-mode-hook #'eldoc-mode))
 
 (use-package iss-mode
   :mode "\\.iss\\'"
