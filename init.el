@@ -68,7 +68,7 @@
  imenu-auto-rescan                    t
  indent-tabs-mode                     nil
  ;; disable screen jump when the cursor moves out of the screen
- scroll-conservatively                101
+ ;; scroll-conservatively                101
  scroll-preserve-screen-position      t
  scroll-step                          1
  vc-follow-symlinks                   t
@@ -209,6 +209,11 @@
    ivy-use-virtual-buffers t
    enable-recursive-minibuffers t))
 
+(use-package smex
+  :ensure t
+  :config
+  (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory)))
+
 (use-package counsel
   :ensure t
   :requires ivy
@@ -340,21 +345,6 @@
 (use-package ggtags
   :ensure t)
 
-(use-package smex
-  :ensure t
-  :bind (("M-x" . #'smex)
-         ("M-X" . #'smex-major-mode-commands))
-  :config
-  (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
-  (run-with-idle-timer (* 10 60) t #'smex-save-to-file))
-
-(use-package amx
-  :ensure t
-  :disabled
-  :init
-  (amx-mode 1))
-
-
 (use-package cmake-mode
   :ensure t
   :bind ((:map cmake-mode-map
@@ -365,8 +355,6 @@
 (use-package flyspell
   :init
   (setq ispell-dictionary "castellano")
-  (add-hook 'org-mode-hook 'flyspell-prog-mode)
-
   :config
   (define-key flyspell-mode-map [(control ?\,)] nil)
   (define-key flyspell-mode-map [(control ?\.)] nil)
@@ -703,6 +691,27 @@
   :custom
   (org-indent-indentation-per-level 4))
 
+(use-package org-journal
+  :ensure t
+  :bind (("C-c C-j" . org-journal-new-entry))
+
+  :preface
+  (defun org-journal-file-header-func (time)
+    "Custom function to create journal header."
+    (concat
+     (pcase org-journal-file-type
+       (`daily "#+title: Daily Journal")
+       (`weekly "#+title: Weekly Journal")
+       (`monthly "#+title: Monthly Journal")
+       (`yearly "#+title: Yearly Journal"))))
+
+  :config
+  (setq org-journal-file-type 'weekly)
+  (setq org-journal-file-format "%Y-%m-%d.journal")
+  (setq org-journal-file-header 'org-journal-file-header-func)
+  (setq org-journal-date-format "%A, %Y/%m/%d")
+  (setq org-journal-dir "~/syncthing/journal/personal/"))
+
 (use-package org
   :load-path "./defuns"
   :mode (("\\.org\\'" . org-mode))
@@ -714,7 +723,16 @@
 
   (unbind-key "C-c C->" org-mode-map)
   (unbind-key "C-," org-mode-map)
+  (define-key global-map (kbd "C-c l") 'org-store-link)
+  (define-key global-map (kbd "C-c a") 'org-agenda)
 
+  (setq org-special-ctrl-a/e t)
+  (setq org-special-ctrl-k t)
+
+  ;; no add new line on new headers
+  (setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
+
+  (setq org-startup-folded t)
   (setq org-cycle-separator-lines 0)
   ;; prevent org mode repositioning text when cicle visibility
   (remove-hook 'org-cycle-hook #'org-optimize-window-after-visibility-change)
@@ -750,7 +768,24 @@
 
   ;; use ivy with org-goto
   (setq org-goto-interface 'outline-path-completion)
-  (setq org-outline-path-complete-in-steps nil))
+  (setq org-outline-path-complete-in-steps nil)
+
+  ;; org capture
+  (define-key global-map (kbd "C-c x") 'org-capture)
+  (setq org-default-notes-file "~/syncthing/notes/notes.org")
+
+  ;; (add-to-list 'org-capture-templates
+  ;;              '("w" "Work related Task"  entry
+  ;;                (file "~/syncthing/notes/work-notes.org")
+  ;;                "* TODO %?" :empty-lines 1))
+
+  ;; (add-to-list 'org-capture-templates
+  ;;              '("w" "Personal related Task"  entry
+  ;;                (file "~/syncthing/notes/notes.org")
+  ;;                "* TODO %?" :empty-lines 1))
+
+
+  )
 
 (use-package beacon
   :ensure t
@@ -961,7 +996,7 @@
   :load-path "./defuns/"
   :bind ([f9] . ma/deft-in-new-frame)
   :init
-  (setq deft-directory "~/syncthing/notes")
+  (setq deft-directory "~/syncthing/deft")
   (setq deft-extensions '("org" "md" "txt")))
 
 (use-package rainbow-mode
