@@ -731,8 +731,8 @@
   (setq org-special-ctrl-a/e t)
   (setq org-special-ctrl-k t)
 
-  ;; no add new line on new headers
-  (setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
+  ;; no add new line on new item
+  (setq org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
 
   (setq org-startup-folded t)
   (setq org-cycle-separator-lines 0)
