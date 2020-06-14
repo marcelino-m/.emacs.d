@@ -250,16 +250,11 @@
 
 (use-package yasnippet
   :ensure t
-  :demand t
   :diminish yas-minor-mode
   :commands (yas-expand yas-minor-mode)
   :functions (yas-guess-snippet-directories yas-table-name)
   :defines (yas-guessed-modes)
-  :bind (([backtab]   . yas-expand)
-         ("C-c y e"   . yas-expand)
-         ("C-c y s"   . yas-insert-snippet)
-         ("C-c y n"   . yas-new-snippet)
-         ("C-c y v"   . yas-visit-snippet-file))
+  :bind (([backtab]   . yas-expand))
   :config
   (define-key yas-minor-mode-map [(tab)] nil)
   (define-key yas-minor-mode-map (kbd "TAB") nil)
