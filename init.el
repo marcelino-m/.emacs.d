@@ -770,24 +770,20 @@
 
   ;; use ivy with org-goto
   (setq org-goto-interface 'outline-path-completion)
-  (setq org-outline-path-complete-in-steps nil)
+  (setq org-outline-path-complete-in-steps nil))
 
+(use-package org-capture
+  :config
   ;; org capture
   (define-key global-map (kbd "C-c x") 'org-capture)
-  (setq org-default-notes-file "~/syncthing/notes/notes.org")
 
-  ;; (add-to-list 'org-capture-templates
-  ;;              '("w" "Work related Task"  entry
-  ;;                (file "~/syncthing/notes/work-notes.org")
-  ;;                "* TODO %?" :empty-lines 1))
-
-  ;; (add-to-list 'org-capture-templates
-  ;;              '("w" "Personal related Task"  entry
-  ;;                (file "~/syncthing/notes/notes.org")
-  ;;                "* TODO %?" :empty-lines 1))
+  (setq org-capture-templates
+        (quote (("t" "Todo: Need be done soon" entry (file+headline "~/syncthing/capture/personal-task.org"  "Need be done soon") "* TODO %?\n%i")
+                ("l" "Todo: Need be done sometime" entry (file+headline "~/syncthing/capture/personal-task.org"  "Sometime in the future") "* TODO %?\n%i")
+                ("w" "work related captures")
+                ("wt" "Todo" entry (file+headline "~/syncthing/capture/work-task.org" "Tasks need be done soon") "* TODO %?\n%i")))))
 
 
-  )
 
 (use-package beacon
   :ensure t
