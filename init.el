@@ -721,6 +721,7 @@
               ("C-c C-v t" . ma/toggle-current-src-block))
 
   :config
+  (add-to-list 'org-modules 'org-habit)
   (require 'org-defun)
 
   (unbind-key "C-c C->" org-mode-map)
@@ -771,6 +772,12 @@
   ;; use ivy with org-goto
   (setq org-goto-interface 'outline-path-completion)
   (setq org-outline-path-complete-in-steps nil))
+
+
+(use-package org-habit
+  :custom
+  (org-habit-graph-column 70))
+
 
 (use-package org-capture
   :config
