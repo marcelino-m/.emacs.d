@@ -804,9 +804,10 @@
 
 (use-package avy
   :ensure t
-  :bind (("C-z z"  . avy-goto-word-1)
-         ("C-z x"  . avy-goto-char)
-         ("C-z l"  . avy-goto-line))
+  :bind (("C-z z"  . avy-goto-char-timer)
+         ("C-z x"  . avy-goto-char-in-line))
+  :custom
+  (avy-timeout-seconds 10.0) ;; confirm with RET
   :init
   (global-set-key (kbd "C-z") nil))
 
