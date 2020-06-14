@@ -823,6 +823,11 @@
   (global-set-key (kbd "C-w")           'ma/kill-line-or-region)
   (global-set-key (kbd "C-y")           'ma/yank-with-feedback))
 
+(use-package crux
+  :ensure t
+  :init
+  (global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line))
+
 (use-package sql-indent
   :ensure t
   :pin gnu
