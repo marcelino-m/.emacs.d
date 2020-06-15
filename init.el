@@ -379,7 +379,7 @@
   :bind (([f12] . magit-status))
   :custom
   (magit-save-repository-buffers          'dontask)
-  (magit-display-buffer-function          'magit-display-buffer-fullframe-status-v1)
+  (magit-display-buffer-function          'magit-display-buffer-fullcolumn-most-v1)
   (magit-section-visibility-indicator     nil)
   (magit-diff-adjust-tab-width            'always)
   (magit-section-initial-visibility-alist '((untracked . hide)
