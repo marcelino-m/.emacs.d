@@ -673,10 +673,10 @@
         ;; disable recentf-cleanup on Emacs start, because it can cause
         ;; problems with remote files
         recentf-auto-cleanup 'never)
-  (add-to-list 'recentf-exclude
-               (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
-  (add-to-list 'recentf-exclude
-               (format "%s/\\.emacs\\.d/\\(ido\\.last\\|recentf\\|\\.gitignore\\)" (getenv "HOME")))
+  (setq recentf-exclude
+        '("/\\.emacs\\.d/\\(elpa/\\|backups/\\)"
+          ".gitignore"))
+
   (recentf-mode +1))
 
 
