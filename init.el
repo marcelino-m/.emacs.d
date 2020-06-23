@@ -821,7 +821,8 @@
   (global-set-key (kbd "C-c j ")        'ma/join-line)
   (global-set-key (kbd "M-w")           'ma/kill-ring-save-line-or-region)
   (global-set-key (kbd "C-w")           'ma/kill-line-or-region)
-  (global-set-key (kbd "C-y")           'ma/yank-with-feedback))
+  (global-set-key (kbd "C-y")           'ma/yank-with-feedback)
+  (global-set-key (kbd "C-c SPC")       'ma/jump-to-mark-ignore-same-line))
 
 (use-package crux
   :ensure t
