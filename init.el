@@ -771,7 +771,8 @@
 
 (use-package org-habit
   :custom
-  (org-habit-graph-column 70))
+  (org-habit-graph-column 70)
+  (org-habit-show-habits-only-for-today nil))
 
 
 (use-package org-capture
