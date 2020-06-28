@@ -172,9 +172,9 @@
   (solarized-height-plus-4           1.0)
 
   :custom-face
-  (org-block            ((t :background "#f4eddb" :extend t)))
-  (org-block-begin-line ((t (:underline "#6c71c4"))))
-  (org-block-end-line   ((t (:overline nil :underline "#6c71c4"))))
+  (org-block            ((t :background nil  :extend t)))
+  (org-block-begin-line ((t (:underline "#c2bdb2"  :foreground "#c2bdb2"))))
+  (org-block-end-line   ((t (:overline nil  :underline nil  :foreground "#c2bdb2"))))
   (org-checkbox         ((t :box nil)))
 
   :config
