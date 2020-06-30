@@ -1199,7 +1199,9 @@
         ("C-c C-n" . ma/python-eval-current-line))
   :init
   (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "--nosep --simple-prompt -i"))
+        python-shell-interpreter-args "--nosep --simple-prompt -i")
+  :config
+  (unbind-key "<backtab>" python-mode-map))
 
 
 (use-package htmlize
