@@ -785,10 +785,11 @@
   (define-key global-map (kbd "C-c x") 'org-capture)
 
   (setq org-capture-templates
-        (quote (("t" "Todo: Need be done soon" entry (file+headline "~/syncthing/capture/personal-task.org"  "Need be done soon") "* TODO %?\n%i")
-                ("l" "Todo: Need be done sometime" entry (file+headline "~/syncthing/capture/personal-task.org"  "Sometime in the future") "* TODO %?\n%i")
+        (quote (("t" "Todo: Need be done soon" entry (file+headline "~/syncthing/capture/personal-task.org"  "Need be done soon") "* TODO %?\n%i" :empty-lines 1)
+                ("l" "Todo: Need be done sometime" entry (file+headline "~/syncthing/capture/personal-task.org"  "Sometime in the future") "* TODO %?\n%i" :empty-lines 1)
+                ("n" "Note: Quick and misc note" entry (file "~/syncthing/capture/quick-notes.org") "* %?\n%i" :empty-lines 1)
                 ("w" "work related captures")
-                ("wt" "Todo" entry (file+headline "~/syncthing/capture/work-task.org" "Tasks need be done soon") "* TODO %?\n%i")))))
+                ("wt" "Todo" entry (file+headline "~/syncthing/capture/work-task.org" "Tasks need be done soon") "* TODO %?\n%i" :empty-lines 1)))))
 
 
 
