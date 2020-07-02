@@ -209,10 +209,8 @@
    ivy-use-virtual-buffers t
    enable-recursive-minibuffers t))
 
-(use-package smex
-  :ensure t
-  :config
-  (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory)))
+(use-package ivy-avy
+  :ensure t)
 
 (use-package counsel
   :ensure t
@@ -226,6 +224,12 @@
               ("C-c w" . ivy-push-view))
   :config
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
+
+(use-package smex
+  :ensure t
+  :config
+  (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory)))
+
 
 (use-package smooth-scroll
   :ensure t
