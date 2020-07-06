@@ -277,8 +277,8 @@ feedback. Otherwise call `mouse-kill-ring-save'"
 
 
 
-(defun  ma/jump-to-mark-ignore-same-line ()
-  "Like C-u SPC but ignore all mark in current line"
+(defun  ma/jump-to-mark-skip-same-line ()
+  "Like C-u SPC but skip marks in current line"
   (interactive)
   (let ((startl (line-number-at-pos)))
     (while (progn
