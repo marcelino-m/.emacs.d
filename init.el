@@ -84,6 +84,8 @@
                                         (vertical-scroll-bars .  nil)
                                         (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
 
+;; unbind from global map
+(global-unset-key (kbd "<menu>"))
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
