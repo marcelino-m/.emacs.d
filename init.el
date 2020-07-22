@@ -1246,6 +1246,8 @@
   :ensure t
   :config
   (push '(inferior-python-mode :height 20 :noselect t :tail t :stick t) popwin:special-display-config)
+  (push '("*Google Translate*" :noselect t :height 20) popwin:special-display-config)
+  (push '("*Projectile Commander Help*"  :height 22) popwin:special-display-config)
   (popwin-mode 1))
 
 (use-package protobuf-mode
