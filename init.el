@@ -422,6 +422,7 @@
 
 (use-package helm
   :ensure t
+  :diminish helm-ff-cache-mode
   :init
   (setq
    helm-split-window-in-side-p t
