@@ -1279,10 +1279,6 @@
   (lsp-ui-doc-enable      nil)
   (lsp-ui-doc-position   'top))
 
-(use-package company-lsp
-  :ensure t
-  :commands company-lsp)
-
 (use-package systemd
   :ensure t
   :mode (("\\.service\\'" . systemd-mode)))
