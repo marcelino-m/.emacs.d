@@ -80,7 +80,7 @@
  browse-url-browser-function          'browse-url-firefox
  browse-url-firefox-program           "~/.src/firefox/firefox"
  default-frame-alist                  '((width                . 0.80)
-                                        (height               . 0.75)
+                                        (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
                                         (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
 
