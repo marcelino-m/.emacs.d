@@ -1,29 +1,33 @@
 ;;  adjust the garbage collection param
 (setq gc-cons-threshold (* 50 1024 1024))
 
-(require 'package)
+;; boostrap straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(defmacro append-to-list (target suffix)
-  "Append SUFFIX to TARGET in place."
-  `(setq ,target (append ,target ,suffix)))
 
-(append-to-list package-archives
-                '(("melpa" . "http://melpa.org/packages/")
-                  ("marmalade" . "http://marmalade-repo.org/packages/")))
+(straight-use-package 'use-package)
 
-
-;; (package-initialize)
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
 
 (use-package use-package-chords
-  :ensure t
+  :straight t
   :config (key-chord-mode 1))
 
-(use-package delight :ensure t)
-(use-package diminish :ensure t)
+(use-package delight
+  :straight t)
+
+(use-package diminish
+  :straight t)
 
 ;; notify when emacs is ready
 ;; I run emacs in server mode set a systemd units
@@ -115,7 +119,7 @@
 ;; Setup packages
 
 (use-package exec-path-from-shell
-  :ensure t
+  :straight t
   :config
   (dolist (var '("PATH" "GOPATH" "GOROOT"  "TIMLIB_SRC_ROOT"))
     (add-to-list 'exec-path-from-shell-variables var))
@@ -129,7 +133,6 @@
   :diminish eldoc-mode)
 
 (use-package info
-  :defer t
   :config
   (define-key Info-mode-map (kbd "<prior>") 'scroll-down-1)
   (define-key Info-mode-map (kbd "<next>") 'scroll-up-1)
@@ -138,7 +141,7 @@
 
 
 (use-package ethan-wspace
-  :ensure t
+  :straight t
   :diminish ethan-wspace-mode
   :init
   (add-hook 'org-src-mode-hook   #'ethan-wspace-clean-all)
@@ -150,16 +153,8 @@
   (add-hook 'ledger-mode-hook    #'ethan-wspace-mode)
   (add-hook 'yaml-mode-hook      #'ethan-wspace-mode))
 
-(use-package zenburn-theme
-  :ensure t
-  :disabled
-  :init
-  (set-cursor-color "#b8860b")
-  :config
-  (load-theme 'zenburn t))
-
 (use-package solarized-theme
-  :ensure t
+  :straight t
   :custom
   (solarized-use-variable-pitch      nil)
   (solarized-high-contrast-mode-line t)
@@ -183,26 +178,26 @@
   (load-theme 'solarized-light t))
 
 (use-package csv-mode
-  :ensure t
+  :straight t
   :mode   "\\.csv\\'")
 
 (use-package expand-region
-  :ensure t
+  :straight t
   :bind ("C-=" . er/expand-region))
 
 (use-package move-text
-  :ensure t
+  :straight t
   :bind
   (([(hyper up)] . move-text-up)
    ([(hyper down)] . move-text-down)))
 
 (use-package powerline
-  :ensure t
+  :straight t
   :config
   (powerline-default-theme))
 
 (use-package ivy
-  :ensure t
+  :straight t
   :diminish ivy-mode
   :bind (:map ivy-minibuffer-map
               ("C-<return>" . ivy-immediate-done))
@@ -212,10 +207,10 @@
    enable-recursive-minibuffers t))
 
 (use-package ivy-avy
-  :ensure t)
+  :straight t)
 
 (use-package counsel
-  :ensure t
+  :straight t
   :requires ivy
   :bind (:map ivy-mode-map
               ("C-c M-x" . ivy-resume)
@@ -228,22 +223,16 @@
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
 
 (use-package smex
-  :ensure t
+  :straight t
   :config
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory)))
 
 
 (use-package smooth-scroll
-  :ensure t
+  :straight t
   :diminish smooth-scroll-mode
   :bind (("M-p"   . scroll-down-1)
          ("M-n"   . scroll-up-1)))
-
-(use-package smooth-scrolling
-  :disabled
-  :ensure t
-  :init
-  (smooth-scrolling-mode -1))
 
 (use-package uniquify
   :init
@@ -255,7 +244,7 @@
 
 
 (use-package yasnippet
-  :ensure t
+  :straight t
   :diminish yas-minor-mode
   :commands (yas-expand yas-minor-mode)
   :functions (yas-guess-snippet-directories yas-table-name)
@@ -294,14 +283,14 @@
 
 
 (use-package markdown-mode
-  :ensure t
+  :straight t
   :init
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 
 
 (use-package projectile
-  :ensure t
+  :straight t
   :delight '(:eval (format " [:prj %s]" (projectile-project-name)))
   :load-path "./defuns/"
   :bind-keymap ("C-," . projectile-command-map)
@@ -341,13 +330,13 @@
 
 
 (use-package helm-projectile
-  :ensure t)
+  :straight t)
 
 (use-package ggtags
-  :ensure t)
+  :straight t)
 
 (use-package cmake-mode
-  :ensure t
+  :straight t
   :bind ((:map cmake-mode-map
                ("<f5>" . 'recompile)))
   :mode ("CMakeList.txt" . cmake-mode))
@@ -363,25 +352,25 @@
 
 
 (use-package flyspell-correct
-  :ensure t
+  :straight t
   :bind (:map flyspell-mode-map ("C-c c" . flyspell-correct-wrapper)))
 
 
 (use-package flyspell-correct-ivy
   :disabled
-  :ensure t
+  :straight t
   :init
   (setq flyspell-correct-interface #'flyspell-correct-ivy))
 
 
 (use-package flyspell-correct-popup
-  :ensure t
+  :straight t
   :init
   (setq flyspell-correct-interface #'flyspell-correct-popup))
 
 
 (use-package magit
-  :ensure t
+  :straight t
   :bind (([f12] . magit-status))
   :custom
   (magit-save-repository-buffers          'dontask)
@@ -411,17 +400,17 @@
                           'append))
 
 (use-package gitignore-mode
-  :ensure t)
+  :straight t)
 
 (use-package git-timemachine
-  :ensure t)
+  :straight t)
 
 (use-package smerge-mode
   :custom
   (smerge-command-prefix  "\C-cm"))
 
 (use-package helm
-  :ensure t
+  :straight t
   :diminish helm-ff-cache-mode
   :init
   (setq
@@ -440,13 +429,13 @@
 
 
 (use-package helm-ag
-  :ensure t
+  :straight t
   :config
   (setq helm-ag-fuzzy-match     t
         helm-ag-insert-at-point 'symbol))
 
 (use-package helm-gtags
-  :ensure t
+  :straight t
   :diminish helm-gtags-mode
   :config
   (setq  helm-gtags-pulse-at-cursor nil)
@@ -457,7 +446,7 @@
   (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack))
 
 (use-package helm-descbinds
-  :ensure t
+  :straight t
   :bind ("C-h b" . helm-descbinds)
   :config
   (helm-descbinds-mode))
@@ -469,7 +458,7 @@
          ("s-c" . delete-other-windows)))
 
 (use-package ace-window
-  :ensure t
+  :straight t
   :custom
   (aw-ignore-current t)
   (aw-keys '(?x ?c ?v ?b ?n ?m ?a))
@@ -485,11 +474,11 @@
 
 
 (use-package emmet-mode
-  :ensure t
+  :straight t
   :defer t)
 
 (use-package web-mode
-  :ensure t
+  :straight t
   :bind (:map web-mode-map ("C-=" . web-mode-mark-and-expand))
   :init
   (setq web-mode-engines-alist '(("angular"    . "\\.html\\'"))
@@ -516,7 +505,7 @@
 
 
 (use-package js2-mode
-  :ensure t
+  :straight t
   :mode        "\\.js\\'"
   :interpreter "node"
   :bind (:map js2-mode-map
@@ -527,9 +516,9 @@
   (add-hook 'js2-mode-hook 'tern-setup)
 
   :config
-  (use-package toggle-quotes :ensure t)
+  (use-package toggle-quotes :straight t)
 
-  (use-package tern :ensure t
+  (use-package tern :straight t
     :defer  t
     :load-path "~/.nvm/versions/node/v10.5.0/lib/node_modules/tern/emacs/"
     :init
@@ -541,7 +530,7 @@
 
 
 (use-package company
-  :ensure t
+  :straight t
   :diminish company-mode
   :bind (:map company-mode-map ("<s-tab>" . company-complete))
   :hook ((emacs-lisp-mode    . company-mode)
@@ -578,21 +567,21 @@
 
   :config
   (use-package company-web
-    :ensure t)
+    :straight t)
 
   (use-package company-shell
-    :ensure t
+    :straight t
     :disabled
     :init
     (add-to-list 'company-backends 'company-shell))
 
   (use-package company-ycmd
-    :ensure
+    :straight
     :init
     (company-ycmd-setup))
 
   (use-package company-auctex
-    :ensure t
+    :straight t
     :init
     (company-auctex-init)
     (eval-after-load "company-auctex"
@@ -626,11 +615,11 @@
   (winner-mode 1))
 
 (use-package transpose-frame
-  :ensure t
+  :straight t
   :bind ("C-c f t" . transpose-frame))
 
 (use-package json-mode
-  :ensure t
+  :straight t
   :init
   (make-local-variable 'js-indent-level)
   (add-hook 'json-mode-hook
@@ -644,7 +633,7 @@
 
 (use-package openwith
   :disabled
-  :ensure t
+  :straight t
   :defer  3
   :config
   (setq openwith-associations
@@ -694,7 +683,7 @@
   (org-indent-indentation-per-level 4))
 
 (use-package org-journal
-  :ensure t
+  :straight t
   :bind (("C-c C-j" . org-journal-new-entry))
 
   :preface
@@ -797,7 +786,7 @@
 
 
 (use-package beacon
-  :ensure t
+  :straight t
   :diminish beacon-mode
   :init
   (setq
@@ -807,7 +796,7 @@
   (beacon-mode 1))
 
 (use-package avy
-  :ensure t
+  :straight t
   :bind (("C-z z"  . avy-goto-char-timer)
          ("C-z x"  . avy-goto-char-in-line))
   :custom
@@ -834,12 +823,12 @@
   (global-set-key (kbd "C-c C-SPC")     'ma/jump-to-mark-skip-same-line))
 
 (use-package crux
-  :ensure t
+  :straight t
   :init
   (global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line))
 
 (use-package sql-indent
-  :ensure t
+  :straight t
   :pin gnu
   :hook (sql-mode . sqlind-minor-mode)
   :config
@@ -879,12 +868,12 @@
 
 
 (use-package dired-narrow
-  :ensure t
+  :straight t
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
 
 (use-package dired-subtree
-  :ensure t
+  :straight t
   :bind (:map dired-mode-map
               ("i"  . dired-subtree-insert)
               ("k"  . dired-subtree-remove))
@@ -899,7 +888,7 @@
   (dired-subtree-depth-6-face ((t (:background "#e8d9b4")))))
 
 (use-package tex
-  :ensure auctex
+  :straight auctex
   :mode ("\\.tex\\'" . TeX-latex-mode)
   :commands (latex-mode LaTeX-mode plain-tex-mode)
   :config
@@ -953,17 +942,17 @@
                       (local-set-key (kbd "<f7>") 'ma/run-biber))))
 
 (use-package gist
-  :ensure t
+  :straight t
   :init
   (setq
    gist-ask-for-description t
    gist-ask-for-filename t))
 
 (use-package simple-httpd
-  :ensure t)
+  :straight t)
 
 (use-package pyvenv
-  :ensure t
+  :straight t
   :config
   (pyvenv-mode 1))
 
@@ -972,15 +961,15 @@
   :mode "\\.pro\\'" )
 
 (use-package typescript-mode
-  :ensure t)
+  :straight t)
 
 (use-package tide
-  :ensure t
+  :straight t
   :after (typescript-mode company)
   :hook ((typescript-mode . tide-setup)))
 
 ;; (use-package tide
-;;   :ensure t
+;;   :straight t
 ;;   ;; :mode ("\\.ts\\'" . js2-mode)
 ;;   :init
 ;;   (defun setup-tide-mode ()
@@ -1001,14 +990,14 @@
 ;;   (add-hook 'js2-mode-hook #'setup-tide-mode))
 
 (use-package mocha-snippets
-  :ensure t)
+  :straight t)
 
 (use-package npm-mode
-  :ensure t
+  :straight t
   :defer t)
 
 (use-package deft
-  :ensure
+  :straight
   :load-path "./defuns/"
   :bind ([f9] . ma/deft-in-new-frame)
   :init
@@ -1016,30 +1005,30 @@
   (setq deft-extensions '("org" "md" "txt")))
 
 (use-package rainbow-mode
-  :ensure t)
+  :straight t)
 
 (use-package google-translate
-  :load-path "./site-lisp/google-translate"
+  :straight t
   :bind ("C-c t" . google-translate-smooth-translate)
   :init
   (use-package google-translate-smooth-ui)
   (setq google-translate-translation-directions-alist '(("en" . "es") ("es" . "en"))))
 
 (use-package paradox
-  :ensure t
+  :straight t
   :config
   (setq paradox-display-download-count t))
 
 
 (use-package geiser
-  :ensure t)
+  :straight t)
 
 (use-package dockerfile-mode
-  :ensure t
+  :straight t
   :mode "Dockerfile\\'")
 
 (use-package docker-compose-mode
-  :ensure t)
+  :straight t)
 
 (use-package font-lock+
   :disabled
@@ -1047,7 +1036,7 @@
 
 
 (use-package multiple-cursors
-  :ensure t
+  :straight t
   :bind (("C-<mouse-1>" . mc/add-cursor-on-click)
          ("C->"     . mc/mark-next-like-this)
          ("C-<"     . mc/mark-previous-like-this)
@@ -1058,45 +1047,45 @@
 
 (use-package iy-go-to-char
   :after (:all multiple-cursors)
-  :ensure t
+  :straight t
   :init
   (add-to-list 'mc/cursor-specific-vars 'iy-go-to-char-start-pos))
 
 
 (use-package yaml-mode
-  :ensure t
+  :straight t
   :mode (("\\.yml\\'"  . yaml-mode)
          ("\\.yaml\\'" . yaml-mode)))
 
 (use-package toml-mode
-  :ensure t
+  :straight t
   :mode ("\\.toml\\'" "/Pipfile\\'"))
 
 (use-package xclip
-  :ensure t
+  :straight t
   :disabled
   :init
   (xclip-mode 1))
 
 (use-package iss-mode
   :mode "\\.iss\\'"
-  :ensure t)
+  :straight t)
 
 
 (use-package hl-todo
-  :ensure t
+  :straight t
   :init (global-hl-todo-mode)
   :config
   (setq hl-todo-activate-in-modes '(prog-mode)))
 
 
 (use-package scss-mode
-  :ensure t
+  :straight t
   :init
   (setq scss-compile-at-save nil))
 
 (use-package nginx-mode
-  :ensure t)
+  :straight t)
 
 (use-package sed-mode
   :load-path "site-lisp/"
@@ -1104,7 +1093,7 @@
 
 
 (use-package flymd
-  :ensure t
+  :straight t
   :init
   (setq flymd-output-directory "/tmp"))
 
@@ -1114,7 +1103,7 @@
   :hook ((prog-mode) .  subword-mode))
 
 (use-package go-mode
-  :ensure t
+  :straight t
   :bind (:map go-mode-map
               ("C-:" . (lambda () (interactive) (insert ":="))))
   :init
@@ -1126,13 +1115,13 @@
 
 (use-package go-eldoc
   :disabled
-  :ensure t
+  :straight t
   :hook (go-mode . go-eldoc-setup))
 
 
 
 (use-package highlight-symbol
-  :ensure t
+  :straight t
   :bind (("H-h" . ma/highlight-symbol)
          ("H-<mouse-1>" . ma/highlight-symbol-at-point-click))
   :init
@@ -1150,47 +1139,47 @@
       (highlight-symbol))))
 
 (use-package highlight-numbers
-  :ensure t
+  :straight t
   :hook (prog-mode . highlight-numbers-mode))
 
 
 (use-package lorem-ipsum
-  :ensure t)
+  :straight t)
 
 ;; jade mode
 (use-package pug-mode
-  :ensure t)
+  :straight t)
 
 (use-package savekill
-  :load-path "~/lab/savekill"
+  :straight (savekill :fork  (:host github :repo "marcelino-m/savekill"))
   :init
   (setq savekill-keep-text-properties t
         savekill-max-saved-items 100))
 
 (use-package auto-yasnippet
-  :ensure t
+  :straight t
   :init
   (global-set-key (kbd "H-w") #'aya-create)
   (global-set-key (kbd "H-y") #'aya-expand))
 
 (use-package paredit
-  :ensure t
+  :straight t
   :disabled
   :init
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode))
 
 
 (use-package uuidgen
-  :ensure t)
+  :straight t)
 
 (use-package see-mode
-  :ensure t
+  :straight t
   :init
   (setq see-use-align-quotes t))
 
 
 (use-package adoc-mode
-  :ensure)
+  :straight)
 
 (use-package python
   :preface
@@ -1213,10 +1202,10 @@
 
 
 (use-package htmlize
-  :ensure t)
+  :straight t)
 
 (use-package elfeed
-  :ensure t
+  :straight t
   :init
   (setq shr-width 100)
   (setq elfeed-feeds
@@ -1238,12 +1227,12 @@
   (setq shr-width (current-fill-column)))
 
 (use-package qml-mode
-  :ensure t
+  :straight t
   :mode "\\.qml\\'")
 
 
 (use-package popwin
-  :ensure t
+  :straight t
   :config
   (push '(inferior-python-mode :height 20 :noselect t :tail t :stick t) popwin:special-display-config)
   (push '("*Google Translate*" :noselect t :height 20) popwin:special-display-config)
@@ -1251,16 +1240,16 @@
   (popwin-mode 1))
 
 (use-package protobuf-mode
-  :ensure t)
+  :straight t)
 
 (use-package eros
-  :ensure t
+  :straight t
   :init
   (eros-mode 1))
 
 
 (use-package lsp-mode
-  :ensure t
+  :straight t
   :hook ((go-mode python-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
@@ -1268,7 +1257,7 @@
   (lsp-signature-auto-activate nil))
 
 (use-package lsp-ui
-  :ensure t
+  :straight t
   :commands lsp-ui-mode
   :bind (:map lsp-mode-map
               ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
@@ -1280,15 +1269,15 @@
   (lsp-ui-doc-position   'top))
 
 (use-package systemd
-  :ensure t
+  :straight t
   :mode (("\\.service\\'" . systemd-mode)))
 
 (use-package goto-line-preview
-  :ensure t
+  :straight t
   :bind ("H-p" . goto-line-preview))
 
 (use-package tramp
-  :ensure t
+  :straight t
   :config
   (setq tramp-default-method "ssh")
   (setq vc-ignore-dir-regexp
@@ -1301,12 +1290,12 @@
                                  '((tramp-parse-sconfig "~/.ssh/config"))))
 
 (use-package gnuplot
-  :ensure t
+  :straight t
   :init
   (add-to-list 'interpreter-mode-alist '("gnuplot" . gnuplot-mode)))
 
 (use-package crontab-mode
-  :ensure t)
+  :straight t)
 
 (use-package xref
   :custom
@@ -1314,22 +1303,22 @@
   (xref-after-return-hook  nil))
 
 (use-package page-break-lines
-  :ensure t
+  :straight t
   :diminish page-break-lines-mode
   :init
   (global-page-break-lines-mode))
 
 
 (use-package restclient
-  :ensure t
+  :straight t
   :mode ("\\.http\\'" . restclient-mode))
 
 
 (use-package glsl-mode
-  :ensure t)
+  :straight t)
 
 (use-package visual-fill-column
-  :ensure t)
+  :straight t)
 
 
 (use-package gnus-dired
@@ -1356,6 +1345,7 @@
   (setq  message-send-mail-function 'smtpmail-send-it))
 
 (use-package mu4e
+  :disabled
   :after smtpmail
   :load-path "~/.local/share/emacs/site-lisp/mu4e"
   :preface
@@ -1428,4 +1418,4 @@
 
 
 (use-package backup-walker
-  :ensure t)
+  :straight t)
