@@ -1,1 +1,1 @@
-$1 = append(${1:theSlice}, ${2:theValue})$0
+${1:theSlice} = append($1, ${2:theValue})$0
