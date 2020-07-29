@@ -461,7 +461,7 @@
   :straight t
   :custom
   (aw-ignore-current t)
-  (aw-keys '(?x ?c ?v ?b ?n ?m ?a))
+  (aw-keys '(?a ?s ?d ?f ?g ?h))
   :bind (("s-z" . ace-window)))
 
 (use-package windmove
@@ -576,7 +576,7 @@
     (add-to-list 'company-backends 'company-shell))
 
   (use-package company-ycmd
-    :straight
+    :straight t
     :init
     (company-ycmd-setup))
 
@@ -826,23 +826,6 @@
   :straight t
   :init
   (global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line))
-
-(use-package sql-indent
-  :straight t
-  :pin gnu
-  :hook (sql-mode . sqlind-minor-mode)
-  :config
-  (defvar my-sql-indentation-offsets-alist
-    `((select-clause 0)
-      (insert-clause 0)
-      (delete-clause 0)
-      (update-clause 0)
-      ,@sqlind-default-indentation-offsets-alist))
-
-  (add-hook 'sqlind-minor-mode-hook
-            (lambda ()
-              (setq sqlind-indentation-offsets-alist
-                    my-sql-indentation-offsets-alist))))
 
 (use-package autorevert
   :delight auto-revert-mode
@@ -1179,7 +1162,7 @@
 
 
 (use-package adoc-mode
-  :straight)
+  :straight t)
 
 (use-package python
   :preface
@@ -1419,3 +1402,7 @@
 
 (use-package backup-walker
   :straight t)
+
+(use-package compile
+  :custom
+  (compilation-ask-about-save  nil))
