@@ -135,9 +135,10 @@
 (use-package info
   :config
   (define-key Info-mode-map (kbd "<prior>") 'scroll-down-1)
-  (define-key Info-mode-map (kbd "<next>") 'scroll-up-1)
-  (use-package info+
-    :load-path "~/.emacs.d/site-lisp/"))
+  (define-key Info-mode-map (kbd "<next>") 'scroll-up-1))
+
+(use-package info+
+  :load-path "~/.emacs.d/site-lisp/")
 
 
 (use-package ethan-wspace
