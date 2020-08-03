@@ -941,8 +941,8 @@
   (pyvenv-mode 1))
 
 (use-package qt-pro-mode
-  :load-path "site-lisp/"
-  :mode "\\.pro\\'" )
+  :straight t
+  :mode ("\\.pro\\'" "\\.pri\\'"))
 
 (use-package typescript-mode
   :straight t)
