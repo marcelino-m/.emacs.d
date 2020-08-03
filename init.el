@@ -53,6 +53,7 @@
 (xterm-mouse-mode)
 
 (setq-default
+ indicate-empty-lines                 t
  case-fold-search                     t
  column-number-mode                   t
  mouse-yank-at-point                  t
