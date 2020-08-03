@@ -1014,11 +1014,6 @@
 (use-package docker-compose-mode
   :straight t)
 
-(use-package font-lock+
-  :disabled
-  :load-path "~/.emacs.d/site-lisp/")
-
-
 (use-package multiple-cursors
   :straight t
   :bind (("C-<mouse-1>" . mc/add-cursor-on-click)
