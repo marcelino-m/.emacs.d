@@ -72,8 +72,6 @@
  mouse-wheel-scroll-amount            '(2 ((shift) . 1) ((control) . nil))
  imenu-auto-rescan                    t
  indent-tabs-mode                     nil
- ;; disable screen jump when the cursor moves out of the screen
- ;; scroll-conservatively                101
  scroll-preserve-screen-position      t
  scroll-step                          1
  vc-follow-symlinks                   t
@@ -1257,7 +1255,6 @@
   :bind ("H-p" . goto-line-preview))
 
 (use-package tramp
-  :straight t
   :config
   (setq tramp-default-method "ssh")
   (setq vc-ignore-dir-regexp
