@@ -1185,12 +1185,12 @@ command"
 
   :bind
   (:map python-mode-map
-        ("C-c C-n" . ma/python-eval-current-line))
-  :init
+        ("<backtab>" . nil)
+        ("C-c C-n"   . ma/python-eval-current-line))
+
+  :config
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "--nosep --simple-prompt -i")
-  :config
-  (unbind-key "<backtab>" python-mode-map))
 
   (let ((nline-fn #'newline))
     (add-function :around nline-fn  #'ma/python-newline)
