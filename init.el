@@ -1169,6 +1169,20 @@
       (unless keep
         (forward-line))))
 
+  (defun ma/python-newline (orig-fun &rest args)
+    "A better newline for  python-mode. this advice understand if
+point  is  currently at  indentation  level,  so when  press  RET
+indentation it's keeps.  If point is not at indentation level the
+behavior  is  the same  as  if  press  RET which  call  (newline)
+command"
+    (let ((levels (python-indent-calculate-levels))
+          (cur    (current-column)))
+      (if (member cur levels)
+          (progn
+            (funcall orig-fun)
+            (indent-to-column cur))
+        (apply orig-fun args))))
+
   :bind
   (:map python-mode-map
         ("C-c C-n" . ma/python-eval-current-line))
@@ -1178,6 +1192,9 @@
   :config
   (unbind-key "<backtab>" python-mode-map))
 
+  (let ((nline-fn #'newline))
+    (add-function :around nline-fn  #'ma/python-newline)
+    (define-key python-mode-map (kbd "RET")  nline-fn)))
 
 (use-package htmlize
   :straight t)
