@@ -132,13 +132,12 @@
   :diminish eldoc-mode)
 
 (use-package info
-  :config
-  (define-key Info-mode-map (kbd "<prior>") 'scroll-down-1)
-  (define-key Info-mode-map (kbd "<next>") 'scroll-up-1))
+  :bind (:map Info-mode-map
+              ([remap scroll-down-command] . scroll-down-1)
+              ([remap scroll-up-command]   . scroll-up-1)))
 
 (use-package info+
-  :load-path "~/.emacs.d/site-lisp/")
-
+    :load-path "~/.emacs.d/site-lisp/")
 
 (use-package ethan-wspace
   :straight t
