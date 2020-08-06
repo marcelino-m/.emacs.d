@@ -1140,13 +1140,6 @@
   (global-set-key (kbd "H-w") #'aya-create)
   (global-set-key (kbd "H-y") #'aya-expand))
 
-(use-package paredit
-  :straight t
-  :disabled
-  :init
-  (add-hook 'emacs-lisp-mode-hook #'paredit-mode))
-
-
 (use-package uuidgen
   :straight t)
 
@@ -1196,8 +1189,6 @@ command"
     (add-function :around nline-fn  #'ma/python-newline)
     (define-key python-mode-map (kbd "RET")  nline-fn)))
 
-(use-package htmlize
-  :straight t)
 
 (use-package elfeed
   :straight t
