@@ -120,7 +120,7 @@
 (use-package exec-path-from-shell
   :straight t
   :config
-  (dolist (var '("PATH" "GOPATH" "GOROOT"  "TIMLIB_SRC_ROOT"))
+  (dolist (var '("PATH" "GOPATH" "GOROOT"))
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize)
 
@@ -227,7 +227,6 @@
   :config
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory)))
 
-
 (use-package smooth-scroll
   :straight t
   :diminish smooth-scroll-mode
@@ -241,7 +240,6 @@
    uniquify-separator           " • "
    uniquify-after-kill-buffer-p t
    uniquify-ignore-buffers-re   "^\\*"))
-
 
 (use-package yasnippet
   :straight t
@@ -259,19 +257,15 @@
 
   (yas-global-mode 1))
 
-
-
 (use-package prog-mode
   :init
   (setq tab-width 4))
-
 
 (use-package elec-pair
   :init
   ;; disable electric pairing in minibuffer
   (setq electric-pair-inhibit-predicate #'(lambda (char) (window-minibuffer-p)))
   (add-hook 'prog-mode-hook #'electric-pair-mode))
-
 
 (use-package saveplace
   :init
@@ -281,13 +275,11 @@
   :config
   (save-place-mode))
 
-
 (use-package markdown-mode
   :straight t
   :init
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
-
 
 (use-package projectile
   :straight t
@@ -328,7 +320,6 @@
 
   (projectile-global-mode))
 
-
 (use-package helm-projectile
   :straight t)
 
@@ -341,7 +332,6 @@
                ("<f5>" . 'recompile)))
   :mode ("CMakeList.txt" . cmake-mode))
 
-
 (use-package flyspell
   :init
   (setq ispell-dictionary "castellano")
@@ -350,11 +340,9 @@
   (define-key flyspell-mode-map [(control ?\.)] nil)
   (define-key flyspell-mode-map [?\C-c ?$]      nil))
 
-
 (use-package flyspell-correct
   :straight t
   :bind (:map flyspell-mode-map ("C-c c" . flyspell-correct-wrapper)))
-
 
 (use-package flyspell-correct-ivy
   :disabled
@@ -362,12 +350,10 @@
   :init
   (setq flyspell-correct-interface #'flyspell-correct-ivy))
 
-
 (use-package flyspell-correct-popup
   :straight t
   :init
   (setq flyspell-correct-interface #'flyspell-correct-popup))
-
 
 (use-package magit
   :straight t
@@ -427,7 +413,6 @@
                  (inhibit-same-window . t)
                  (window-height . 0.4))))
 
-
 (use-package helm-ag
   :straight t
   :config
@@ -451,7 +436,6 @@
   :config
   (helm-descbinds-mode))
 
-
 (use-package window
   :config
   :bind (("s-x" . delete-window)
@@ -471,7 +455,6 @@
          ("s-a"       . windmove-left)
          ("s-w"       . windmove-up)
          ("s-s"       . windmove-down)))
-
 
 (use-package emmet-mode
   :straight t
@@ -503,7 +486,6 @@
   (add-to-list 'company-backends 'company-css)
   (add-to-list 'company-backends 'company-web-html))
 
-
 (use-package js2-mode
   :straight t
   :mode        "\\.js\\'"
@@ -527,7 +509,6 @@
       (interactive)
       (when (string-match "\\.js\\'" buffer-file-name)
         (tern-mode 1)))))
-
 
 (use-package company
   :straight t
@@ -630,7 +611,6 @@
   :mode (("\\.geojson\\'" . json-mode)
          ("\\.json\\'"    . json-mode)))
 
-
 (use-package openwith
   :disabled
   :straight t
@@ -674,7 +654,6 @@
           ".gitignore"))
 
   (recentf-mode +1))
-
 
 (use-package org-indent
   :diminish
@@ -764,12 +743,10 @@
   (setq org-goto-interface 'outline-path-completion)
   (setq org-outline-path-complete-in-steps nil))
 
-
 (use-package org-habit
   :custom
   (org-habit-graph-column 70)
   (org-habit-show-habits-only-for-today nil))
-
 
 (use-package org-capture
   :config
@@ -782,8 +759,6 @@
                 ("n" "Note: Quick and misc note" entry (file "~/syncthing/capture/quick-notes.org") "* %?\n%i" :empty-lines 1)
                 ("w" "work related captures")
                 ("wt" "Todo" entry (file+headline "~/syncthing/capture/work-task.org" "Tasks need be done soon") "* TODO %?\n%i" :empty-lines 1)))))
-
-
 
 (use-package beacon
   :straight t
@@ -848,7 +823,6 @@
   (dired-dwim-target                       t)
   (wdired-allow-to-change-permissions      t)
   (dired-listing-switches             "-alh"))
-
 
 (use-package dired-narrow
   :straight t
@@ -1002,7 +976,6 @@
   :config
   (setq paradox-display-download-count t))
 
-
 (use-package geiser
   :straight t)
 
@@ -1022,13 +995,11 @@
   :init
   (global-unset-key (kbd "C-<down-mouse-1>")))
 
-
 (use-package iy-go-to-char
   :after (:all multiple-cursors)
   :straight t
   :init
   (add-to-list 'mc/cursor-specific-vars 'iy-go-to-char-start-pos))
-
 
 (use-package yaml-mode
   :straight t
@@ -1049,13 +1020,11 @@
   :mode "\\.iss\\'"
   :straight t)
 
-
 (use-package hl-todo
   :straight t
   :init (global-hl-todo-mode)
   :config
   (setq hl-todo-activate-in-modes '(prog-mode)))
-
 
 (use-package scss-mode
   :straight t
@@ -1069,12 +1038,10 @@
   :load-path "site-lisp/"
   :mode "\\.sed\\'")
 
-
 (use-package flymd
   :straight t
   :init
   (setq flymd-output-directory "/tmp"))
-
 
 (use-package subword
   :diminish
@@ -1095,8 +1062,6 @@
   :disabled
   :straight t
   :hook (go-mode . go-eldoc-setup))
-
-
 
 (use-package highlight-symbol
   :straight t
@@ -1119,7 +1084,6 @@
 (use-package highlight-numbers
   :straight t
   :hook (prog-mode . highlight-numbers-mode))
-
 
 (use-package lorem-ipsum
   :straight t)
@@ -1147,7 +1111,6 @@
   :straight t
   :init
   (setq see-use-align-quotes t))
-
 
 (use-package adoc-mode
   :straight t)
@@ -1189,7 +1152,6 @@ command"
     (add-function :around nline-fn  #'ma/python-newline)
     (define-key python-mode-map (kbd "RET")  nline-fn)))
 
-
 (use-package elfeed
   :straight t
   :init
@@ -1216,7 +1178,6 @@ command"
   :straight t
   :mode "\\.qml\\'")
 
-
 (use-package popwin
   :straight t
   :config
@@ -1232,7 +1193,6 @@ command"
   :straight t
   :init
   (eros-mode 1))
-
 
 (use-package lsp-mode
   :straight t
@@ -1293,18 +1253,15 @@ command"
   :init
   (global-page-break-lines-mode))
 
-
 (use-package restclient
   :straight t
   :mode ("\\.http\\'" . restclient-mode))
-
 
 (use-package glsl-mode
   :straight t)
 
 (use-package visual-fill-column
   :straight t)
-
 
 (use-package gnus-dired
   :config
@@ -1323,7 +1280,6 @@ command"
 
   (setq gnus-dired-mail-mode 'mu4e-user-agent)
   (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode))
-
 
 (use-package smtpmail
   :config
@@ -1400,7 +1356,6 @@ command"
                (smtpmail-stream-type   . ssl)
                (smtpmail-smtp-service  . 465)
                (smtpmail-queue-mail    . nil))))))
-
 
 (use-package backup-walker
   :straight t)
