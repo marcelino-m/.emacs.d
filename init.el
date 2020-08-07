@@ -199,10 +199,12 @@
   :diminish ivy-mode
   :bind (:map ivy-minibuffer-map
               ("C-<return>" . ivy-immediate-done))
-  :init (ivy-mode)
-  (setq
-   ivy-use-virtual-buffers t
-   enable-recursive-minibuffers t))
+  :custom
+  (ivy-use-virtual-buffers  t)
+
+  :init
+  (setq enable-recursive-minibuffers t)
+  (ivy-mode))
 
 (use-package ivy-avy
   :straight t)
@@ -232,12 +234,11 @@
          ("M-n"   . scroll-up-1)))
 
 (use-package uniquify
-  :init
-  (setq
-   uniquify-buffer-name-style   'reverse
-   uniquify-separator           " • "
-   uniquify-after-kill-buffer-p t
-   uniquify-ignore-buffers-re   "^\\*"))
+  :custom
+  (uniquify-buffer-name-style    'reverse)
+  (uniquify-separator            " • ")
+  (uniquify-after-kill-buffer-p  t)
+  (uniquify-ignore-buffers-re    "^\\*"))
 
 (use-package yasnippet
   :straight t
@@ -245,49 +246,42 @@
   :commands (yas-expand yas-minor-mode)
   :functions (yas-guess-snippet-directories yas-table-name)
   :defines (yas-guessed-modes)
-  :bind (([backtab]   . yas-expand))
+  :bind (:map yas-minor-mode-map
+              ("TAB"         . nil)
+              ("<backtab>"   . yas-expand))
   :config
-  (define-key yas-minor-mode-map [(tab)] nil)
-  (define-key yas-minor-mode-map (kbd "TAB") nil)
-
-  (setq yas-snippet-dirs (append yas-snippet-dirs
-                                 '("~/.emacs.d/snippets/")))
-
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
   (yas-global-mode 1))
 
 (use-package prog-mode
   :init
-  (setq tab-width 4))
+  (setq-default tab-width 4))
 
 (use-package elec-pair
+  :custom
+  (electric-pair-inhibit-predicate #'(lambda (char) (window-minibuffer-p)))
   :init
-  ;; disable electric pairing in minibuffer
-  (setq electric-pair-inhibit-predicate #'(lambda (char) (window-minibuffer-p)))
   (add-hook 'prog-mode-hook #'electric-pair-mode))
 
 (use-package saveplace
+  :custom
+  (save-place-file  "~/.emacs.d/saveplace")
   :init
-  (setq-default
-   save-place-mode t
-   save-place-file "~/.emacs.d/saveplace")
-  :config
   (save-place-mode))
 
 (use-package markdown-mode
   :straight t
-  :init
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 
 (use-package projectile
   :straight t
-  :delight '(:eval (format " [:prj %s]" (projectile-project-name)))
+  :delight '(:eval (format " [prj: %s]" (projectile-project-name)))
   :load-path "./defuns/"
   :bind-keymap ("C-," . projectile-command-map)
   :bind (:map projectile-command-map
               ("s a" . helm-projectile-ag)
-              ("o"   . helm-occur)
-              ("5 p" . ma/projectile-switch-to-project-other-frame))
+              ("o"   . helm-occur))
   :custom
   (projectile-enable-caching            t)
   (projectile-completion-system      'ivy)
@@ -301,11 +295,6 @@
   (defun projectile--file-name-extensions (file-name)
     "Return FILE-NAME's extensions."
     (file-name-extension file-name))
-
-  (defun ma/projectile-switch-to-project-other-frame (&optional arg)
-    (interactive "P")
-    (select-frame (make-frame-command))
-    (projectile-switch-project arg))
 
   ;; projectile slows down tramp-mode
   ;; https://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
@@ -333,29 +322,23 @@
 (use-package flyspell
   :init
   (setq ispell-dictionary "castellano")
-  :config
-  (define-key flyspell-mode-map [(control ?\,)] nil)
-  (define-key flyspell-mode-map [(control ?\.)] nil)
-  (define-key flyspell-mode-map [?\C-c ?$]      nil))
+  :bind (:map flyspell-mode-map
+              ("C-,"   . nil)
+              ("C-."   . nil)
+              ("C-c $" . nil)))
 
 (use-package flyspell-correct
   :straight t
   :bind (:map flyspell-mode-map ("C-c c" . flyspell-correct-wrapper)))
 
-(use-package flyspell-correct-ivy
-  :disabled
-  :straight t
-  :init
-  (setq flyspell-correct-interface #'flyspell-correct-ivy))
-
 (use-package flyspell-correct-popup
   :straight t
-  :init
-  (setq flyspell-correct-interface #'flyspell-correct-popup))
+  :custom
+  (flyspell-correct-interface #'flyspell-correct-popup))
 
 (use-package magit
   :straight t
-  :bind (([f12] . magit-status))
+  :bind (("<f12>" . magit-status))
   :custom
   (magit-save-repository-buffers          'dontask)
   (magit-display-buffer-function          'magit-display-buffer-fullcolumn-most-v1)
@@ -396,15 +379,14 @@
 (use-package helm
   :straight t
   :diminish helm-ff-cache-mode
-  :init
-  (setq
-   helm-split-window-in-side-p t
-   helm-autoresize-max-height  40
-   helm-autoresize-min-height  40
-   helm-buffers-fuzzy-matching t)
+  :bind ("M-y" . helm-show-kill-ring)
+  :custom
+  (helm-split-window-in-side-p  t)
+  (helm-autoresize-max-height  40)
+  (helm-autoresize-min-height  40)
+  (helm-buffers-fuzzy-matching  t)
 
   :config
-  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
   (add-to-list 'display-buffer-alist
                `(,(rx bos "*helm" (* not-newline) "*" eos)
                  (display-buffer-in-side-window)
@@ -413,20 +395,9 @@
 
 (use-package helm-ag
   :straight t
-  :config
-  (setq helm-ag-fuzzy-match     t
-        helm-ag-insert-at-point 'symbol))
-
-(use-package helm-gtags
-  :straight t
-  :diminish helm-gtags-mode
-  :config
-  (setq  helm-gtags-pulse-at-cursor nil)
-  (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
-  (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
-  (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
-  (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-  (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack))
+  :custom
+  (helm-ag-fuzzy-match     t)
+  (helm-ag-insert-at-point 'symbol))
 
 (use-package helm-descbinds
   :straight t
@@ -456,57 +427,33 @@
 
 (use-package emmet-mode
   :straight t
-  :defer t)
+  :hook web-mode)
 
 (use-package web-mode
   :straight t
   :bind (:map web-mode-map ("C-=" . web-mode-mark-and-expand))
-  :init
-  (setq web-mode-engines-alist '(("angular"    . "\\.html\\'"))
-        web-mode-enable-current-element-highlight     t
-        web-mode-enable-element-content-fontification t
-        web-mode-enable-element-tag-fontification     t)
 
-  (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.[gj]sp\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-hook 'web-mode-hook (lambda ()
-                             (setq web-mode-markup-indent-offset 2)
-                             (setq web-mode-code-indent-offset 4)
-                             (emmet-mode 1)))
+  :mode
+  (("\\.phtml\\'"    . web-mode)
+   ("\\.tpl\\.php\\'" . web-mode)
+   ("\\.[gj]sp\\'"    . web-mode)
+   ("\\.as[cp]x\\'"   . web-mode)
+   ("\\.erb\\'"       . web-mode)
+   ("\\.mustache\\'"  . web-mode)
+   ("\\.djhtml\\'"    . web-mode)
+   ("\\.html?\\'"     . web-mode))
 
-  :config
-  (add-to-list 'company-backends 'company-css)
-  (add-to-list 'company-backends 'company-web-html))
+  :custom
+  (web-mode-engines-alist '(("angular"    . "\\.html\\'")))
+  (web-mode-enable-current-element-highlight     t)
+  (web-mode-enable-element-content-fontification t)
+  (web-mode-enable-element-tag-fontification     t)
+  (web-mode-markup-indent-offset                 2)
+  (web-mode-code-indent-offset                   4))
 
 (use-package js2-mode
   :straight t
-  :mode        "\\.js\\'"
-  :interpreter "node"
-  :bind (:map js2-mode-map
-              ("C-'" . toggle-quotes)
-              ;; ("C->" . ma/insert-arrow)
-              )
-  :init
-  (add-hook 'js2-mode-hook 'tern-setup)
-
-  :config
-  (use-package toggle-quotes :straight t)
-
-  (use-package tern :straight t
-    :defer  t
-    :load-path "~/.nvm/versions/node/v10.5.0/lib/node_modules/tern/emacs/"
-    :init
-    (add-to-list 'exec-path "~/.nvm/versions/node/v10.5.0/bin/")
-    (defun tern-setup ()
-      (interactive)
-      (when (string-match "\\.js\\'" buffer-file-name)
-        (tern-mode 1)))))
+  :mode        "\\.js\\'")
 
 (use-package company
   :straight t
@@ -525,50 +472,39 @@
          (ledger-mode        . company-mode))
 
 
-  :init
-  (setq
-   company-idle-delay            0
-   company-tooltip-idle-delay    0
-   company-minimum-prefix-length 1
-   company-show-numbers          t
-   company-dabbrev-downcase      nil)
+  :custom
+  (company-idle-delay            0)
+  (company-tooltip-idle-delay    0)
+  (company-minimum-prefix-length 1)
+  (company-show-numbers          t)
+  (company-dabbrev-downcase      nil)
 
+  :config
   (defun  ma/reorder-argument-company-fill-propertize (orig-fun &rest args)
     "This advice is for show number of company to left side"
     (if (string= " " (car (last args)))
         (apply orig-fun args)
       (apply orig-fun (append (butlast args 2) (reverse (last args 2))))))
 
-  (advice-add
-   #'company-fill-propertize
-   :around
-   #'ma/reorder-argument-company-fill-propertize)
-
-  :config
-  (use-package company-web
-    :straight t)
-
-  (use-package company-shell
-    :straight t
-    :disabled
-    :init
-    (add-to-list 'company-backends 'company-shell))
-
-  (use-package company-ycmd
-    :straight t
-    :init
-    (company-ycmd-setup))
-
-  (use-package company-auctex
-    :straight t
-    :init
-    (company-auctex-init)
-    (eval-after-load "company-auctex"
-      ;; override this function, bad alignament in company
-      '(defun company-auctex-symbol-annotation (candidate)
-         nil)))
-
+  (advice-add #'company-fill-propertize :around #'ma/reorder-argument-company-fill-propertize)
   (add-to-list 'company-backend 'company-ispell))
+
+(use-package company-web
+  :straight t)
+
+(use-package company-ycmd
+  :straight t
+  :init
+  (company-ycmd-setup))
+
+(use-package company-auctex
+  :straight t
+  :init
+  (company-auctex-init)
+  (eval-after-load "company-auctex"
+    ;; override this function, bad alignament in company
+    '(defun company-auctex-symbol-annotation (candidate)
+       nil)))
 
 (use-package winner
   :defer 5
@@ -600,7 +536,6 @@
 (use-package json-mode
   :straight t
   :init
-  (make-local-variable 'js-indent-level)
   (add-hook 'json-mode-hook
             (lambda ()
               (make-local-variable 'js-indent-level)
@@ -608,36 +543,6 @@
 
   :mode (("\\.geojson\\'" . json-mode)
          ("\\.json\\'"    . json-mode)))
-
-(use-package openwith
-  :disabled
-  :straight t
-  :defer  3
-  :config
-  (setq openwith-associations
-        (list
-         (list (openwith-make-extension-regexp
-                '("db"))
-               "sqlitebrowser"
-               '(file))
-         ;; (list (openwith-make-extension-regexp
-         ;;        '("ui"))
-         ;;       "designer"
-         ;;       '(file))
-         (list (openwith-make-extension-regexp
-                '("odg"))
-               "lodraw"
-               '(file))
-         (list (openwith-make-extension-regexp
-                '("pdf"))
-               "okular"
-               '(file))
-         ;; (list (openwith-make-extension-regexp
-         ;;        '("dbm"))
-         ;;       "pgmodeler"
-         ;;       '(file))
-         ))
-  (openwith-mode 1))
 
 (use-package recentf
   :config
@@ -923,27 +828,6 @@
   :after (typescript-mode company)
   :hook ((typescript-mode . tide-setup)))
 
-;; (use-package tide
-;;   :straight t
-;;   ;; :mode ("\\.ts\\'" . js2-mode)
-;;   :init
-;;   (defun setup-tide-mode ()
-;;     (interactive)
-;;     (when (string-match "\\.ts\\'" buffer-file-name)
-;;       ;;(setq tide-tsserver-executable "node_modules/typescript/bin/tsserver")
-;;       (tide-setup)
-;;       (flycheck-mode +1)
-;;       (setq flycheck-check-syntax-automatically '(save mode-enabled)
-;;             js2-mode-show-parse-errors          nil
-;;             js2-mode-show-strict-warnings       nil
-;;             )
-;;       (eldoc-mode +1)
-;;       (company-mode +1)))
-
-;;   ;; aligns annotation to the right hand side
-;;   (setq company-tooltip-align-annotations t)
-;;   (add-hook 'js2-mode-hook #'setup-tide-mode))
-
 (use-package mocha-snippets
   :straight t)
 
@@ -1008,12 +892,6 @@
   :straight t
   :mode ("\\.toml\\'" "/Pipfile\\'"))
 
-(use-package xclip
-  :straight t
-  :disabled
-  :init
-  (xclip-mode 1))
-
 (use-package iss-mode
   :mode "\\.iss\\'"
   :straight t)
@@ -1055,11 +933,6 @@
             (lambda ()
               (add-hook 'before-save-hook 'gofmt-before-save)
               (setq tab-width 4))))
-
-(use-package go-eldoc
-  :disabled
-  :straight t
-  :hook (go-mode . go-eldoc-setup))
 
 (use-package highlight-symbol
   :straight t
