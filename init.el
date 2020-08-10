@@ -1,5 +1,5 @@
 ;;  adjust the garbage collection param
-(setq gc-cons-threshold (* 50 1024 1024))
+(setq gc-cons-threshold 67108864) ;; 64mb
 
 ;; boostrap straight.el
 (defvar bootstrap-version)
@@ -17,6 +17,18 @@
 
 
 (straight-use-package 'use-package)
+
+;; taken from https://gustafwaldemarson.com/posts/set-variable-in-hook/
+(defmacro set-variable-in-hook (hook variable value &optional name)
+  "Create a proper  HOOK function for setting  VARIABLE to VALUE.
+NAME can be used to set the name of the defined function."
+  (let* ((hname (symbol-name hook))
+         (vname (symbol-name variable))
+         (fname (intern (or name (format "set-%s-in-%s" vname hname)))))
+    `(progn
+       (defun ,fname ()
+         (setq-local ,variable ,value))
+       (add-hook (quote ,hook) (function ,fname)))))
 
 
 (use-package use-package-chords
@@ -255,7 +267,7 @@
 
 (use-package prog-mode
   :init
-  (setq-default tab-width 4))
+  (set-variable-in-hook prog-mode-hook tab-width 4))
 
 (use-package elec-pair
   :custom
@@ -385,6 +397,9 @@
   (helm-autoresize-max-height  40)
   (helm-autoresize-min-height  40)
   (helm-buffers-fuzzy-matching  t)
+
+  :custom-face
+  (helm-selection ((t (:extend t :background "#eee8d5" :underline nil))))
 
   :config
   (add-to-list 'display-buffer-alist
@@ -854,6 +869,7 @@
   (setq google-translate-translation-directions-alist '(("en" . "es") ("es" . "en"))))
 
 (use-package paradox
+  :disabled
   :straight t
   :config
   (setq paradox-display-download-count t))
@@ -997,11 +1013,12 @@
         (forward-line))))
 
   (defun ma/python-newline (orig-fun &rest args)
-    "A better newline for  python-mode. this advice understand if
-point  is  currently at  indentation  level,  so when  press  RET
-indentation it's keeps.  If point is not at indentation level the
-behavior  is  the same  as  if  press  RET which  call  (newline)
-command"
+    "A better newline for  python-mode.
+
+this  advice  understand if  point  is  currently at  indentation
+level, so when press RET indentation it's keeps.  If point is not
+at indentation  level the behavior  is the  same as if  press RET
+which call (newline) command"
     (let ((levels (python-indent-calculate-levels))
           (cur    (current-column)))
       (if (member cur levels)
