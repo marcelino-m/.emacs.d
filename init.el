@@ -353,7 +353,7 @@ NAME can be used to set the name of the defined function."
   :bind (("<f12>" . magit-status))
   :custom
   (magit-save-repository-buffers          'dontask)
-  (magit-display-buffer-function          'magit-display-buffer-fullcolumn-most-v1)
+  (magit-display-buffer-function          'magit-display-buffer-traditional)
   (magit-section-visibility-indicator     nil)
   (magit-diff-adjust-tab-width            'always)
   (magit-section-initial-visibility-alist '((untracked . hide)
@@ -750,8 +750,7 @@ NAME can be used to set the name of the defined function."
 (use-package dired-subtree
   :straight t
   :bind (:map dired-mode-map
-              ("i"  . dired-subtree-insert)
-              ("k"  . dired-subtree-remove))
+              ("TAB"  . dired-subtree-cycle))
   :custom
   (dired-subtree-use-backgrounds  t)
   :custom-face
