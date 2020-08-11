@@ -761,7 +761,7 @@ NAME can be used to set the name of the defined function."
 (use-package dired-subtree
   :straight t
   :bind (:map dired-mode-map
-              ("TAB"  . dired-subtree-cycle))
+              ("TAB"  . dired-subtree-toggle))
   :custom
   (dired-subtree-use-backgrounds  t)
   ;; :custom-face
