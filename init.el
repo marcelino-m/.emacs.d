@@ -163,7 +163,18 @@ NAME can be used to set the name of the defined function."
   (add-hook 'ledger-mode-hook    #'ethan-wspace-mode)
   (add-hook 'yaml-mode-hook      #'ethan-wspace-mode))
 
+(use-package spacemacs-theme
+  :straight t
+  :defer
+  :init
+  (if (daemonp)
+        (add-hook 'after-make-frame-functions
+              (lambda (frame)
+            (with-selected-frame frame (load-theme 'spacemacs-dark t))))
+      (load-theme 'spacemacs-dark t)))
+
 (use-package solarized-theme
+  :disabled
   :straight t
   :custom
   (solarized-use-variable-pitch      nil)
@@ -398,8 +409,8 @@ NAME can be used to set the name of the defined function."
   (helm-autoresize-min-height  40)
   (helm-buffers-fuzzy-matching  t)
 
-  :custom-face
-  (helm-selection ((t (:extend t :background "#eee8d5" :underline nil))))
+  ;; :custom-face
+  ;; (helm-selection ((t (:extend t :background "#eee8d5" :underline nil))))
 
   :config
   (add-to-list 'display-buffer-alist
@@ -753,13 +764,14 @@ NAME can be used to set the name of the defined function."
               ("TAB"  . dired-subtree-cycle))
   :custom
   (dired-subtree-use-backgrounds  t)
-  :custom-face
-  (dired-subtree-depth-1-face ((t (:background "#f4eddb"))))
-  (dired-subtree-depth-2-face ((t (:background "#f2e9d3"))))
-  (dired-subtree-depth-3-face ((t (:background "#efe5cb"))))
-  (dired-subtree-depth-4-face ((t (:background "#ede1c4"))))
-  (dired-subtree-depth-5-face ((t (:background "#eaddbc"))))
-  (dired-subtree-depth-6-face ((t (:background "#e8d9b4")))))
+  ;; :custom-face
+  ;; (dired-subtree-depth-1-face ((t (:background "#f4eddb"))))
+  ;; (dired-subtree-depth-2-face ((t (:background "#f2e9d3"))))
+  ;; (dired-subtree-depth-3-face ((t (:background "#efe5cb"))))
+  ;; (dired-subtree-depth-4-face ((t (:background "#ede1c4"))))
+  ;; (dired-subtree-depth-5-face ((t (:background "#eaddbc"))))
+  ;; (dired-subtree-depth-6-face ((t (:background "#e8d9b4"))))
+  )
 
 (use-package tex
   :straight auctex
