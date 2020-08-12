@@ -166,12 +166,17 @@ NAME can be used to set the name of the defined function."
 (use-package spacemacs-theme
   :straight t
   :defer
+  :custom
+  (spacemacs-theme-org-height nil)
   :init
-  (if (daemonp)
-        (add-hook 'after-make-frame-functions
-              (lambda (frame)
-            (with-selected-frame frame (load-theme 'spacemacs-dark t))))
+  (defun ma/setup-appearence (frame)
+    (with-selected-frame frame
+      (remove-hook 'after-make-frame-functions #'ma/setup-appearence)
       (load-theme 'spacemacs-dark t)))
+
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions #'ma/setup-appearence)
+    (load-theme 'spacemacs-dark t)))
 
 (use-package solarized-theme
   :disabled
