@@ -867,7 +867,7 @@ NAME can be used to set the name of the defined function."
   :defer t)
 
 (use-package deft
-  :straight
+  :straight t
   :load-path "./defuns/"
   :bind ([f9] . ma/deft-in-new-frame)
   :init
