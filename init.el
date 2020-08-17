@@ -376,7 +376,7 @@ NAME can be used to set the name of the defined function."
   :bind (("<f12>" . magit-status))
   :custom
   (magit-save-repository-buffers          'dontask)
-  (magit-display-buffer-function          'magit-display-buffer-traditional)
+  (magit-display-buffer-function          'magit-display-buffer-fullframe-status-v1)
   (magit-section-visibility-indicator     nil)
   (magit-diff-adjust-tab-width            'always)
   (magit-section-initial-visibility-alist '((untracked . hide)
