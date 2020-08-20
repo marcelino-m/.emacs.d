@@ -1045,18 +1045,36 @@ which call (newline) command"
             (indent-to-column cur))
         (apply orig-fun args))))
 
+  (defun ma/python-shell-calculate-command-advice (orig-fun &rest args)
+    "If ipython is not found in path use python"
+    (if (executable-find  python-shell-interpreter)
+        (apply orig-fun args)
+      (let ((python-shell-interpreter "python")
+            (python-shell-interpreter-args "-i"))
+        (apply orig-fun args))))
+
   :bind
   (:map python-mode-map
         ("<backtab>" . nil)
         ("C-c C-n"   . ma/python-eval-current-line))
 
-  :config
-  (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "--nosep --simple-prompt -i")
+  :custom
+  (python-indent-offset                 4)
+  (python-shell-interpreter      "ipython")
+  (python-shell-interpreter-args "--simple-prompt -i")
 
+
+  :config
+  ;; advising newline behavior in python mode
   (let ((nline-fn #'newline))
     (add-function :around nline-fn  #'ma/python-newline)
-    (define-key python-mode-map (kbd "RET")  nline-fn)))
+    (define-key python-mode-map (kbd "RET")  nline-fn))
+
+  ;; advising if ipython not found then use  python
+  (advice-add
+   'python-shell-calculate-command
+   :around
+   #'ma/python-shell-calculate-command-advice))
 
 (use-package elfeed
   :straight t
