@@ -179,12 +179,13 @@ NAME can be used to set the name of the defined function."
   (defun ma/setup-appearence (frame)
     (with-selected-frame frame
       (remove-hook 'after-make-frame-functions #'ma/setup-appearence)
-      (load-theme 'spacemacs-dark t)))
+      (load-theme 'spacemacs-dark t)
+      (set-face-attribute 'region nil :background "#3d3b40")))
 
   (if (daemonp)
       (add-hook 'after-make-frame-functions #'ma/setup-appearence)
-    (load-theme 'spacemacs-dark t))
-  (set-face-attribute 'region nil :background "#3d3b40"))
+    (load-theme 'spacemacs-dark t)
+    (set-face-attribute 'region nil :background "#3d3b40")))
 
 (use-package solarized-theme
   :disabled
