@@ -776,15 +776,8 @@ NAME can be used to set the name of the defined function."
   :bind (:map dired-mode-map
               ("TAB"  . dired-subtree-toggle))
   :custom
-  (dired-subtree-use-backgrounds  t)
-  ;; :custom-face
-  ;; (dired-subtree-depth-1-face ((t (:background "#f4eddb"))))
-  ;; (dired-subtree-depth-2-face ((t (:background "#f2e9d3"))))
-  ;; (dired-subtree-depth-3-face ((t (:background "#efe5cb"))))
-  ;; (dired-subtree-depth-4-face ((t (:background "#ede1c4"))))
-  ;; (dired-subtree-depth-5-face ((t (:background "#eaddbc"))))
-  ;; (dired-subtree-depth-6-face ((t (:background "#e8d9b4"))))
-  )
+  (dired-subtree-use-backgrounds nil)
+  (dired-subtree-line-prefix      ""))
 
 (use-package tex
   :straight auctex
