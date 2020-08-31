@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: method
+# key: met
+# group: object oriented
+# --
+def ${1:method}(self$2) -> ${3:Res}:
+    $0
