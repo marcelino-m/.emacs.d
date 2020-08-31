@@ -1076,6 +1076,17 @@ which call (newline) command"
    :around
    #'ma/python-shell-calculate-command-advice))
 
+(use-package py-isort
+  :straight t
+  :hook (python-mode . ma/enable-py-isort)
+  :preface
+  (defun ma/enable-py-isort()
+    (add-hook 'before-save-hook 'py-isort-before-save nil t)))
+
+(use-package blacken
+  :straight t
+  :hook (python-mode . blacken-mode))
+
 (use-package elfeed
   :straight t
   :init
