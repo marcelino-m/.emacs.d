@@ -523,7 +523,7 @@ NAME can be used to set the name of the defined function."
 
   :config
   (defun  ma/reorder-argument-company-fill-propertize (orig-fun &rest args)
-    "This advice is for show number of company to left side"
+    "This advice to show number of candidate in company popup in left side"
     (if (string= " " (car (last args)))
         (apply orig-fun args)
       (apply orig-fun (append (butlast args 2) (reverse (last args 2))))))
@@ -647,7 +647,7 @@ NAME can be used to set the name of the defined function."
   (setq org-special-ctrl-a/e t)
   (setq org-special-ctrl-k t)
 
-  ;; no add new line on new item
+  ;; new line behavior on new item
   (setq org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
 
   (setq org-startup-folded t)
@@ -1036,7 +1036,7 @@ NAME can be used to set the name of the defined function."
     "A better newline for  python-mode.
 
 this  advice  understand if  point  is  currently at  indentation
-level, so when press RET indentation it's keeps.  If point is not
+level, so when press RET, indentation level is keeps.  If point is not
 at indentation  level the behavior  is the  same as if  press RET
 which call (newline) command"
     (let ((levels (python-indent-calculate-levels))
