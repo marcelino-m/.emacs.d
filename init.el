@@ -1087,6 +1087,7 @@ which call (newline) command"
 
 (use-package blacken
   :straight t
+  :diminish
   :hook (python-mode . blacken-mode))
 
 (use-package elfeed
@@ -1133,6 +1134,7 @@ which call (newline) command"
 
 (use-package lsp-mode
   :straight t
+  :diminish
   :hook ((go-mode python-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
