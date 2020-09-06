@@ -1032,7 +1032,7 @@ NAME can be used to set the name of the defined function."
       (unless keep
         (forward-line))))
 
-  (defun ma/python-newline (orig-fun &rest args)
+  (defun ma/python-newline-advice (orig-fun &rest args)
     "A better newline for  python-mode.
 
 this  advice  understand if  point  is  currently at  indentation
@@ -1069,7 +1069,7 @@ which call (newline) command"
   :config
   ;; advising newline behavior in python mode
   (let ((nline-fn #'newline))
-    (add-function :around nline-fn  #'ma/python-newline)
+    (add-function :around nline-fn  #'ma/python-newline-advice)
     (define-key python-mode-map (kbd "RET")  nline-fn))
 
   ;; advising if ipython not found then use  python
