@@ -226,10 +226,12 @@ NAME can be used to set the name of the defined function."
   (([(hyper up)] . move-text-up)
    ([(hyper down)] . move-text-down)))
 
-(use-package powerline
+(use-package spaceline
   :straight t
   :config
-  (powerline-default-theme))
+  (use-package spaceline-config
+    :config
+    (spaceline-spacemacs-theme)))
 
 (use-package ivy
   :straight t
