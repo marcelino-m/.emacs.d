@@ -170,7 +170,7 @@ NAME can be used to set the name of the defined function."
   (spacemacs-theme-org-height nil)
 
   :custom-face
-  (org-block            ((t :background nil  :extend t)))
+  (org-block            ((t :background nil  :extend nil)))
   (org-block-begin-line ((t (:underline "#bc6ec5" :background nil  :foreground "#5d4d7a" :extend nil))))
   (org-block-end-line   ((t (:overline nil  :underline nil  :foreground "#5d4d7a" :background nil :extend nil))))
   (org-checkbox         ((t :box nil)))
