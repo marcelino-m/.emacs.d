@@ -180,7 +180,8 @@ NAME can be used to set the name of the defined function."
     (with-selected-frame frame
       (remove-hook 'after-make-frame-functions #'ma/setup-appearence)
       (load-theme 'spacemacs-dark t)
-      (set-face-attribute 'region nil :background "#3d3b40")))
+      (set-face-attribute 'region nil :background "#3d3b40")
+      (add-hook 'org-mode-hook (lambda () (set-face-attribute 'org-block-begin-line nil :extend nil)))))
 
   (if (daemonp)
       (add-hook 'after-make-frame-functions #'ma/setup-appearence)
