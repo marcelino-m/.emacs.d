@@ -365,7 +365,13 @@ NAME can be used to set the name of the defined function."
   :bind (:map flyspell-mode-map
               ("C-,"   . nil)
               ("C-."   . nil)
-              ("C-c $" . nil)))
+              ("C-c $" . nil))
+
+  :custom
+  (flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face))
+
+  :init
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode))
 
 (use-package flyspell-correct
   :straight t
