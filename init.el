@@ -359,9 +359,15 @@ NAME can be used to set the name of the defined function."
                ("<f5>" . 'recompile)))
   :mode ("CMakeList.txt" . cmake-mode))
 
+(use-package ispell
+  :custom
+  (ispell-program-name  "hunspell")
+  (ispell-dictionary "es_CL,en_US")
+  :config
+  (ispell-set-spellchecker-params)
+  (ispell-hunspell-add-multi-dic "es_CL,en_US"))
+
 (use-package flyspell
-  :init
-  (setq ispell-dictionary "castellano")
   :bind (:map flyspell-mode-map
               ("C-,"   . nil)
               ("C-."   . nil)
