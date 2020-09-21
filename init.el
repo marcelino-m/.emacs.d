@@ -168,6 +168,8 @@ NAME can be used to set the name of the defined function."
   :defer
   :custom
   (spacemacs-theme-org-height nil)
+  (spacemacs-theme-comment-bg nil)
+  (spacemacs-theme-comment-italic t)
 
   :custom-face
   (org-block            ((t :background nil  :extend nil)))
