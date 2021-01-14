@@ -1351,5 +1351,15 @@ which call (newline) command"
   :straight t)
 
 (use-package compile
+  :preface
+  (defun ma/bury-compile-buffer  (buf str)
+    (if (null (string-match ".*exited abnormally.*" str))
+        ;;no errors, make the compilation window go away in a 1 seconds
+        (progn
+          (run-with-timer 1 nil #'delete-window  (get-buffer-window buf))
+          (message "No Compilation Errors!"))))
   :custom
-  (compilation-ask-about-save  nil))
+  (compilation-ask-about-save  nil)
+
+  :init
+  (add-hook 'compilation-finish-functions #'ma/bury-compile-buffer))
