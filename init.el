@@ -148,7 +148,7 @@ NAME can be used to set the name of the defined function."
   (define-key Info-mode-map (kbd "<next>") 'scroll-up-1))
 
 (use-package info+
-    :load-path "~/.emacs.d/site-lisp/")
+  :straight t)
 
 (use-package ethan-wspace
   :straight t
