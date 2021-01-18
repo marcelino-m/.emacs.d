@@ -1170,7 +1170,8 @@ which call (newline) command"
   (lsp-diagnostic-package :none)
   (lsp-signature-auto-activate nil)
   (lsp-enable-symbol-highlighting nil)
-  (lsp-modeline-diagnostics-enable nil))
+  (lsp-modeline-diagnostics-enable nil)
+  (lsp-headerline-breadcrumb-enable nil))
 
 (use-package lsp-ui
   :straight t
