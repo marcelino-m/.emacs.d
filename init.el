@@ -319,14 +319,15 @@ NAME can be used to set the name of the defined function."
 (use-package projectile
   :straight t
   :delight '(:eval (format " [prj: %s]" (projectile-project-name)))
-  :load-path "./defuns/"
   :bind-keymap ("C-," . projectile-command-map)
+  :bind-keymap ("C-c p" . projectile-command-map)
   :bind (:map projectile-command-map
               ("s a" . helm-projectile-ag)
               ("o"   . helm-occur))
   :custom
   (projectile-enable-caching            t)
   (projectile-completion-system      'ivy)
+  (projectile-sort-order             'recently-active)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
 
   :config
