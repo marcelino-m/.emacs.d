@@ -377,6 +377,7 @@ NAME can be used to set the name of the defined function."
   (ispell-hunspell-add-multi-dic "es_CL,en_US"))
 
 (use-package flyspell
+  :diminish
   :bind (:map flyspell-mode-map
               ("C-,"   . nil)
               ("C-."   . nil)
@@ -625,7 +626,7 @@ NAME can be used to set the name of the defined function."
   :diminish
   :hook (org-mode . org-indent-mode)
   :custom
-  (org-indent-indentation-per-level 4))
+  (org-indent-indentation-per-level 2))
 
 (use-package org-journal
   :straight t
@@ -1055,7 +1056,6 @@ NAME can be used to set the name of the defined function."
 
   (defun ma/python-newline-advice (orig-fun &rest args)
     "A better newline for  python-mode.
-
 this  advice  understand if  point  is  currently at  indentation
 level, so when press RET, indentation level is keeps.  If point is not
 at indentation  level the behavior  is the  same as if  press RET
@@ -1369,3 +1369,7 @@ which call (newline) command"
 
   :init
   (add-hook 'compilation-finish-functions #'ma/bury-compile-buffer))
+
+(use-package ledger-mode
+  :straight t
+  :mode "\\.journal\\'")
