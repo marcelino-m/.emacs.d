@@ -743,20 +743,19 @@ NAME can be used to set the name of the defined function."
 (use-package misc-defuns
   :load-path "./defuns/"
   :init
-  (global-set-key (kbd "C-o")           'ma/open-line-and-indent)
-  (global-set-key (kbd "<C-return>")    'ma/open-line-below)
-  (global-set-key (kbd "<C-S-return>")  'ma/open-line-above)
-  (global-set-key (kbd "H-l")           'ma/goto-line-with-feedback)
-  (global-set-key (kbd "<M-backspace>") 'ma/kill-line)
-  (global-set-key (kbd "C-c e")         'ma/eval-and-replace)
-  (global-set-key (kbd "C-c f c")       'make-frame-command)
-  ;; (global-set-key (kbd "C-c i f")       'ma/insert-file-path-at-point)
-  ;; (global-set-key (kbd "C-c c f")       'ma/save-file-path-to-kill-ring)
-  (global-set-key (kbd "C-c j ")        'ma/join-line)
-  (global-set-key (kbd "M-w")           'ma/kill-ring-save-line-or-region)
-  (global-set-key (kbd "C-w")           'ma/kill-line-or-region)
-  (global-set-key (kbd "C-y")           'ma/yank-with-feedback)
-  (global-set-key (kbd "C-c C-SPC")     'ma/jump-to-mark-skip-same-line))
+  (global-set-key (kbd "C-o")           #'ma/open-line-and-indent)
+  (global-set-key (kbd "<C-return>")    #'ma/open-line-below)
+  (global-set-key (kbd "<C-S-return>")  #'ma/open-line-above)
+  (global-set-key (kbd "H-l")           #'ma/goto-line-with-feedback)
+  (global-set-key (kbd "<M-backspace>") #'ma/kill-line)
+  (global-set-key (kbd "C-c e")         #'ma/eval-and-replace)
+  (global-set-key (kbd "C-c f c")       #'make-frame-command)
+  (global-set-key (kbd "C-c j")         #'ma/join-line)
+  (global-set-key (kbd "C-c J")         #'ma/join-join-line)
+  (global-set-key (kbd "M-w")           #'ma/kill-ring-save-line-or-region)
+  (global-set-key (kbd "C-w")           #'ma/kill-line-or-region)
+  (global-set-key (kbd "C-y")           #'ma/yank-with-feedback)
+  (global-set-key (kbd "C-c C-SPC")     #'ma/jump-to-mark-skip-same-line))
 
 (use-package crux
   :straight t

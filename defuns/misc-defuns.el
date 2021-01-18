@@ -209,6 +209,10 @@ Version 2016-08-11"
       (setq pend (1- (point)))
       (delete-region pbegin pend))))
 
+(defun ma/join-join-line ()
+  (interactive)
+  (ma/join-line t))
+
 (defun ma/kill-ring-save-line-or-region (beg end &optional region)
   "Save current  line to kill ring  if no region is  active, with
 feedback. Otherwise call `mouse-kill-ring-save'"
