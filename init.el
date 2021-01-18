@@ -31,6 +31,12 @@ NAME can be used to set the name of the defined function."
        (add-hook (quote ,hook) (function ,fname)))))
 
 
+(defmacro lambda-i (args body)
+  "Define an interactive lambda"
+  `(lambda ,args
+     (interactive)
+     ,body))
+
 (use-package use-package-chords
   :straight t
   :config (key-chord-mode 1))
@@ -751,7 +757,7 @@ NAME can be used to set the name of the defined function."
   (global-set-key (kbd "C-c e")         #'ma/eval-and-replace)
   (global-set-key (kbd "C-c f c")       #'make-frame-command)
   (global-set-key (kbd "C-c j")         #'ma/join-line)
-  (global-set-key (kbd "C-c J")         #'ma/join-join-line)
+  (global-set-key (kbd "C-c J")         (lambda-i () (ma/join-line t)))
   (global-set-key (kbd "M-w")           #'ma/kill-ring-save-line-or-region)
   (global-set-key (kbd "C-w")           #'ma/kill-line-or-region)
   (global-set-key (kbd "C-y")           #'ma/yank-with-feedback)
@@ -977,7 +983,7 @@ NAME can be used to set the name of the defined function."
 (use-package go-mode
   :straight t
   :bind (:map go-mode-map
-              ("C-:" . (lambda () (interactive) (insert ":="))))
+              ("C-:" . (lambda-i () (insert ":="))))
   :init
   (setq gofmt-command "goimports")
   (add-hook 'go-mode-hook
