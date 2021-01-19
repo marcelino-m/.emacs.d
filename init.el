@@ -137,13 +137,11 @@ NAME can be used to set the name of the defined function."
 (use-package exec-path-from-shell
   :straight t
   :config
-  (dolist (var '("PATH" "GOPATH" "GOROOT"))
+  (dolist (var '("GOPATH" "PYTHONUSERBASE"))
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize)
-
   (add-to-list 'exec-path "~/.local/bin/")
-  (add-to-list 'exec-path (concat (getenv "PYTHONUSERBASE") "/bin"))
-  (add-to-list 'exec-path (concat (getenv "GOROOT") "/bin")))
+  (add-to-list 'exec-path (concat (getenv "PYTHONUSERBASE") "/bin")))
 
 (use-package eldoc
   :diminish eldoc-mode)
