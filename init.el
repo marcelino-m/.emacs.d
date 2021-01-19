@@ -990,7 +990,7 @@ NAME can be used to set the name of the defined function."
 (use-package go-mode
   :straight t
   :bind (:map go-mode-map
-              ("C-:" . (lambda-i () (insert ":="))))
+              ("C-:" . (lambda () (interactive) (insert ":="))))
   :init
   (setq gofmt-command "goimports")
   (add-hook 'go-mode-hook
