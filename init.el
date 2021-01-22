@@ -37,6 +37,13 @@ NAME can be used to set the name of the defined function."
      (interactive)
      ,body))
 
+
+(use-package frame
+  :init
+  ;; in gnome stealing focus doesn't work correctly
+  (add-hook 'after-make-frame-functions
+            (lambda-i (frame) (select-frame-set-input-focus frame))))
+
 (use-package use-package-chords
   :straight t
   :config (key-chord-mode 1))
@@ -754,7 +761,7 @@ NAME can be used to set the name of the defined function."
   (global-set-key (kbd "H-l")           #'ma/goto-line-with-feedback)
   (global-set-key (kbd "<M-backspace>") #'ma/kill-line)
   (global-set-key (kbd "C-c e")         #'ma/eval-and-replace)
-  (global-set-key (kbd "C-c f c")       (lambda-i () (select-frame-set-input-focus (make-frame-command))))
+  (global-set-key (kbd "C-c f c")       #'make-frame-command)
   (global-set-key (kbd "C-c j")         #'ma/join-line)
   (global-set-key (kbd "C-c J")         (lambda-i () (ma/join-line t)))
   (global-set-key (kbd "M-w")           #'ma/kill-ring-save-line-or-region)
