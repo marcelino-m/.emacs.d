@@ -340,15 +340,15 @@ NAME can be used to set the name of the defined function."
 (use-package projectile
   :straight t
   :delight '(:eval (format " [prj: %s]" (projectile-project-name)))
-  :bind-keymap ("C-," . projectile-command-map)
+  :bind-keymap ("C-,"   . projectile-command-map)
   :bind-keymap ("C-c p" . projectile-command-map)
   :bind (:map projectile-command-map
-              ("s a" . helm-projectile-ag)
-              ("o"   . helm-occur))
+              ("s a" . counsel-projectile-ag)
+              ("e"   . counsel-projectile-r))
   :custom
   (projectile-enable-caching            t)
   (projectile-completion-system      'ivy)
-  (projectile-sort-order             'recently-active)
+  (projectile-sort-order 'recently-active)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
 
   :config
@@ -370,6 +370,9 @@ NAME can be used to set the name of the defined function."
   (add-to-list 'projectile-other-file-alist '("css"  . ("ts" "html")))
 
   (projectile-global-mode))
+
+(use-package counsel-projectile
+  :straight t)
 
 (use-package helm-projectile
   :straight t)
