@@ -1204,12 +1204,13 @@ which call (newline) command"
 (use-package lsp-ui
   :straight t
   :commands lsp-ui-mode
-  :bind-keymap ("H-." . lsp-command-map)
+  :bind-keymap ("C-c C-l" . lsp-command-map)
   :bind (:map lsp-mode-map
               ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
               ([remap xref-find-references]  . lsp-ui-peek-find-references)
-              ("C-."                         . lsp-ui-imenu)
-              ("C-c d"                       . lsp-ui-doc-show))
+              ;; ("C-."                         . lsp-ui-imenu)
+              ;; ("C-c C-l d"                   . lsp-ui-doc-show)
+              )
   :custom
   (lsp-ui-sideline-enable nil)
   (lsp-ui-doc-enable      nil)
