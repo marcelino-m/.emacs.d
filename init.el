@@ -250,13 +250,27 @@ NAME can be used to set the name of the defined function."
 (use-package ivy
   :straight t
   :diminish ivy-mode
-  :bind (:map ivy-minibuffer-map
-              ("C-<return>" . ivy-immediate-done))
+  :bind (:map
+         ivy-minibuffer-map
+         ("C-<return>" . ivy-immediate-done)
+         :map
+         ivy-mode-map
+         ("C-c r"   . ivy-resume)
+         ("C-c W"   . ivy-pop-view)
+         ("C-c w"   . ivy-push-view))
   :custom
-  (ivy-use-virtual-buffers  t)
+  (ivy-use-virtual-buffers      t)
+  (enable-recursive-minibuffers t)
 
   :init
-  (setq enable-recursive-minibuffers t)
+  ;; hint: invoking  the  completion  command  you're  interested
+  ;; M-: (ivy-state-caller ivy-last)     RET
+  ;; M-: (ivy-state-collection ivy-last) RET
+  ;; https://github.com/abo-abo/swiper/issues/2620#issuecomment-645665878
+  (setq ivy-re-builders-alist '((projectile-completing-read . ivy--regex-ignore-order)
+                                (help--symbol-completion-table . ivy--regex-ignore-order)
+                                (swiper . ivy--regex-ignore-order)
+                                (t  . ivy--regex-plus)))
   (ivy-mode))
 
 (use-package ivy-avy
@@ -266,12 +280,8 @@ NAME can be used to set the name of the defined function."
   :straight t
   :requires ivy
   :bind (:map ivy-mode-map
-              ("C-c M-x" . ivy-resume)
-              ("C-c <menu>" . ivy-resume)
               ("C-s" . swiper)
-              ("M-x" . counsel-M-x)
-              ("C-c W" . ivy-pop-view)
-              ("C-c w" . ivy-push-view))
+              ("M-x" . counsel-M-x))
   :config
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
 
