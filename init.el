@@ -415,7 +415,8 @@ NAME can be used to set the name of the defined function."
 
 (use-package magit
   :straight t
-  :bind (("<f12>" . magit-status))
+  :bind (("<f12>" . magit-status)
+         ("C-c d" . ma/magit-diff-buffer-file))
   :custom
   (magit-save-repository-buffers          'dontask)
   (magit-display-buffer-function          'magit-display-buffer-fullframe-status-v1)
@@ -431,6 +432,15 @@ NAME can be used to set the name of the defined function."
 
   :hook
   (git-commit-mode . git-commit-turn-on-flyspell)
+
+  :preface
+  (defun ma/display-buffer-same-windows (buffer)
+    (display-buffer buffer '(display-buffer-same-window)))
+
+  (defun ma/magit-diff-buffer-file ()
+    (interactive)
+    (let ((magit-display-buffer-function  #'ma/display-buffer-same-windows))
+      (magit-diff-buffer-file)))
 
   :config
   (global-git-commit-mode)
