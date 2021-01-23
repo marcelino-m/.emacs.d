@@ -355,13 +355,14 @@ NAME can be used to set the name of the defined function."
   :bind-keymap ("C-,"   . projectile-command-map)
   :bind-keymap ("C-c p" . projectile-command-map)
   :bind (:map projectile-command-map
-              ("s a" . counsel-projectile-ag)
-              ("e"   . counsel-projectile-r))
+              ("s a" . counsel-projectile-ag))
+
   :custom
-  (projectile-enable-caching            t)
   (projectile-completion-system      'ivy)
-  (projectile-sort-order 'recently-active)
+  (projectile-indexing-method        'hybrid)
+  (projectile-sort-order             'modification-time)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
+  (projectile-project-search-path    '("~/lab"))
 
   :config
   (defun projectile--file-name-sans-extensions (file-name)
