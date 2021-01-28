@@ -228,15 +228,11 @@ NAME can be used to set the name of the defined function."
   (load-theme 'solarized-light t))
 
 
-(use-package doom-themes
+(use-package zenburn-theme
   :straight t
   :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-tomorrow-night t)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+  (load-theme 'zenburn t))
+
 
 (use-package csv-mode
   :straight t
