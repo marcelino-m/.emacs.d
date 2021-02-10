@@ -105,7 +105,6 @@ NAME can be used to set the name of the defined function."
  default-input-method                 "latin-prefix"
  frame-resize-pixelwise                t
  browse-url-browser-function          'browse-url-firefox
- browse-url-firefox-program           "~/.src/firefox/firefox"
  default-frame-alist                  '((width                . 0.80)
                                         (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
