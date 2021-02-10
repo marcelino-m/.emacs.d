@@ -278,6 +278,7 @@ NAME can be used to set the name of the defined function."
   (setq ivy-re-builders-alist '((projectile-completing-read . ivy--regex-ignore-order)
                                 (help--symbol-completion-table . ivy--regex-ignore-order)
                                 (swiper . ivy--regex-ignore-order)
+                                (counsel-M-x . ivy--regex-ignore-order)
                                 (t  . ivy--regex-plus)))
   (ivy-mode))
 
