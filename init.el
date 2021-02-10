@@ -762,12 +762,12 @@ NAME can be used to set the name of the defined function."
   (define-key global-map (kbd "C-c x") 'org-capture)
 
   (setq org-capture-templates
-        (quote (("t" "Todo: Need be done soon" entry (file+headline "~/syncthing/capture/personal-task.org"  "Need be done soon") "* TODO %?\n%i" :empty-lines 1)
-                ("l" "Todo: Need be done sometime" entry (file+headline "~/syncthing/capture/personal-task.org"  "Sometime in the future") "* TODO %?\n%i" :empty-lines 1)
-                ("n" "Note: Quick and misc note" entry (file "~/syncthing/capture/quick-notes.org") "* %?\n%i" :empty-lines 1)
+        (quote (("T" "Todo: Need be done soon" entry (file+headline "~/syncthing/capture/personal-task.org"  "Need be done soon") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+                ("t" "Todo: Need be done sometime" entry (file+headline "~/syncthing/capture/personal-task.org"  "Sometime in the future") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+                ("n" "Note: Quick and misc note" entry (file "~/syncthing/capture/quick-notes.org") "* %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
                 ("w" "work related captures")
-                ("wt" "Todo" entry (file+headline "~/syncthing/capture/work-task.org" "Tasks need be done soon") "* TODO %?\n%i" :empty-lines 1)
-                ("wn" "Note: Quick and misc note" entry (file "~/syncthing/capture/work-quick-notes.org") "* %?\n%i" :empty-lines 1)))))
+                ("wt" "Task" entry (file+headline "~/syncthing/capture/work-task.org" "Tasks need be done") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+                ("wm" "Meetings notes" entry (file "~/syncthing/capture/work-meeting.org" ) "* Meeting %?\n%U" :empty-lines-after 1 :empty-lines-before 0)))))
 
 (use-package beacon
   :straight t
