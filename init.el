@@ -432,13 +432,16 @@ NAME can be used to set the name of the defined function."
   (magit-display-buffer-function          'magit-display-buffer-fullframe-status-v1)
   (magit-section-visibility-indicator     nil)
   (magit-diff-adjust-tab-width            'always)
-  (magit-diff-refine-hunk                 'all)
-  (magit-diff-refine-ignore-whitespace    t)
+  (magit-diff-refine-hunk                 nil)
   (magit-section-initial-visibility-alist '((untracked . hide)
                                             (unstaged  . show)
                                             (staged    . show)
                                             (stashes   . hide)
                                             (recent    . show)))
+
+  :custom-face
+  (smerge-refined-added   ((t :inverse-video nil)))
+  (smerge-refined-removed ((t :inverse-video nil)))
 
   :hook
   (git-commit-mode . git-commit-turn-on-flyspell)
