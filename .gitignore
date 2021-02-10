@@ -27,3 +27,4 @@ var/
 /.lsp-session-v1
 /.no-shared.el
 /straight/
+/eln-cache/
