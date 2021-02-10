@@ -1240,17 +1240,19 @@ which call (newline) command"
   (lsp-ui-peek-list-width 80)
 
   :custom-face
-  (lsp-ui-peek-peek    ((t :background "#202224")))
-  (lsp-ui-peek-list    ((t :background "#202224")))
+  (lsp-ui-peek-peek    ((t :background "#494949")))
+  (lsp-ui-peek-list    ((t :background "#494949")))
   (lsp-ui-peek-header  ((t :background "#5d4d7a" :foreground "white")))
 
-  :preface
+  :config
   (defun lsp-ui-peek--peek-display (src1 src2)
     (-let* ((win-width (frame-width))
+            (lsp-ui-peek-list-width (/ (frame-width) 2))
             (string (-some--> (-zip-fill "" src1 src2)
                       (--map (lsp-ui-peek--adjust win-width it) it)
                       (-map-indexed 'lsp-ui-peek--make-line it)
                       (-concat it (lsp-ui-peek--make-footer)))))
+
       (setq lsp-ui-peek--buffer (get-buffer-create "*lsp-peek--buffer*"))
       (posframe-show lsp-ui-peek--buffer
                      :string (mapconcat 'identity string "")
@@ -1265,7 +1267,8 @@ which call (newline) command"
     (set-window-start (get-buffer-window) lsp-ui-peek--win-start))
 
   (advice-add #'lsp-ui-peek--peek-new :override #'lsp-ui-peek--peek-display)
-  (advice-add #'lsp-ui-peek--peek-hide :override #'lsp-ui-peek--peek-destroy))
+  (advice-add #'lsp-ui-peek--peek-hide :override #'lsp-ui-peek--peek-destroy)
+  )
 
 (use-package posframe ;; for lsp-ui-peek
   :straight t)
