@@ -1188,6 +1188,15 @@ which call (newline) command"
 
 (use-package popwin
   :straight t
+  :init
+  (defun ma/bury-compile-buffer  (buf str)
+    (when (null (string-match ".*exited abnormally.*" str))
+      ;;no errors, make the compilation window go away in a 1 seconds
+      (run-with-timer 1 nil #'popwin:close-popup-window)
+      (message "No Compilation Errors!")))
+
+  (add-hook 'compilation-finish-functions #'ma/bury-compile-buffer)
+
   :config
   (push '(inferior-python-mode :height 20 :noselect t :tail t :stick t) popwin:special-display-config)
   (push '("*Google Translate*" :noselect t :height 20) popwin:special-display-config)
@@ -1408,18 +1417,8 @@ which call (newline) command"
   :straight t)
 
 (use-package compile
-  :preface
-  (defun ma/bury-compile-buffer  (buf str)
-    (if (null (string-match ".*exited abnormally.*" str))
-        ;;no errors, make the compilation window go away in a 1 seconds
-        (progn
-          (run-with-timer 1 nil #'delete-window  (get-buffer-window buf))
-          (message "No Compilation Errors!"))))
   :custom
-  (compilation-ask-about-save  nil)
-
-  :init
-  (add-hook 'compilation-finish-functions #'ma/bury-compile-buffer))
+  (compilation-ask-about-save  nil))
 
 (use-package ledger-mode
   :straight t
