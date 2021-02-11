@@ -761,13 +761,14 @@ NAME can be used to set the name of the defined function."
   (define-key global-map (kbd "C-c x") 'org-capture)
 
   (setq org-capture-templates
-        (quote (("T" "Todo: Need be done soon" entry (file+headline "~/syncthing/capture/personal-task.org"  "Need be done soon") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-                ("t" "Todo: Need be done sometime" entry (file+headline "~/syncthing/capture/personal-task.org"  "Sometime in the future") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-                ("n" "Note: Quick and misc note" entry (file "~/syncthing/capture/quick-notes.org") "* %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-                ("w" "work related captures")
-                ("wt" "Task" entry (file+headline "~/syncthing/capture/work-task.org" "Tasks need be done") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-                ("wm" "Meetings notes" entry (file "~/syncthing/capture/work-meeting.org" ) "* Meeting %?\n%U" :empty-lines-after 1 :empty-lines-before 0)
-                ("wl" "To share in next lead  meeting" entry (file+headline "~/syncthing/capture/work-to-share-lead-meeting.org" "To say in lead meeting") "* TODO %?" :empty-lines-after 1 :empty-lines-before 0)))))
+        '(("t" "Task" entry (file+headline "~/syncthing/capture/personal-task.org"  "Need be done soon") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+          ("f" "Would be nice doing this in some time" entry (file+headline "~/syncthing/capture/personal-task.org"  "Sometime in the future") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+          ("n" "Note: Quick and misc note about anything" entry (file "~/syncthing/capture/quick-notes.org") "* %?\n%i" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+          ("w" "work related captures")
+          ("wt" "Task" entry (file+headline "~/syncthing/capture/work-task.org" "Tasks need be done") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+          ("wm" "Meetings notes" entry (file "~/syncthing/capture/work-meeting.org" ) "* Meeting %?\n%U" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+          ("wl" "To share in next lead  meeting" entry (file+headline "~/syncthing/capture/work-to-share-lead-meeting.org" "To say in lead meeting") "* TODO %?" :empty-lines-after 1 :empty-lines-before 0))))
+
 
 (use-package beacon
   :straight t
@@ -1161,6 +1162,7 @@ which call (newline) command"
   :hook (python-mode . blacken-mode))
 
 (use-package elfeed
+  :disabled
   :straight t
   :init
   (setq shr-width 100)
