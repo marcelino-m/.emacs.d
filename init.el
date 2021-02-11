@@ -766,7 +766,8 @@ NAME can be used to set the name of the defined function."
                 ("n" "Note: Quick and misc note" entry (file "~/syncthing/capture/quick-notes.org") "* %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
                 ("w" "work related captures")
                 ("wt" "Task" entry (file+headline "~/syncthing/capture/work-task.org" "Tasks need be done") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-                ("wm" "Meetings notes" entry (file "~/syncthing/capture/work-meeting.org" ) "* Meeting %?\n%U" :empty-lines-after 1 :empty-lines-before 0)))))
+                ("wm" "Meetings notes" entry (file "~/syncthing/capture/work-meeting.org" ) "* Meeting %?\n%U" :empty-lines-after 1 :empty-lines-before 0)
+                ("wl" "To share in next lead  meeting" entry (file+headline "~/syncthing/capture/work-to-share-lead-meeting.org" "To say in lead meeting") "* TODO %?" :empty-lines-after 1 :empty-lines-before 0)))))
 
 (use-package beacon
   :straight t
