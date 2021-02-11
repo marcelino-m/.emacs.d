@@ -784,6 +784,9 @@ NAME can be used to set the name of the defined function."
   :straight t
   :bind (("C-z z"  . avy-goto-char-timer)
          ("C-z x"  . avy-goto-char-in-line))
+  :custom-face
+  (avy-goto-char-timer-face ((t (:inherit isearch))))
+
   :custom
   (avy-timeout-seconds 10.0) ;; confirm with RET
   :init
