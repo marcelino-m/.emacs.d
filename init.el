@@ -727,6 +727,10 @@ NAME can be used to set the name of the defined function."
         org-src-tab-acts-natively  t
         org-src-window-setup       'current-window)
 
+  (setq org-todo-keywords
+           '((sequence "WANT" "TODO" "DOING" "|" "DONE")
+             (sequence "|" "CANCELED")))
+
 
   (setq org-confirm-babel-evaluate nil)
   (setq org-babel-python-command "ipython --no-banner --nosep --simple-prompt  -i")
