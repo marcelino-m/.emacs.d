@@ -78,6 +78,7 @@ NAME can be used to set the name of the defined function."
 (xterm-mouse-mode)
 
 (setq-default
+ cursor-type                          'bar
  case-fold-search                     t
  column-number-mode                   t
  mouse-yank-at-point                  t
@@ -105,7 +106,8 @@ NAME can be used to set the name of the defined function."
  default-input-method                 "latin-prefix"
  frame-resize-pixelwise                t
  browse-url-browser-function          'browse-url-firefox
- default-frame-alist                  '((width                . 0.80)
+ default-frame-alist                  '((cursor-color         . "#CCDC90")
+                                        (width                . 0.80)
                                         (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
                                         (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
