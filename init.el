@@ -2,6 +2,7 @@
 (setq gc-cons-threshold 67108864) ;; 64mb
 
 ;; boostrap straight.el
+(setq straight-repository-branch "develop")
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -151,6 +152,122 @@ NAME can be used to set the name of the defined function."
   (add-to-list 'exec-path "~/.local/bin/")
   (add-to-list 'exec-path (concat (getenv "PYTHONUSERBASE") "/bin")))
 
+
+(use-package org
+  :straight (:type built-in)
+  :load-path "./defuns"
+  :mode (("\\.org\\'" . org-mode))
+  :bind (:map org-mode-map
+              ("C-c C-v t" . ma/toggle-current-src-block))
+
+  :config
+  (add-to-list 'org-modules 'org-habit)
+  (require 'org-defun)
+
+  (unbind-key "C-c C->" org-mode-map)
+  (unbind-key "C-," org-mode-map)
+  (define-key global-map (kbd "C-c l") 'org-store-link)
+  (define-key global-map (kbd "C-c a") 'org-agenda)
+
+  (setq org-special-ctrl-a/e t)
+  (setq org-special-ctrl-k t)
+
+  ;; new line behavior on new item
+  (setq org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
+
+  (setq org-startup-folded t)
+  (setq org-cycle-separator-lines 0)
+  ;; prevent org mode repositioning text when cicle visibility
+  (remove-hook 'org-cycle-hook #'org-optimize-window-after-visibility-change)
+
+  (add-hook
+   'org-src-mode-hook
+   (lambda () (setq org-src--saved-temp-window-config nil)))
+
+  (setq org-src-fontify-natively   t
+        org-src-tab-acts-natively  t
+        org-src-window-setup       'current-window)
+
+  (setq org-todo-keywords
+           '((sequence "WANT" "TODO" "DOING" "|" "DONE")
+             (sequence "|" "CANCELED")))
+
+
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-babel-python-command "ipython --no-banner --nosep --simple-prompt  -i")
+  (setq org-babel-results-keyword "results")
+
+  ;; redisply omages inline when image change
+  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell   . t)
+     (js      . t)
+     (R       . t)
+     (sql     . t)
+     (sqlite  . t)
+     (python  . t)
+     (latex   . t)
+     (ditaa   . t)
+     (calc    . t)
+     (ruby    . t)))
+
+  ;; use ivy with org-goto
+  (setq org-goto-interface 'outline-path-completion)
+  (setq org-outline-path-complete-in-steps nil))
+
+(use-package org-agenda
+  :custom
+  (org-agenda-span   'fortnight)
+  (org-agenda-files  "~/.emacs.d/agenda-files"))
+
+(use-package org-habit
+  :custom
+  (org-habit-graph-column 70)
+  (org-habit-show-habits-only-for-today nil))
+
+(use-package org-capture
+  :config
+  (define-key global-map (kbd "C-c x") 'org-capture)
+
+  (setq org-capture-templates
+        '(("t" "Task" entry (file+headline "~/syncthing/capture/task.org"  "Need be done soon") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+          ("f" "Would be nice doing this in some time" entry (file+headline "~/syncthing/capture/wanted.org"  "Wanted things!") "* WANT %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+          ("n" "Note: Quick and misc note about anything" entry (file "~/syncthing/capture/quick-notes.org") "* %?\n%i" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+          ("w" "work related captures")
+          ("wt" "Task" entry (file+headline "~/syncthing/capture/task.org" "Tasks need be done") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+          ("wm" "Meetings notes" entry (file "~/syncthing/capture/meeting.org" ) "* Meeting %?\n%U" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+          ("wl" "To share in next lead  meeting" entry (file+headline "~/syncthing/capture/to-share-lead-meeting.org" "To say in lead meeting") "* TODO %?" :empty-lines-after 1 :empty-lines-before 0))))
+
+
+(use-package org-indent
+  :diminish
+  :hook (org-mode . org-indent-mode)
+  :custom
+  (org-indent-indentation-per-level 2))
+
+(use-package org-journal
+  :straight t
+  :bind (("C-c C-j" . org-journal-new-entry))
+
+  :config
+  (defun org-journal-file-header-func (time)
+    "Custom function to create journal header."
+    (concat
+     (pcase org-journal-file-type
+       (`daily "#+title: Daily Journal")
+       (`weekly "#+title: Weekly Journal")
+       (`monthly "#+title: Monthly Journal")
+       (`yearly "#+title: Yearly Journal"))))
+
+
+  (setq org-journal-file-type 'weekly)
+  (setq org-journal-file-format "%Y-%m-%d.journal")
+  (setq org-journal-file-header 'org-journal-file-header-func)
+  (setq org-journal-date-format "%A, %Y/%m/%d")
+  (setq org-journal-dir "~/syncthing/journal"))
+
 (use-package eldoc
   :diminish eldoc-mode)
 
@@ -294,6 +411,25 @@ NAME can be used to set the name of the defined function."
               ("M-x" . counsel-M-x))
   :config
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
+
+(use-package ivy-posframe
+  :straight t
+  :custom
+  (ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  (ivy-posframe-border-width 2)
+
+  :config
+  (defun ivy-posframe-get-size ()
+    "Set the ivy-posframe size according to the current frame."
+    (let ((height (or ivy-posframe-height (or ivy-height 10)))
+          (width (min (or ivy-posframe-width 200) (round (* .75 (frame-width))))))
+      (list :height height :width width :min-height height :min-width width)))
+  (ivy-posframe-mode 1))
+
+(use-package ivy-rich
+  :straight t
+  :config
+  (ivy-rich-mode 1))
 
 (use-package smex
   :straight t
@@ -664,116 +800,7 @@ NAME can be used to set the name of the defined function."
 
   (recentf-mode +1))
 
-(use-package org-indent
-  :diminish
-  :hook (org-mode . org-indent-mode)
-  :custom
-  (org-indent-indentation-per-level 2))
 
-(use-package org-journal
-  :straight t
-  :bind (("C-c C-j" . org-journal-new-entry))
-
-  :preface
-  (defun org-journal-file-header-func (time)
-    "Custom function to create journal header."
-    (concat
-     (pcase org-journal-file-type
-       (`daily "#+title: Daily Journal")
-       (`weekly "#+title: Weekly Journal")
-       (`monthly "#+title: Monthly Journal")
-       (`yearly "#+title: Yearly Journal"))))
-
-  :config
-  (setq org-journal-file-type 'weekly)
-  (setq org-journal-file-format "%Y-%m-%d.journal")
-  (setq org-journal-file-header 'org-journal-file-header-func)
-  (setq org-journal-date-format "%A, %Y/%m/%d")
-  (if (string= (system-name) "jaylah")
-      (setq org-journal-dir "~/syncthing/journal/personal/")
-    (setq org-journal-dir "~/syncthing/journal/work/")))
-
-(use-package org
-  :load-path "./defuns"
-  :mode (("\\.org\\'" . org-mode))
-  :bind (:map org-mode-map
-              ("C-c C-v t" . ma/toggle-current-src-block))
-
-  :config
-  (add-to-list 'org-modules 'org-habit)
-  (require 'org-defun)
-
-  (unbind-key "C-c C->" org-mode-map)
-  (unbind-key "C-," org-mode-map)
-  (define-key global-map (kbd "C-c l") 'org-store-link)
-  (define-key global-map (kbd "C-c a") 'org-agenda)
-
-  (setq org-special-ctrl-a/e t)
-  (setq org-special-ctrl-k t)
-
-  ;; new line behavior on new item
-  (setq org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
-
-  (setq org-startup-folded t)
-  (setq org-cycle-separator-lines 0)
-  ;; prevent org mode repositioning text when cicle visibility
-  (remove-hook 'org-cycle-hook #'org-optimize-window-after-visibility-change)
-
-  (add-hook
-   'org-src-mode-hook
-   (lambda () (setq org-src--saved-temp-window-config nil)))
-
-  (setq org-src-fontify-natively   t
-        org-src-tab-acts-natively  t
-        org-src-window-setup       'current-window)
-
-  (setq org-todo-keywords
-           '((sequence "WANT" "TODO" "DOING" "|" "DONE")
-             (sequence "|" "CANCELED")))
-
-
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-babel-python-command "ipython --no-banner --nosep --simple-prompt  -i")
-  (setq org-babel-results-keyword "results")
-
-  ;; redisply omages inline when image change
-  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((shell   . t)
-     (js      . t)
-     (R       . t)
-     (sql     . t)
-     (sqlite  . t)
-     (python  . t)
-     (latex   . t)
-     (ditaa   . t)
-     (calc    . t)
-     (ruby    . t)))
-
-  ;; use ivy with org-goto
-  (setq org-goto-interface 'outline-path-completion)
-  (setq org-outline-path-complete-in-steps nil))
-
-(use-package org-habit
-  :custom
-  (org-habit-graph-column 70)
-  (org-habit-show-habits-only-for-today nil))
-
-(use-package org-capture
-  :config
-  ;; org capture
-  (define-key global-map (kbd "C-c x") 'org-capture)
-
-  (setq org-capture-templates
-        '(("t" "Task" entry (file+headline "~/syncthing/capture/personal--task.org"  "Need be done soon") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-          ("f" "Would be nice doing this in some time" entry (file+headline "~/syncthing/capture/personal--wanted.org"  "Wanted things!") "* WANT %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-          ("n" "Note: Quick and misc note about anything" entry (file "~/syncthing/capture/personal--quick-notes.org") "* %?\n%i" :prepend t :empty-lines-after 1 :empty-lines-before 1)
-          ("w" "work related captures")
-          ("wt" "Task" entry (file+headline "~/syncthing/capture/work--task.org" "Tasks need be done") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-          ("wm" "Meetings notes" entry (file "~/syncthing/capture/work--meeting.org" ) "* Meeting %?\n%U" :prepend t :empty-lines-after 1 :empty-lines-before 1)
-          ("wl" "To share in next lead  meeting" entry (file+headline "~/syncthing/capture/work--to-share-lead-meeting.org" "To say in lead meeting") "* TODO %?" :empty-lines-after 1 :empty-lines-before 0))))
 
 
 (use-package beacon
@@ -1171,27 +1198,24 @@ which call (newline) command"
   :hook (python-mode . blacken-mode))
 
 (use-package elfeed
-  :disabled
   :straight t
+  :custom
+  (elfeed-db-directory  "~/syncthing/elfeed/elfeed-db")
   :init
-  (setq shr-width 100)
-  (setq elfeed-feeds
-        '("https://karl-voit.at/feeds/lazyblorg-all.atom_1.0.links-and-teaser.xml"
-          "https://blog.codinghorror.com/rss/"
-          "https://www.joelonsoftware.com/feed/"
-          "http://irreal.org/blog/?feed=rss2"
-          "http://sachachua.com/blog/feed/"
-          "http://cherian.net/rss.xml"
-          "http://emacsninja.com/feed.atom"
-          "http://mbork.pl/?action=rss;days=30;all=0;showedit=0;full=1"
-          "https://simblob.blogspot.com/feeds/posts/default"
-          "http://cachestocaches.com/feed")))
+  (setq shr-width 100))
 
 (use-package shr
   :config
   (setq shr-use-fonts nil)
   (setq shr-max-image-proportion 0.5)
   (setq shr-width (current-fill-column)))
+
+(use-package elfeed-org
+  :straight t
+  :after (elfeed)
+  :config
+  (elfeed-org)
+  (setq rmh-elfeed-org-files '("~/syncthing/elfeed/feeds.org")))
 
 (use-package qml-mode
   :straight t
@@ -1437,3 +1461,7 @@ which call (newline) command"
 (use-package ledger-mode
   :straight t
   :mode "\\.journal\\'")
+
+(use-package display-line-numbers
+  :custom
+  (display-line-numbers-type  'relative))
