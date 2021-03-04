@@ -363,8 +363,8 @@ NAME can be used to set the name of the defined function."
 (use-package move-text
   :straight t
   :bind
-  (([(hyper up)] . move-text-up)
-   ([(hyper down)] . move-text-down)))
+  (("C-M-s-e" . move-text-up)
+   ("C-M-s-d" . move-text-down)))
 
 (use-package spaceline
   :straight t
@@ -662,10 +662,10 @@ NAME can be used to set the name of the defined function."
 (use-package windmove
   :custom
   (windmove-create-window  t)
-  :bind (("s-d"       . windmove-right)
-         ("s-a"       . windmove-left)
-         ("s-w"       . windmove-up)
-         ("s-s"       . windmove-down)))
+  :bind (("s-f"       . windmove-right)
+         ("s-s"       . windmove-left)
+         ("s-e"       . windmove-up)
+         ("s-d"       . windmove-down)))
 
 (use-package emmet-mode
   :straight t
@@ -815,13 +815,14 @@ NAME can be used to set the name of the defined function."
 
 (use-package avy
   :straight t
-  :bind (("C-z z"  . avy-goto-char-timer)
-         ("C-z x"  . avy-goto-char-in-line))
+  :bind (("C-M-s-g"  . avy-goto-char-timer))
+
   :custom-face
   (avy-goto-char-timer-face ((t (:inherit isearch))))
 
   :custom
   (avy-timeout-seconds 10.0) ;; confirm with RET
+
   :init
   (global-set-key (kbd "C-z") nil))
 
