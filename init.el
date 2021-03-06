@@ -189,8 +189,15 @@ NAME can be used to set the name of the defined function."
         org-src-window-setup       'current-window)
 
   (setq org-todo-keywords
-           '((sequence "WANT" "TODO" "DOING" "|" "DONE")
-             (sequence "|" "CANCELED")))
+           '((sequence "WANT" "TODO" "DOING" "STOPPED" "|" "DONE" "CANCELED")))
+
+  (setq org-todo-keyword-faces
+        '(("WANT"   . "gray")
+          ("TODO"   . "OrangeRed")
+          ("DOING"  . "Orange")
+          ("STOPPED" . "Yellow")
+          ("DONE"   . "SpringGreen")
+          ("CANCELED" . "SpringGreen")))
 
 
   (setq org-confirm-babel-evaluate nil)
