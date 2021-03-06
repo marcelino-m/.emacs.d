@@ -569,7 +569,7 @@ NAME can be used to set the name of the defined function."
 
 (use-package magit
   :straight t
-  :bind (("<f12>" . magit-status)
+  :bind (("C-c g" . magit-status)
          ("C-c d" . ma/magit-diff-buffer-file))
   :custom
   (magit-save-repository-buffers          'dontask)
