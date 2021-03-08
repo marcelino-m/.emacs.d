@@ -420,6 +420,7 @@ NAME can be used to set the name of the defined function."
   (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
 
 (use-package ivy-posframe
+  :disabled
   :straight t
   :custom
   (ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
