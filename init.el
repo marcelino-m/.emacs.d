@@ -497,7 +497,8 @@ NAME can be used to set the name of the defined function."
   :bind-keymap ("C-,"   . projectile-command-map)
   :bind-keymap ("C-c p" . projectile-command-map)
   :bind (:map projectile-command-map
-              ("s a" . counsel-projectile-ag))
+              ("s a" . counsel-projectile-ag)
+              (","   . counsel-projectile-switch-project))
 
   :custom
   (projectile-completion-system      'ivy)
@@ -527,7 +528,10 @@ NAME can be used to set the name of the defined function."
   (projectile-global-mode))
 
 (use-package counsel-projectile
-  :straight t)
+  :straight t
+  :after projectile
+  :config
+  (counsel-projectile-mode))
 
 (use-package helm-projectile
   :straight t)
