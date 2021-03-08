@@ -712,7 +712,12 @@ NAME can be used to set the name of the defined function."
 (use-package company
   :straight t
   :diminish company-mode
-  :bind (:map company-mode-map ("<s-tab>" . company-complete))
+  :bind (:map company-mode-map
+         ("<s-tab>" . company-complete)
+         :map company-active-map
+         ("C-n" . company-select-next)
+         ("C-p" . company-select-previous))
+
   :hook ((emacs-lisp-mode    . company-mode)
          (js2-mode           . company-mode)
          (web-mode           . company-mode)
@@ -727,20 +732,14 @@ NAME can be used to set the name of the defined function."
 
 
   :custom
-  (company-idle-delay            0)
+  (company-idle-delay            nil)
   (company-tooltip-idle-delay    0)
-  (company-minimum-prefix-length 1)
-  (company-show-numbers          t)
+  (company-minimum-prefix-length 3)
+  (company-show-numbers          'left)
   (company-dabbrev-downcase      nil)
+  (company-selection-wrap-around t)
 
   :config
-  (defun  ma/reorder-argument-company-fill-propertize (orig-fun &rest args)
-    "This advice to show number of candidate in company popup in left side"
-    (if (string= " " (car (last args)))
-        (apply orig-fun args)
-      (apply orig-fun (append (butlast args 2) (reverse (last args 2))))))
-
-  (advice-add #'company-fill-propertize :around #'ma/reorder-argument-company-fill-propertize)
   (add-to-list 'company-backend 'company-ispell))
 
 (use-package company-web
