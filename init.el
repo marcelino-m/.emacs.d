@@ -226,7 +226,6 @@ NAME can be used to set the name of the defined function."
 
 (use-package org-agenda
   :custom
-  (org-agenda-span   'fortnight)
   (org-agenda-files  "~/.emacs.d/agenda-files"))
 
 (use-package org-habit
