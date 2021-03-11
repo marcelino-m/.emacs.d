@@ -825,7 +825,11 @@ NAME can be used to set the name of the defined function."
 
 (use-package avy
   :straight t
-  :bind (("C-M-s-g"  . avy-goto-char-timer))
+  :bind (("C-M-s-g"  . avy-goto-char-timer)
+         ("C-M-s-f"   . avy-goto-line)
+         :map org-mode-map
+         ("C-M-s-f"   . avy-org-goto-heading-timer)
+         ("C-M-s-g"   . counsel-org-goto))
 
   :custom-face
   (avy-goto-char-timer-face ((t (:inherit isearch))))
