@@ -289,7 +289,7 @@ NAME can be used to set the name of the defined function."
   (setq org-journal-file-format "%Y-%m-%d.journal")
   (setq org-journal-file-header 'org-journal-file-header-func)
   (setq org-journal-date-format "%A, %Y/%m/%d")
-  (setq org-journal-dir "~/syncthing/journal"))
+  (setq org-journal-dir "~/syncthing/org/journal"))
 
 (use-package eldoc
   :diminish eldoc-mode)
@@ -1008,7 +1008,7 @@ NAME can be used to set the name of the defined function."
   :load-path "./defuns/"
   :bind ([f9] . ma/deft-in-new-frame)
   :init
-  (setq deft-directory "~/syncthing/deft")
+  (setq deft-directory "~/syncthing/org/deft")
   (setq deft-extensions '("org" "md" "txt")))
 
 (use-package rainbow-mode
