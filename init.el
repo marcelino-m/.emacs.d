@@ -727,7 +727,7 @@ NAME can be used to set the name of the defined function."
   :straight t
   :diminish company-mode
   :bind (:map company-mode-map
-         ("<s-tab>" . company-complete)
+         ("C-M-s-c" . company-complete)
          :map company-active-map
          ("C-n" . company-select-next)
          ("C-p" . company-select-previous))
