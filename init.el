@@ -224,8 +224,11 @@ NAME can be used to set the name of the defined function."
   (setq org-goto-interface 'outline-path-completion))
 
 (use-package org-agenda
-  :custom
-  (org-agenda-files  "~/.emacs.d/agenda-files"))
+  :config
+  (setq org-agenda-files
+      (mapcar 'abbreviate-file-name
+              (split-string
+               (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n"))))
 
 (use-package org-habit
   :custom
