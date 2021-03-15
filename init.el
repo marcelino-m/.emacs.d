@@ -221,8 +221,7 @@ NAME can be used to set the name of the defined function."
      (ruby    . t)))
 
   ;; use ivy with org-goto
-  (setq org-goto-interface 'outline-path-completion)
-  (setq org-outline-path-complete-in-steps nil))
+  (setq org-goto-interface 'outline-path-completion))
 
 (use-package org-agenda
   :custom
@@ -238,13 +237,14 @@ NAME can be used to set the name of the defined function."
   (define-key global-map (kbd "C-c x") 'org-capture)
 
   (setq org-capture-templates
-        '(("t" "Task" entry (file+headline "~/syncthing/capture/task.org"  "Need be done soon") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-          ("f" "Would be nice doing this in some time" entry (file+headline "~/syncthing/capture/wanted.org"  "Wanted things!") "* WANT %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-          ("n" "Note: Quick and misc note about anything" entry (file "~/syncthing/capture/quick-notes.org") "* %?\n%i" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+        '(("t" "Task" entry (file+headline "~/syncthing/org/capture/task.org"  "Need be done soon") "* TODO %?%^C" :empty-lines-after 1 :empty-lines-before 0)
+          ("f" "Would be nice doing this in some time" entry (file+headline "~/syncthing/org/capture/wanted.org"  "Wanted things!") "* WANT %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+          ("n" "Note: Quick and misc note about anything" entry (file "~/syncthing/org/capture/quick-notes.org") "* %?\n%i" :prepend t :empty-lines-after 1 :empty-lines-before 1)
           ("w" "work related captures")
-          ("wt" "Task" entry (file+headline "~/syncthing/capture/task.org" "Tasks need be done") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-          ("wm" "Meetings notes" entry (file "~/syncthing/capture/meeting.org" ) "* Meeting %?\n%U" :prepend t :empty-lines-after 1 :empty-lines-before 1)
-          ("wl" "To share in next lead  meeting" entry (file+headline "~/syncthing/capture/to-share-lead-meeting.org" "To say in lead meeting") "* TODO %?" :empty-lines-after 1 :empty-lines-before 0))))
+          ("wt" "Task" entry (file+headline "~/syncthing/org/capture/work/task.org" "Tasks need be done") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+          ("wm" "Meetings notes" entry (file "~/syncthing/org/capture/work/meeting.org" ) "* Meeting %?\n%T" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+          ("wl" "To share in next lead  meeting" entry (file+headline "~/syncthing/org/capture/work/to-share-lead-meeting.org" "To say in lead meeting") "* TODO %?" :empty-lines-after 1 :empty-lines-before 0)
+          ("wi" "Weekly iteration log" item (file+olp+datetree "~/syncthing/org/capture/work/weekly-iteration.org") "%?" :tree-type week))))
 
 
 (use-package org-indent
@@ -252,6 +252,20 @@ NAME can be used to set the name of the defined function."
   :hook (org-mode . org-indent-mode)
   :custom
   (org-indent-indentation-per-level 2))
+
+(use-package org-refile
+  :init
+  (setq org-refile-targets  '((nil :maxlevel . 9)
+                              (org-agenda-files :maxlevel . 9)))
+
+  ; Use full outline paths for refile targets - we file directly with IDO
+  (setq org-refile-use-outline-path t)
+
+   ; Targets complete directly with ivy
+  (setq org-outline-path-complete-in-steps nil)
+
+  (setq org-refile-allow-creating-parent-nodes t))
+
 
 (use-package org-journal
   :straight t
