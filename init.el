@@ -258,16 +258,12 @@ NAME can be used to set the name of the defined function."
 
 (use-package org-refile
   :init
-  (setq org-refile-targets  '((nil :maxlevel . 9)
-                              (org-agenda-files :maxlevel . 9)))
+  (setq org-refile-targets  '((nil :maxlevel . 3)
+                              (org-agenda-files :maxlevel . 3)))
 
-  ; Use full outline paths for refile targets - we file directly with IDO
-  (setq org-refile-use-outline-path t)
-
-   ; Targets complete directly with ivy
+  (setq org-refile-use-outline-path 'file)
   (setq org-outline-path-complete-in-steps nil)
-
-  (setq org-refile-allow-creating-parent-nodes t))
+  (setq org-refile-allow-creating-parent-nodes 'confirm))
 
 
 (use-package org-journal
@@ -434,7 +430,7 @@ NAME can be used to set the name of the defined function."
               ("C-s" . swiper)
               ("M-x" . counsel-M-x))
   :config
-  (setf (cdr (assoc 'counsel-M-x ivy-initial-inputs-alist)) ""))
+  (setq ivy-initial-inputs-alist nil))
 
 (use-package ivy-posframe
   :disabled
