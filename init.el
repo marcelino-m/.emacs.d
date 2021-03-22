@@ -264,16 +264,45 @@ NAME can be used to set the name of the defined function."
   :config
   (define-key global-map (kbd "C-c x") 'org-capture)
 
+  (add-hook 'org-capture-mode-hook #'org-align-all-tags)
+
   (setq org-capture-templates
-        '(("t" "Task" entry (file+headline "~/syncthing/org/capture/task.org"  "Need be done soon") "* TODO %?%^C" :empty-lines-after 1 :empty-lines-before 0)
-          ("f" "Would be nice doing this in some time" entry (file+headline "~/syncthing/org/capture/wanted.org"  "Wanted things!") "* WANT %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-          ("n" "Note: Quick and misc note about anything" entry (file "~/syncthing/org/capture/quick-notes.org") "* %?\n%i" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+        '(("t" "Task"
+           entry (file "~/syncthing/org/capture/task.org")
+           "* TODO %? %^G" :empty-lines-after 1 :empty-lines-before 0)
+
+          ("f" "Would be nice doing it... some time"
+           entry (file "~/syncthing/org/capture/wanted.org")
+           "* WANT %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+
+          ("n" "Note: Quick and misc note about anything" entry
+           (file "~/syncthing/org/capture/quick-notes.org")
+           "* %?\n%i" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+
+          ("h" "Home and domestic related task"
+           entry (file "~/syncthing/org/capture/home-task.org")
+           "* TODO %? :home: \n%i" :empty-lines-after 1 :empty-lines-before 0)
+
           ("w" "work related captures")
-          ("wt" "Task" entry (file+headline "~/syncthing/org/capture/work/task.org" "Tasks need be done") "* TODO %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
-          ("wm" "Meetings notes" entry (file "~/syncthing/org/capture/work/meeting.org" ) "* Meeting %?\n%T" :prepend t :empty-lines-after 1 :empty-lines-before 1)
-          ("wn" "Note: Quick and misc note about anything" entry (file "~/syncthing/org/capture/work/quick-notes.org") "* %?\n%i" :prepend t :empty-lines-after 1 :empty-lines-before 1)
-          ("wl" "To share in next lead  meeting" entry (file+headline "~/syncthing/org/capture/work/to-share-lead-meeting.org" "To say in lead meeting") "* TODO %?" :empty-lines-after 1 :empty-lines-before 0)
-          ("wi" "Weekly iteration log" item (file+olp+datetree "~/syncthing/org/capture/work/weekly-iteration.org") "%?" :tree-type week))))
+          ("wt" "Task"
+           entry (file "~/syncthing/org/capture/work/task.org")
+           "* TODO %? :@work: \n%i" :empty-lines-after 1 :empty-lines-before 0)
+
+          ("wm" "Meetings notes"
+           entry (file "~/syncthing/org/capture/work/meeting.org" )
+           "* Meeting %? :@work: \n%T" :prepend t :empty-lines-after 1 :empty-lines-before 0)
+
+          ("wn" "Note: Quick and misc note about anything"
+           entry (file "~/syncthing/org/capture/work/quick-notes.org")
+           "* %? :@work: \n%i" :prepend t :empty-lines-after 1 :empty-lines-before 0)
+
+          ("wl" "To share in next lead  meeting"
+           entry (file+headline "~/syncthing/org/capture/work/to-share-lead-meeting.org" "To say in lead meeting")
+           "* TODO %? :@work:" :empty-lines-after 1 :empty-lines-before 0)
+
+          ("wi" "Weekly iteration log"
+           item (file+olp+datetree "~/syncthing/org/capture/work/weekly-iteration.org")
+           "%? :@work:" :tree-type week))))
 
 
 (use-package org-indent
