@@ -415,12 +415,7 @@ NAME can be used to set the name of the defined function."
   ;; M-: (ivy-state-caller ivy-last)     RET
   ;; M-: (ivy-state-collection ivy-last) RET
   ;; https://github.com/abo-abo/swiper/issues/2620#issuecomment-645665878
-  (setq ivy-re-builders-alist '((projectile-completing-read . ivy--regex-ignore-order)
-                                (help--symbol-completion-table . ivy--regex-ignore-order)
-                                (swiper . ivy--regex-ignore-order)
-                                (counsel-M-x . ivy--regex-ignore-order)
-                                (counsel-projectile-find-file . ivy--regex-ignore-order)
-                                (t  . ivy--regex-plus)))
+  (setq ivy-re-builders-alist '((t  . ivy--regex-ignore-order)))
   (ivy-mode))
 
 (use-package ivy-avy
