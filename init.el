@@ -202,6 +202,29 @@ NAME can be used to set the name of the defined function."
           ("CANCELED"  . "SpringGreen")))
 
 
+  (setq org-tag-alist '((:startgroup)
+                        (:grouptags)
+                        ("@personal" . ?a)
+                        ("@work" . ?d)
+                        (:endgroup)
+                        (:startgrouptag)
+                        ("@personal")
+                        (:grouptags)
+                        ("home" . ?s)
+                        ("finance" . ?w)
+                        (:endgrouptag)
+
+                        (:startgroup)
+                        ("@void" . ?f) ("@collecting" . ?g) ("@ready" . ?h)
+                        (:endgroup)
+
+                        ("read" . ?j)
+                        ("interesting" . ?k)
+                        ("emacs" . ?l)
+                        ("idea" . ?q)))
+
+
+
   (setq org-confirm-babel-evaluate nil)
   (setq org-babel-python-command "ipython --no-banner --nosep --simple-prompt  -i")
   (setq org-babel-results-keyword "results")
