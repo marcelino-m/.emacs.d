@@ -252,7 +252,23 @@ NAME can be used to set the name of the defined function."
   (setq org-agenda-files
       (mapcar 'abbreviate-file-name
               (split-string
-               (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n"))))
+               (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n")))
+
+  (setq ma/work-org-agenda-files
+        (seq-filter (lambda (s) (string-match-p "/work/" s)) org-agenda-files))
+
+  (setq org-agenda-custom-commands
+        '(("A" "Personal agenda for current day or week" agenda ""
+           ((org-agenda-tag-filter-preset '("+@personal"))))
+          ("!" "To work this week" tags "+@personal+week")
+          ("I" "Very Personal related task" tags-todo "+@personal-home")
+          ("i" "Very Personal related task" tags-todo "+@personal")
+          ("h" "Home related task" tags "+home")
+          ("w" . "Work related comand")
+          ("wa" "Agenda for current day or week" agenda ""
+           ((org-agenda-tag-filter-preset '("+@work"))))
+          ("wt" "All todos" tags-todo "+@work")
+          ("w!" "To work this week" tags "+@work+week"))))
 
 (use-package org-habit
   :custom
