@@ -203,25 +203,24 @@ NAME can be used to set the name of the defined function."
 
 
   (setq org-tag-alist '((:startgroup)
-                        (:grouptags)
-                        ("@personal" . ?a)
-                        ("@work" . ?d)
+                        ("@personal" . ?P) ("@work" . ?W)
                         (:endgroup)
                         (:startgrouptag)
                         ("@personal")
                         (:grouptags)
-                        ("home" . ?s)
-                        ("finance" . ?w)
+                        ("home" . ?h)
+                        ("finance" . ?f)
                         (:endgrouptag)
 
                         (:startgroup)
-                        ("@void" . ?f) ("@collecting" . ?g) ("@ready" . ?h)
+                        ("@void" . ?V) ("@collecting" . ?C) ("@ready" . ?R)
                         (:endgroup)
 
-                        ("read" . ?j)
-                        ("interesting" . ?k)
-                        ("emacs" . ?l)
-                        ("idea" . ?q)))
+                        ("read" . ?r)
+                        ("interesting" . ?i)
+                        ("emacs" . ?e)
+                        ("idea" . ?t)
+                        ("week")))
 
 
 
