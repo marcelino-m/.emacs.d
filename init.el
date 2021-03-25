@@ -331,6 +331,7 @@ NAME can be used to set the name of the defined function."
   (setq org-refile-targets  '((nil :maxlevel . 3)
                               (org-agenda-files :maxlevel . 3)))
 
+  ;; https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html
   (setq org-refile-use-outline-path 'file)
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm))
