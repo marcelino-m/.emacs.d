@@ -188,8 +188,12 @@ NAME can be used to set the name of the defined function."
         org-src-tab-acts-natively  t
         org-src-window-setup       'current-window)
 
+  ;; log state chages into a drawer
+  (setq org-log-into-drawer t)
+
   (setq org-todo-keywords
-        '((sequence "WANT(a)" "WAIT(s)" "TODO(d)" "STOPED(f)" "DOING(j)"  "|" "DONE(k)" "DELEGATED(l)" "CANCELED(;)")))
+        '((sequence
+           "WANT(a)" "WAIT(s@/!)" "TODO(d!)" "STOPED(f@)" "DOING(j!)"  "|" "DONE(k@)" "DELEGATED(l@)" "CANCELED(;@)")))
 
   (setq org-todo-keyword-faces
         '(("WANT"   . "gray")
