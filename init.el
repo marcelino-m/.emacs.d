@@ -316,9 +316,9 @@ NAME can be used to set the name of the defined function."
            entry (file+headline "~/syncthing/org/capture/work/to-share-lead-meeting.org" "To say in lead meeting")
            "* TODO %? :@work:" :empty-lines-after 1 :empty-lines-before 0)
 
-          ("wi" "Weekly iteration log"
-           item (file+olp+datetree "~/syncthing/org/capture/work/weekly-iteration.org")
-           "%? :@work:" :tree-type week))))
+          ("wj" "Journal"
+           item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
+           "%?" :tree-type week))))
 
 
 (use-package org-indent
