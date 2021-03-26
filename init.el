@@ -359,6 +359,10 @@ NAME can be used to set the name of the defined function."
   (setq org-journal-date-format "%A, %Y/%m/%d")
   (setq org-journal-dir "~/syncthing/org/journal"))
 
+(use-package calendar
+  :custom
+  (calendar-week-start-day 1))
+
 (use-package eldoc
   :diminish eldoc-mode)
 
