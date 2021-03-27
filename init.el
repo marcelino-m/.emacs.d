@@ -1385,6 +1385,7 @@ which call (newline) command"
   (lsp-ui-peek-header  ((t :background "#5d4d7a" :foreground "white")))
 
   :config
+  (setq lsp-ui-peek--buffer nil)
   (defun lsp-ui-peek--peek-display (src1 src2)
     (-let* ((win-width (frame-width))
             (lsp-ui-peek-list-width (/ (frame-width) 2))
@@ -1393,7 +1394,7 @@ which call (newline) command"
                       (-map-indexed 'lsp-ui-peek--make-line it)
                       (-concat it (lsp-ui-peek--make-footer)))))
 
-      (setq lsp-ui-peek--buffer (get-buffer-create "*lsp-peek--buffer*"))
+      (setq lsp-ui-peek--buffer (get-buffer-create " *lsp-peek--buffer*"))
       (posframe-show lsp-ui-peek--buffer
                      :string (mapconcat 'identity string "")
                      :min-width (frame-width)
