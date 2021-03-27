@@ -300,24 +300,24 @@ NAME can be used to set the name of the defined function."
 
           ("n" "Note: Quick and misc note about anything" entry
            (file "~/syncthing/org/capture/quick-notes.org")
-           "* %?\n%i" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+           "* %?\n%U" :prepend t :empty-lines-after 1 :empty-lines-before 1)
 
           ("h" "Home and domestic related task"
            entry (file "~/syncthing/org/capture/home-task.org")
-           "* TODO %? :home: \n%i" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :home: \n%U" :empty-lines-after 1 :empty-lines-before 0)
 
           ("w" "work related captures")
           ("wt" "Task"
            entry (file "~/syncthing/org/capture/work/task.org")
-           "* TODO %? :@work: \n%i" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work: \n%U" :empty-lines-after 1 :empty-lines-before 0)
 
           ("wm" "Meetings notes"
            entry (file "~/syncthing/org/capture/work/meeting.org" )
-           "* Meeting %? :@work: \n%T" :prepend t :empty-lines-after 1 :empty-lines-before 0)
+           "* Meeting %? :@work: \n%U" :prepend t :empty-lines-after 1 :empty-lines-before 0)
 
           ("wn" "Note: Quick and misc note about anything"
            entry (file "~/syncthing/org/capture/work/quick-notes.org")
-           "* %? :@work: \n%i" :prepend t :empty-lines-after 1 :empty-lines-before 0)
+           "* %? :@work: \n%U" :prepend t :empty-lines-after 1 :empty-lines-before 0)
 
           ("wl" "To share in next lead  meeting"
            entry (file+headline "~/syncthing/org/capture/work/to-share-lead-meeting.org" "To say in lead meeting")
