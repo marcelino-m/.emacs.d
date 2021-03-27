@@ -180,14 +180,6 @@ NAME can be used to set the name of the defined function."
   ;; prevent org mode repositioning text when cicle visibility
   (remove-hook 'org-cycle-hook #'org-optimize-window-after-visibility-change)
 
-  (add-hook
-   'org-src-mode-hook
-   (lambda () (setq org-src--saved-temp-window-config nil)))
-
-  (setq org-src-fontify-natively   t
-        org-src-tab-acts-natively  t
-        org-src-window-setup       'current-window)
-
   ;; log state chages into a drawer
   (setq org-log-into-drawer t)
 
@@ -250,6 +242,21 @@ NAME can be used to set the name of the defined function."
 
   ;; use ivy with org-goto
   (setq org-goto-interface 'outline-path-completion))
+
+(use-package org-src
+  :custom
+  ;; https://lists.gnu.org/archive/html/emacs-orgmode/2018-08/msg00127.html
+  ;; prevent problem with diff src block
+  (org-src-preserve-indentation t)
+  (org-src-fontify-natively   t)
+  (org-src-tab-acts-natively  t)
+  (org-src-window-setup       'current-window)
+
+  :config
+  (add-hook
+   'org-src-mode-hook
+   (lambda () (setq org-src--saved-temp-window-config nil))))
+
 
 (use-package org-agenda
   :config
