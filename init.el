@@ -1077,11 +1077,18 @@ NAME can be used to set the name of the defined function."
 
 (use-package deft
   :straight t
-  :load-path "./defuns/"
-  :bind ([f9] . ma/deft-in-new-frame)
-  :init
-  (setq deft-directory "~/syncthing/org/deft")
-  (setq deft-extensions '("org" "md" "txt")))
+  :bind ([f2] . ma/deft-in-new-frame)
+  :custom
+  (deft-directory "~/syncthing/org/deft")
+  (deft-extensions '("org" "md" "markdown" "txt" "text"))
+  :config
+  (defun ma/deft-in-new-frame (&optional arg)
+    "Launch deft in a new frame"
+    (interactive "P")
+    (if (not arg)
+        (deft)
+      (select-frame (make-frame-command))
+      (deft))))
 
 (use-package rainbow-mode
   :straight t)
