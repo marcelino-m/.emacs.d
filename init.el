@@ -512,7 +512,8 @@ NAME can be used to set the name of the defined function."
               ("C-s" . swiper)
               ("M-x" . counsel-M-x))
   :config
-  (setq ivy-initial-inputs-alist nil))
+  (setq ivy-initial-inputs-alist nil)
+  (counsel-mode))
 
 (use-package ivy-posframe
   :disabled
