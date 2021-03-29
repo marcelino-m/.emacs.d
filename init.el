@@ -183,6 +183,11 @@ NAME can be used to set the name of the defined function."
   ;; log state chages into a drawer
   (setq org-log-into-drawer t)
 
+  ;; priority range
+  (setq org-priority-highest ?A)
+  (setq org-priority-lowest  ?G)
+  (setq org-priority-default ?D)
+
   (setq org-todo-keywords
         '((sequence
            "WANT(a)" "WAIT(s@/!)" "TODO(d!)" "STOPED(f@)" "DOING(j!)"  "|" "DONE(k@)" "DELEGATED(l@)" "CANCELED(;@)")))
@@ -201,13 +206,6 @@ NAME can be used to set the name of the defined function."
   (setq org-tag-alist '((:startgroup)
                         ("@personal" . ?P) ("@work" . ?W)
                         (:endgroup)
-                        (:startgrouptag)
-                        ("@personal")
-                        (:grouptags)
-                        ("home" . ?h)
-                        ("finance" . ?f)
-                        (:endgrouptag)
-
                         (:startgroup)
                         ("@void" . ?V) ("@collecting" . ?C) ("@ready" . ?R)
                         (:endgroup)
@@ -216,7 +214,12 @@ NAME can be used to set the name of the defined function."
                         ("interesting" . ?i)
                         ("emacs" . ?e)
                         ("idea" . ?t)
-                        ("week")))
+                        ("home" . ?h)
+                        ("finance" . ?f)
+                        ("week" . ?w)
+                        ("english" . ?e))
+
+        )
 
 
 
@@ -260,6 +263,7 @@ NAME can be used to set the name of the defined function."
 
 (use-package org-agenda
   :config
+  (add-hook 'org-agenda-mode-hook #'hl-line-mode)
   (setq org-agenda-files
       (mapcar 'abbreviate-file-name
               (split-string
@@ -267,10 +271,10 @@ NAME can be used to set the name of the defined function."
 
   (setq org-agenda-custom-commands
         '(("A" "Personal agenda for current day or week" agenda ""
-           ((org-agenda-tag-filter-preset '("+@personal"))))
-          ("!" "To work this week" tags "+@personal+week")
-          ("I" "Very Personal related task" tags-todo "+@personal-home")
-          ("i" "Very Personal related task" tags-todo "+@personal")
+           ((org-agenda-tag-filter-preset '("-@work"))))
+          ("!" "To work this week" tags "-@work+week")
+          ("I" "Very Personal related task" tags-todo "-@work-home")
+          ("i" "Personal related task" tags-todo "-@work")
           ("h" "Home related task" tags "+home")
           ("w" . "Work related comand")
           ("wa" "Agenda for current day or week" agenda ""
@@ -292,7 +296,7 @@ NAME can be used to set the name of the defined function."
   (setq org-capture-templates
         '(("t" "Task"
            entry (file "~/syncthing/org/capture/task.org")
-           "* TODO %? %^G" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? %^G\n%U" :empty-lines-after 1 :empty-lines-before 0)
 
           ("f" "Would be nice doing it... some time"
            entry (file "~/syncthing/org/capture/wanted.org")
@@ -817,7 +821,8 @@ NAME can be used to set the name of the defined function."
          (sh-mode            . company-mode)
          (typescript-mode    . company-mode)
          (inferior-ess-mode  . company-mode)
-         (ledger-mode        . company-mode))
+         (ledger-mode        . company-mode)
+         (org-mode           . company-mode))
 
 
   :custom
