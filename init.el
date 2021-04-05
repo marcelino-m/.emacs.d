@@ -1420,9 +1420,8 @@ which call (newline) command"
   :bind (:map lsp-mode-map
               ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
               ([remap xref-find-references]  . lsp-ui-peek-find-references)
-              ;; ("C-."                         . lsp-ui-imenu)
-              ;; ("C-c C-l d"                   . lsp-ui-doc-show)
-              )
+              ("C-."                         . counsel-imenu)
+              ("C-c C-l d"                   . lsp-ui-doc-show))
   :custom
   (lsp-ui-sideline-enable nil)
   (lsp-ui-doc-enable      nil)
