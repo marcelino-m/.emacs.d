@@ -329,7 +329,7 @@ NAME can be used to set the name of the defined function."
 
           ("f" "Would be nice doing it... some time"
            entry (file "~/syncthing/org/capture/wanted.org")
-           "* WANT %?\n%i" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO [#G] %? :@void:want: \n%i" :empty-lines-after 1 :empty-lines-before 0)
 
           ("n" "Note: Quick and misc note about anything" entry
            (file "~/syncthing/org/capture/quick-notes.org")
