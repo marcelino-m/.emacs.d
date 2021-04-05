@@ -598,8 +598,7 @@ NAME can be used to set the name of the defined function."
               ("TAB"         . nil)
               ("<backtab>"   . yas-expand))
   :config
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
-  (yas-global-mode 1))
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/"))
 
 (use-package prog-mode
   :init
