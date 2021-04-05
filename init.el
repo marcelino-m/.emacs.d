@@ -154,7 +154,7 @@ NAME can be used to set the name of the defined function."
 
 
 (use-package org
-  :straight (:type built-in)
+  :straight t
   :load-path "./defuns"
   :mode (("\\.org\\'" . org-mode))
   :bind (:map org-mode-map
@@ -190,7 +190,7 @@ NAME can be used to set the name of the defined function."
 
   (setq org-todo-keywords
         '((sequence
-           "WANT(a)" "WAIT(s@/!)" "TODO(d!)" "STOPED(f@)" "DOING(j!)"  "|" "DONE(k@)" "DELEGATED(l@)" "CANCELED(;@)")))
+           "WANT(a)" "WAIT(s@/!)" "TODO(d)" "STOPED(f@)" "DOING(j!)"  "|" "CANCELED(;@)" "DELEGATED(l@)" "DONE(k@)")))
 
   (setq org-todo-keyword-faces
         '(("WANT"   . "gray")
@@ -202,6 +202,9 @@ NAME can be used to set the name of the defined function."
           ("DELEGATED" . "SpringGreen")
           ("CANCELED"  . "SpringGreen")))
 
+
+  ;; position of tags in right margin
+  (setq org-tags-column -95)
 
   (setq org-tag-alist '((:startgroup)
                         ("@personal" . ?P) ("@work" . ?W)
