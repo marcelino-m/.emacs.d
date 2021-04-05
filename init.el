@@ -626,7 +626,10 @@ NAME can be used to set the name of the defined function."
   :delight '(:eval (format " [prj: %s]" (projectile-project-name)))
   :bind-keymap ("C-,"   . projectile-command-map)
   :bind-keymap ("C-c p" . projectile-command-map)
-  :bind (:map projectile-command-map
+  :bind (([f3]  . next-error)
+         ([f4] . 'recompile)
+         ([f5]  . projectile-compile-project)
+         :map projectile-command-map
               ("s a" . counsel-projectile-ag)
               (","   . projectile-switch-project))
 
