@@ -272,18 +272,44 @@ NAME can be used to set the name of the defined function."
               (split-string
                (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n")))
 
+  (setq org-agenda-sorting-strategy
+        '((agenda habit-down time-up priority-down category-keep)
+          (todo priority-down category-down todo-state-up)
+          (tags priority-down category-keep)
+          (search category-keep)))
+
   (setq org-agenda-custom-commands
         '(("A" "Personal agenda for current day or week" agenda ""
            ((org-agenda-tag-filter-preset '("-@work"))))
-          ("!" "To work this week" tags "-@work+week")
-          ("I" "Very Personal related task" tags-todo "-@work-home")
-          ("i" "Personal related task" tags-todo "-@work")
-          ("h" "Home related task" tags "+home")
+
+          ("!" "To work this week" tags "-@work+week"
+           ((org-agenda-sorting-strategy '(todo-state-down  priority-down))
+            (org-agenda-prefix-format " ")))
+
+          ("I" "Very Personal related task" tags-todo "-@work-home"
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
+            (org-agenda-prefix-format " ")))
+
+          ("i" "Personal related task" tags-todo "-@work"
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
+            (org-agenda-prefix-format " ")))
+
+          ("h" "Home related task" tags-todo "+home"
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
+            (org-agenda-prefix-format " ")))
+
           ("w" . "Work related comand")
+
           ("wa" "Agenda for current day or week" agenda ""
            ((org-agenda-tag-filter-preset '("+@work"))))
-          ("wt" "All todos" tags-todo "+@work")
-          ("w!" "To work this week" tags "+@work+week"))))
+
+          ("wt" "All todos" tags-todo "+@work"
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
+            (org-agenda-prefix-format " ")))
+
+          ("w!" "To work this week" tags "+@work+week"
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
+            (org-agenda-prefix-format " "))))))
 
 (use-package org-habit
   :custom
