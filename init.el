@@ -352,9 +352,21 @@ NAME can be used to set the name of the defined function."
            entry (file "~/syncthing/org/capture/work/quick-notes.org")
            "* %? :@work: \n%U" :prepend t :empty-lines-after 1 :empty-lines-before 0)
 
-          ("wl" "To share in next lead  meeting"
-           entry (file+headline "~/syncthing/org/capture/work/to-share-lead-meeting.org" "To say in lead meeting")
-           "* TODO %? :@work:" :empty-lines-after 1 :empty-lines-before 0)
+          ("wo" "One to one meeting"
+           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "One to One")
+           "* TODO %? :@work:one2one" :empty-lines-after 1 :empty-lines-before 0)
+
+          ("wl" "Lead meeting"
+           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
+           "* TODO %? :@work:lead:" :empty-lines-after 1 :empty-lines-before 0)
+
+          ("ws" "Stand up"
+           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
+           "* TODO %? :@work:standup:" :empty-lines-after 1 :empty-lines-before 0)
+
+          ("wr" "Retro"
+           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Retrospective")
+           "* TODO %? :@work:retro:" :empty-lines-after 1 :empty-lines-before 0)
 
           ("wj" "Journal"
            item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
