@@ -169,6 +169,7 @@ NAME can be used to set the name of the defined function."
   (define-key global-map (kbd "C-c l") 'org-store-link)
   (define-key global-map (kbd "C-c a") 'org-agenda)
 
+  (setq org-ellipsis " ▼")
   (setq org-special-ctrl-a/e t)
   (setq org-special-ctrl-k t)
 
@@ -379,6 +380,13 @@ NAME can be used to set the name of the defined function."
   :custom
   (org-indent-indentation-per-level 2))
 
+(use-package org-bullets
+  :straight t
+  :diminish
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("჻")))
+
 (use-package org-refile
   :init
   (setq org-refile-targets  '((nil :maxlevel . 3)
@@ -495,6 +503,9 @@ NAME can be used to set the name of the defined function."
 
 (use-package zenburn-theme
   :straight t
+  :custom-face
+  (org-ellipsis  ((t (:underline nil :foreground nil))))
+
   :config
   (load-theme 'zenburn t))
 
