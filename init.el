@@ -569,8 +569,6 @@ NAME can be used to set the name of the defined function."
               ("M-x" . counsel-M-x))
   :config
   (setq ivy-initial-inputs-alist nil)
-  (define-key counsel-mode-map [remap switch-to-buffer] 'counsel-switch-buffer)
-  (define-key counsel-mode-map [remap switch-to-buffer-other-window] 'counsel-switch-buffer-other-window)
   (counsel-mode))
 
 (use-package ivy-posframe
