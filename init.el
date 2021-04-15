@@ -321,53 +321,51 @@ NAME can be used to set the name of the defined function."
   :config
   (define-key global-map (kbd "C-c x") 'org-capture)
 
-  (add-hook 'org-capture-mode-hook #'org-align-all-tags)
-
   (setq org-capture-templates
         '(("t" "Task"
            entry (file "~/syncthing/org/capture/task.org")
-           "* TODO %? %^G\n%U" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? \n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
 
           ("f" "Would be nice doing it... some time"
            entry (file "~/syncthing/org/capture/wanted.org")
-           "* TODO [#G] %? :@void:want: \n%i" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO [#G] %? :@void:want:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
 
           ("n" "Note: Quick and misc note about anything" entry
            (file "~/syncthing/org/capture/quick-notes.org")
-           "* %?\n%U" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+           "* %? \n:LOGBOOK: \n:CREATED: %U \n:END:" :prepend t :empty-lines-after 1 :empty-lines-before 1)
 
           ("h" "Home and domestic related task"
            entry (file "~/syncthing/org/capture/home-task.org")
-           "* TODO %? :home: \n%U" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :home:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
 
           ("w" "work related captures")
           ("wt" "Task"
            entry (file "~/syncthing/org/capture/work/task.org")
-           "* TODO %? :@work: \n%U" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
 
           ("wm" "Meetings notes"
            entry (file "~/syncthing/org/capture/work/meeting.org" )
-           "* Meeting %? :@work: \n%U" :prepend t :empty-lines-after 1 :empty-lines-before 0)
+           "* Meeting %? :@work:\n:LOGBOOK: \n:CREATED: %U \n:END:" :prepend t :empty-lines-after 1 :empty-lines-before 0)
 
           ("wn" "Note: Quick and misc note about anything"
            entry (file "~/syncthing/org/capture/work/quick-notes.org")
-           "* %? :@work: \n%U" :prepend t :empty-lines-after 1 :empty-lines-before 0)
+           "* %? :@work:\n:LOGBOOK: \n:CREATED: %U \n:END:" :prepend t :empty-lines-after 1 :empty-lines-before 0)
 
           ("wo" "One to one meeting"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "One to One")
-           "* TODO %? :@work:one2one" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:one2one:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
 
           ("wl" "Lead meeting"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
-           "* TODO %? :@work:lead:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:lead:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
 
           ("ws" "Stand up"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
-           "* TODO %? :@work:standup:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:standup:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
 
           ("wr" "Retro"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Retrospective")
-           "* TODO %? :@work:retro:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:retro:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
 
           ("wj" "Journal"
            item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
