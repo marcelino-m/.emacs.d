@@ -142,6 +142,9 @@ NAME can be used to set the name of the defined function."
 
 
 ;; Setup packages
+(global-unset-key (kbd "S-<down-mouse-1>"))
+(global-unset-key (kbd "S-<mouse-3>"))
+
 
 (use-package exec-path-from-shell
   :straight t
@@ -1639,3 +1642,7 @@ which call (newline) command"
 (use-package display-line-numbers
   :custom
   (display-line-numbers-type  'relative))
+
+(use-package engtool
+  :config
+  (engtool-mode 1))
