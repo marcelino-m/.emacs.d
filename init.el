@@ -163,6 +163,9 @@ NAME can be used to set the name of the defined function."
   :bind (:map org-mode-map
               ("C-c C-v t" . ma/toggle-current-src-block))
 
+  :custom-face
+  (org-ellipsis  ((t (:underline nil :foreground nil))))
+
   :config
   (add-to-list 'org-modules 'org-habit)
   (require 'org-defun)
@@ -504,9 +507,6 @@ NAME can be used to set the name of the defined function."
 
 (use-package zenburn-theme
   :straight t
-  :custom-face
-  (org-ellipsis  ((t (:underline nil :foreground nil))))
-
   :config
   (load-theme 'zenburn t))
 
