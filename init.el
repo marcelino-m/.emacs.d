@@ -277,7 +277,7 @@ NAME can be used to set the name of the defined function."
   (setq org-agenda-files
       (mapcar 'abbreviate-file-name
               (split-string
-               (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n")))
+               (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n" t)))
 
   (setq org-agenda-sorting-strategy
         '((agenda habit-down time-up priority-down category-keep)
