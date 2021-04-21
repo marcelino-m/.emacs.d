@@ -613,14 +613,16 @@ NAME can be used to set the name of the defined function."
 (use-package yasnippet
   :straight t
   :diminish yas-minor-mode
-  :commands (yas-expand yas-minor-mode)
+  :commands (yas-expand yas-minor-mode yas-reload-all)
   :functions (yas-guess-snippet-directories yas-table-name)
   :defines (yas-guessed-modes)
-  :bind (:map yas-minor-mode-map
-              ("TAB"         . nil)
-              ("<backtab>"   . yas-expand))
+
   :config
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/"))
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
+  (yas-reload-all)
+  (add-hook 'go-mode-hook 'yas-minor-mode)
+  (add-hook 'python-mode-hook 'yas-minor-mode))
+
 
 (use-package prog-mode
   :init
