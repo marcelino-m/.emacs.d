@@ -436,7 +436,8 @@ NAME can be used to set the name of the defined function."
   (define-key Info-mode-map (kbd "<next>") 'scroll-up-1))
 
 (use-package info+
-  :straight t)
+  :straight (info+ :fork  (:host github :repo "SrAceves/info-plus")))
+
 
 (use-package ethan-wspace
   :straight t
