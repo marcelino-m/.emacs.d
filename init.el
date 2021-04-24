@@ -1665,7 +1665,11 @@ which call (newline) command"
   (display-line-numbers-current-absolute nil)
 
   :config
-  (global-display-line-numbers-mode))
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  (add-hook 'org-mode-hook 'display-line-numbers-mode)
+  (add-hook 'markdown-mode-hook 'display-line-numbers-mode)
+  (add-hook 'yaml-mode-hook 'display-line-numbers-mode))
+
 
 (use-package engtool
   :config
