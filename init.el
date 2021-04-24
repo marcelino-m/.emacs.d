@@ -443,6 +443,7 @@ NAME can be used to set the name of the defined function."
   :straight t
   :diminish ethan-wspace-mode
   :init
+  (add-hook 'org-mode            #'ethan-wspace-mode)
   (add-hook 'org-src-mode-hook   #'ethan-wspace-clean-all)
   (add-hook 'prog-mode-hook      #'ethan-wspace-mode)
   (add-hook 'markdown-mode-hook  #'ethan-wspace-mode)
@@ -983,8 +984,10 @@ NAME can be used to set the name of the defined function."
 
 (use-package avy
   :straight t
-  :bind (("C-M-s-g"  . avy-goto-char-timer)
-         ("C-M-s-f"   . avy-goto-line)
+  :bind (("C-M-s-r" . avy-goto-line)
+         ("C-M-s-f" . avy-goto-subword-1)
+         ("C-M-s-v" . avy-goto-char-timer)
+         ("C-M-s-g" . avy-goto-char-in-line)
          :map org-mode-map
          ("C-M-s-f"   . avy-org-goto-heading-timer)
          ("C-M-s-g"   . counsel-org-goto))
@@ -1644,7 +1647,11 @@ which call (newline) command"
 
 (use-package display-line-numbers
   :custom
-  (display-line-numbers-type  'relative))
+  (display-line-numbers-type  'visual)
+  (display-line-numbers-current-absolute nil)
+
+  :config
+  (global-display-line-numbers-mode))
 
 (use-package engtool
   :config
