@@ -998,6 +998,20 @@ NAME can be used to set the name of the defined function."
   :custom
   (avy-timeout-seconds 10.0) ;; confirm with RET
 
+  :config
+  ;; filter blank lines when use avy-goto-char
+  (advice-add 'avy--line-cands
+              :filter-return
+              (lambda (lines)
+                (save-excursion
+                  (let (filtered)
+                    (dolist (l lines filtered)
+                      (let ((buffer (window-buffer (cdr l))))
+                        (set-buffer buffer)
+                        (goto-char (car l))
+                        (unless  (string-blank-p (thing-at-point 'line))
+                          (add-to-list 'filtered l))))))))
+
   :init
   (global-set-key (kbd "C-z") nil))
 
