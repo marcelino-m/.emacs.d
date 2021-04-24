@@ -977,7 +977,7 @@ NAME can be used to set the name of the defined function."
   :diminish beacon-mode
   :init
   (setq
-   beacon-color       "#eead0e"
+   beacon-color       "#6F6F6F"
    beacon-blink-delay 0.1
    beacon-dont-blink-commands '(next-line previous-line forward-line mwheel-scroll scroll-down-1 scroll-up-1))
   (beacon-mode 1))
