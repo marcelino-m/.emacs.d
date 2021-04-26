@@ -330,48 +330,48 @@ NAME can be used to set the name of the defined function."
   (setq org-capture-templates
         '(("t" "Task"
            entry (file "~/syncthing/org/capture/task.org")
-           "* TODO %? \n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? \n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("f" "Would be nice doing it... some time"
            entry (file "~/syncthing/org/capture/wanted.org")
-           "* TODO [#G] %? :@void:want:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO [#G] %? :@void:want:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
-          ("n" "Note: Quick and misc note about anything" entry
-           (file "~/syncthing/org/capture/quick-notes.org")
-           "* %? \n:LOGBOOK: \n:CREATED: %U \n:END:" :prepend t :empty-lines-after 1 :empty-lines-before 1)
+          ("n" "Note: Quick and misc note about anything"
+           entry (file "~/syncthing/org/capture/quick-notes.org")
+           "* %? \n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2)
 
           ("h" "Home and domestic related task"
            entry (file "~/syncthing/org/capture/home-task.org")
-           "* TODO %? :home:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :home:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("w" "work related captures")
           ("wt" "Task"
            entry (file "~/syncthing/org/capture/work/task.org")
-           "* TODO %? :@work:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wm" "Meetings notes"
            entry (file "~/syncthing/org/capture/work/meeting.org" )
-           "* Meeting %? :@work:\n:LOGBOOK: \n:CREATED: %U \n:END:" :prepend t :empty-lines-after 1 :empty-lines-before 0)
+           "* Meeting %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2)
 
           ("wn" "Note: Quick and misc note about anything"
            entry (file "~/syncthing/org/capture/work/quick-notes.org")
-           "* %? :@work:\n:LOGBOOK: \n:CREATED: %U \n:END:" :prepend t :empty-lines-after 1 :empty-lines-before 0)
+           "* %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2)
 
           ("wo" "One to one meeting"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "One to One")
-           "* TODO %? :@work:one2one:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wl" "Lead meeting"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
-           "* TODO %? :@work:lead:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:lead:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("ws" "Stand up"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
-           "* TODO %? :@work:standup:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:standup:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wr" "Retro"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Retrospective")
-           "* TODO %? :@work:retro:\n:LOGBOOK: \n:CREATED: %U \n:END:" :empty-lines-after 1 :empty-lines-before 0)
+           "* TODO %? :@work:retro:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wj" "Journal"
            item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
@@ -524,8 +524,8 @@ NAME can be used to set the name of the defined function."
 (use-package move-text
   :straight t
   :bind
-  (("C-M-s-e" . move-text-up)
-   ("C-M-s-d" . move-text-down)))
+  (("C-M-s-<up>" . move-text-up)
+   ("C-M-s-<down>" . move-text-down)))
 
 (use-package spaceline
   :straight t
@@ -989,8 +989,7 @@ NAME can be used to set the name of the defined function."
          ("C-M-s-v" . avy-goto-char-timer)
          ("C-M-s-g" . avy-goto-char-in-line)
          :map org-mode-map
-         ("C-M-s-f"   . avy-org-goto-heading-timer)
-         ("C-M-s-g"   . counsel-org-goto))
+         ("C-."   . counsel-imenu))
 
   :custom-face
   (avy-goto-char-timer-face ((t (:inherit isearch))))
