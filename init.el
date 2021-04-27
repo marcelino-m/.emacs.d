@@ -510,7 +510,14 @@ NAME can be used to set the name of the defined function."
 (use-package zenburn-theme
   :straight t
   :config
-  (load-theme 'zenburn t))
+  (load-theme 'zenburn t)
+  (let ((custom--inhibit-theme-enable nil))
+    (zenburn-with-color-variables
+      (custom-theme-set-faces
+       'zenburn
+       `(font-lock-comment-face ((t (:foreground ,zenburn-fg-05))))
+       `(font-lock-comment-delimiter-face ((t (:foreground ,zenburn-fg-05))))
+       `(font-lock-doc-face ((t (:foreground ,zenburn-green-1))))))))
 
 
 (use-package csv-mode
