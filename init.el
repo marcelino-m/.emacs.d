@@ -111,6 +111,8 @@ NAME can be used to set the name of the defined function."
                                         (width                . 0.80)
                                         (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
+                                        (left-fringe          .    0)
+                                        (right-fringe         .    0)
                                         (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
 
 ;; unbind from global map
