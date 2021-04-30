@@ -1336,7 +1336,17 @@ NAME can be used to set the name of the defined function."
   :straight t)
 
 (use-package python
-  :preface
+  :bind (:map python-mode-map
+              ("<backtab>" . nil)
+              ("C-c C-n"   . ma/python-eval-current-line))
+
+  :custom
+  (python-indent-offset                 4)
+  (python-shell-interpreter      "ipython")
+  (python-shell-interpreter-args "--simple-prompt -i")
+
+
+  :config
   (defun ma/python-eval-current-line (&optional keep)
     (interactive "P")
     (let ((beg (line-beginning-position))
@@ -1363,32 +1373,17 @@ which call (newline) command"
     "If ipython is not found in path use python"
     (if (executable-find  python-shell-interpreter)
         (apply orig-fun args)
-      (let ((python-shell-interpreter "python")
+      (let ((python-shell-interpreter "python3")
             (python-shell-interpreter-args "-i"))
         (apply orig-fun args))))
 
-  :bind
-  (:map python-mode-map
-        ("<backtab>" . nil)
-        ("C-c C-n"   . ma/python-eval-current-line))
-
-  :custom
-  (python-indent-offset                 4)
-  (python-shell-interpreter      "ipython")
-  (python-shell-interpreter-args "--simple-prompt -i")
-
-
-  :config
   ;; advising newline behavior in python mode
   (let ((nline-fn #'newline))
     (add-function :around nline-fn  #'ma/python-newline-advice)
     (define-key python-mode-map (kbd "RET")  nline-fn))
 
-  ;; advising if ipython not found then use  python
-  (advice-add
-   'python-shell-calculate-command
-   :around
-   #'ma/python-shell-calculate-command-advice))
+  ;; advising if ipython not found then use  python3
+  (advice-add 'python-shell-calculate-command :around #'ma/python-shell-calculate-command-advice))
 
 (use-package py-isort
   :straight t
