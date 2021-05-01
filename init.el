@@ -111,8 +111,6 @@ NAME can be used to set the name of the defined function."
                                         (width                . 0.80)
                                         (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
-                                        (left-fringe          .    0)
-                                        (right-fringe         .    0)
                                         (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
 
 ;; unbind from global map
@@ -632,7 +630,8 @@ NAME can be used to set the name of the defined function."
   (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
   (yas-reload-all)
   (add-hook 'go-mode-hook 'yas-minor-mode)
-  (add-hook 'python-mode-hook 'yas-minor-mode))
+  (add-hook 'python-mode-hook 'yas-minor-mode)
+  (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode))
 
 
 (use-package prog-mode
@@ -1144,10 +1143,6 @@ NAME can be used to set the name of the defined function."
 (use-package simple-httpd
   :straight t)
 
-(use-package pyvenv
-  :straight t
-  :config
-  (pyvenv-mode 1))
 
 (use-package qt-pro-mode
   :straight t
@@ -1333,6 +1328,11 @@ NAME can be used to set the name of the defined function."
 
 (use-package adoc-mode
   :straight t)
+
+(use-package pyvenv
+  :straight t
+  :config
+  (pyvenv-mode 1))
 
 (use-package python
   :bind (:map python-mode-map
@@ -1669,10 +1669,10 @@ which call (newline) command"
   :config
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
   (add-hook 'org-mode-hook 'display-line-numbers-mode)
-  (add-hook 'markdown-mode-hook 'display-line-numbers-mode)
-  (add-hook 'yaml-mode-hook 'display-line-numbers-mode))
+  (add-hook 'text-mode-hook 'display-line-numbers-mode))
 
 
 (use-package engtool
+  :diminish
   :config
   (engtool-mode 1))
