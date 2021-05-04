@@ -1219,8 +1219,7 @@ NAME can be used to set the name of the defined function."
 
 (use-package multiple-cursors
   :straight t
-  :bind (("C-<mouse-1>" . mc/add-cursor-on-click)
-         ("C->"     . mc/mark-next-like-this)
+  :bind (("C->"     . mc/mark-next-like-this)
          ("C-<"     . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-next-like-this-word))
   :init
