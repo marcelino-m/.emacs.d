@@ -1,5 +1,5 @@
 ;;  adjust the garbage collection param
-(setq gc-cons-threshold 67108864) ;; 64mb
+(setq gc-cons-threshold (* 128 (expt 2 20))) ;; 128mb
 
 ;; boostrap straight.el
 (setq straight-repository-branch "develop")
