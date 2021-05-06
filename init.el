@@ -565,7 +565,9 @@ NAME can be used to set the name of the defined function."
   (ivy-mode))
 
 (use-package ivy-avy
-  :straight t)
+  :straight t
+  :bind (:map ivy-minibuffer-map
+              ("'" . ivy-avy)))
 
 (use-package swiper
   :straight t
