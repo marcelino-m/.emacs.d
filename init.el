@@ -760,7 +760,7 @@ NAME can be used to set the name of the defined function."
   (magit-display-buffer-function          'magit-display-buffer-fullframe-status-v1)
   (magit-section-visibility-indicator     nil)
   (magit-diff-adjust-tab-width            'always)
-  (magit-diff-refine-hunk                 nil)
+  (magit-diff-refine-hunk                 'all)
   (magit-section-initial-visibility-alist '((untracked . hide)
                                             (unstaged  . show)
                                             (staged    . show)
