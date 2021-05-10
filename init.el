@@ -515,6 +515,18 @@ NAME can be used to set the name of the defined function."
     (zenburn-with-color-variables
       (custom-theme-set-faces
        'zenburn
+
+       `(magit-diff-added    ((t (:background nil  :foreground ,zenburn-green))))
+       `(magit-diff-changed  ((t (:background nil  :foreground ,zenburn-yellow-1))))
+       `(magit-diff-removed  ((t (:background nil  :foreground ,zenburn-red-2))))
+       `(magit-diff-added-highlight    ((t (:background ,zenburn-bg+05  :foreground ,zenburn-green))))
+       `(magit-diff-changed-highlight  ((t (:background ,zenburn-bg+05  :foreground ,zenburn-yellow-1))))
+       `(magit-diff-removed-highlight  ((t (:background ,zenburn-bg+05  :foreground ,zenburn-red-2))))
+
+       `(diff-refine-added   ((t (:background nil  :foreground ,zenburn-green+4))))
+       `(diff-refine-changed ((t (:background nil  :foreground ,zenburn-yellow))))
+       `(diff-refine-removed ((t (:background nil  :foreground ,zenburn-red))))
+
        `(font-lock-comment-face ((t (:foreground ,zenburn-fg-05))))
        `(font-lock-comment-delimiter-face ((t (:foreground ,zenburn-fg-05))))
        `(font-lock-doc-face ((t (:foreground ,zenburn-green-1))))))))
