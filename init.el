@@ -510,6 +510,24 @@ NAME can be used to set the name of the defined function."
 (use-package zenburn-theme
   :straight t
   :config
+  (setq zenburn-override-colors-alist
+        '(("zenburn-fg-2"     . "#6D6D6D")
+          ("zenburn-fg-1"     . "#878787")
+          ("zenburn-fg-05"    . "#A2A2A2")
+          ("zenburn-fg"       . "#BDBDBD")
+          ("zenburn-fg+1"     . "#D7D7D7")
+          ("zenburn-fg+2"     . "#F2F2F2")
+          ("zenburn-bg-2"     . "#000000")
+          ("zenburn-bg-1"     . "#171717")
+          ("zenburn-bg-08"    . "#232323")
+          ("zenburn-bg-05"    . "#2F2F2F")
+          ("zenburn-bg"       . "#383838")
+          ("zenburn-bg+05"    . "#404040")
+          ("zenburn-bg+1"     . "#525252")
+          ("zenburn-bg+2"     . "#5F5F5F")
+          ("zenburn-bg+3"     . "#6D6D6D")
+    ))
+
   (load-theme 'zenburn t)
   (let ((custom--inhibit-theme-enable nil))
     (zenburn-with-color-variables
@@ -527,8 +545,8 @@ NAME can be used to set the name of the defined function."
        `(diff-refine-changed ((t (:background nil  :foreground ,zenburn-yellow))))
        `(diff-refine-removed ((t (:background nil  :foreground ,zenburn-red))))
 
-       `(font-lock-comment-face ((t (:foreground ,zenburn-fg-05))))
-       `(font-lock-comment-delimiter-face ((t (:foreground ,zenburn-fg-05))))
+       `(font-lock-comment-face ((t (:foreground ,zenburn-fg-2))))
+       `(font-lock-comment-delimiter-face ((t (:foreground ,zenburn-fg-2))))
        `(font-lock-doc-face ((t (:foreground ,zenburn-green-1))))))))
 
 
