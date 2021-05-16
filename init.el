@@ -547,7 +547,9 @@ NAME can be used to set the name of the defined function."
 
        `(font-lock-comment-face ((t (:foreground ,zenburn-fg-2))))
        `(font-lock-comment-delimiter-face ((t (:foreground ,zenburn-fg-2))))
-       `(font-lock-doc-face ((t (:foreground ,zenburn-green-1))))))))
+       `(font-lock-doc-face ((t (:foreground ,zenburn-green-1))))
+
+       `(ledger-font-xact-highlight-face ((t (:background ,zenburn-bg+05))))))))
 
 
 (use-package csv-mode
