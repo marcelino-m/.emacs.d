@@ -1699,7 +1699,7 @@ which call (newline) command"
 
 (use-package display-line-numbers
   :custom
-  (display-line-numbers-type  'relative)
+  (display-line-numbers-type  'visual)
   (display-line-numbers-current-absolute nil)
 
   :config
