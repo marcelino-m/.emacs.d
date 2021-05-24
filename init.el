@@ -536,6 +536,8 @@ NAME can be used to set the name of the defined function."
       (custom-theme-set-faces
        'zenburn
 
+       `(org-link ((t (:foreground ,zenburn-yellow-2 :underline nil :bold t))))
+
        `(magit-diff-added    ((t (:background nil  :foreground ,zenburn-green))))
        `(magit-diff-changed  ((t (:background nil  :foreground ,zenburn-yellow-1))))
        `(magit-diff-removed  ((t (:background nil  :foreground ,zenburn-red-2))))
