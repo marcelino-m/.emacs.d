@@ -575,7 +575,8 @@ NAME can be used to set the name of the defined function."
   :config
   (use-package spaceline-config
     :config
-    (spaceline-spacemacs-theme)))
+    (spaceline-emacs-theme))
+  )
 
 (use-package ivy
   :straight t
@@ -695,7 +696,6 @@ NAME can be used to set the name of the defined function."
 
 (use-package projectile
   :straight t
-  :delight '(:eval (format " [prj: %s]" (projectile-project-name)))
   :bind-keymap ("C-,"   . projectile-command-map)
   :bind-keymap ("C-c p" . projectile-command-map)
   :bind (([f3]  . next-error)
@@ -705,11 +705,13 @@ NAME can be used to set the name of the defined function."
               ("s a" . counsel-projectile-ag)
               (","   . projectile-switch-project))
 
+
   :custom
   (projectile-completion-system      'ivy)
   (projectile-indexing-method        'hybrid)
   (projectile-sort-order             'modification-time)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
+  (projectile-mode-line-function     (lambda ()  (format "proj: %s" (projectile-project-name))))
   (projectile-project-search-path    '("~/lab"))
 
   :config
