@@ -1711,6 +1711,16 @@ which call (newline) command"
   (add-hook 'org-mode-hook 'display-line-numbers-mode)
   (add-hook 'text-mode-hook 'display-line-numbers-mode))
 
+(use-package eyebrowse
+  :straight t
+  :diminish
+  :bind (("s-1" . eyebrowse-switch-to-window-config-1)
+         ("s-2" . eyebrowse-switch-to-window-config-2)
+         ("s-3" . eyebrowse-switch-to-window-config-3)
+         ("s-4" . eyebrowse-switch-to-window-config-4)
+         ("s-t" . eyebrowse-rename-window-config))
+  :config
+  (eyebrowse-mode 1))
 
 (use-package engtool
   :diminish
