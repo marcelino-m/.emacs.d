@@ -547,7 +547,7 @@ NAME can be used to set the name of the defined function."
 
        `(diff-refine-added   ((t (:background nil  :foreground ,zenburn-green+4))))
        `(diff-refine-changed ((t (:background nil  :foreground ,zenburn-yellow))))
-       `(diff-refine-removed ((t (:background nil  :foreground ,zenburn-red))))
+       `(diff-refine-removed ((t (:background nil  :foreground ,zenburn-red+1))))
 
        `(font-lock-comment-face ((t (:foreground ,zenburn-fg-2))))
        `(font-lock-comment-delimiter-face ((t (:foreground ,zenburn-fg-2))))
