@@ -45,6 +45,25 @@ NAME can be used to set the name of the defined function."
   (add-hook 'after-make-frame-functions
             (lambda-i (frame) (select-frame-set-input-focus frame))))
 
+(use-package simple
+  :config
+  (advice-add 'backward-kill-word
+              :around
+              (lambda (origfn &rest args)
+                "First delete blanks before point"
+                (if (looking-back "[ \t]+" nil t)
+                    (replace-match "" nil nil)
+                  (apply origfn args))))
+
+  (advice-add 'kill-word
+              :around
+              (lambda (origfn &rest args)
+                "First delete blanks after point"
+                (if (looking-at "[ \t]+")
+                    (replace-match "" nil nil)
+                  (apply origfn args)))))
+
+
 (use-package use-package-chords
   :straight t
   :config (key-chord-mode 1))
