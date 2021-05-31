@@ -1730,16 +1730,38 @@ which call (newline) command"
   (add-hook 'org-mode-hook 'display-line-numbers-mode)
   (add-hook 'text-mode-hook 'display-line-numbers-mode))
 
+
+(use-package hydra
+  :straight t)
+
+(use-package use-package-hydra
+  :straight t)
+
 (use-package eyebrowse
   :straight t
-  :diminish
-  :bind (("s-1" . eyebrowse-switch-to-window-config-1)
-         ("s-2" . eyebrowse-switch-to-window-config-2)
-         ("s-3" . eyebrowse-switch-to-window-config-3)
-         ("s-4" . eyebrowse-switch-to-window-config-4)
-         ("s-t" . eyebrowse-rename-window-config))
+  :after hydra
+  :custom
+  (eyebrowse-new-workspace  t)
+  (eyebrowse-wrap-around    t)
+  (eyebrowse-mode-line-style 'always)
+
   :config
-  (eyebrowse-mode 1))
+  (eyebrowse-mode 1)
+
+  :hydra hydra-eye (eyebrowse-mode-map "s-a")
+  "eyebrowse"
+  ("a"  eyebrowse-switch-to-window-config-0)
+  ("s"  eyebrowse-switch-to-window-config-1)
+  ("d"  eyebrowse-switch-to-window-config-2)
+  ("f"  eyebrowse-switch-to-window-config-3)
+  ("g"  eyebrowse-switch-to-window-config-4)
+  ("x"  eyebrowse-close-window-config)
+  ("r"  eyebrowse-rename-window-config)
+  ("c"  eyebrowse-create-window-config)
+  ("t"  eyebrowse-rename-window-config)
+  ("p"  projectile-switch-project)
+  ("<left>"  eyebrowse-prev-window-config)
+  ("<right>" eyebrowse-next-window-config))
 
 (use-package engtool
   :diminish
