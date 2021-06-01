@@ -1743,18 +1743,18 @@ which call (newline) command"
   :custom
   (eyebrowse-new-workspace  t)
   (eyebrowse-wrap-around    t)
-  (eyebrowse-mode-line-style 'always)
+  (eyebrowse-default-workspace-slot 1)
 
   :config
   (eyebrowse-mode 1)
 
   :hydra hydra-eye (eyebrowse-mode-map "s-a")
   "eyebrowse"
-  ("a"  eyebrowse-switch-to-window-config-0)
-  ("s"  eyebrowse-switch-to-window-config-1)
-  ("d"  eyebrowse-switch-to-window-config-2)
-  ("f"  eyebrowse-switch-to-window-config-3)
-  ("g"  eyebrowse-switch-to-window-config-4)
+  ("a"  eyebrowse-switch-to-window-config-1)
+  ("s"  eyebrowse-switch-to-window-config-2)
+  ("d"  eyebrowse-switch-to-window-config-3)
+  ("f"  eyebrowse-switch-to-window-config-4)
+  ("g"  eyebrowse-switch-to-window-config-5)
   ("x"  eyebrowse-close-window-config)
   ("r"  eyebrowse-rename-window-config)
   ("c"  eyebrowse-create-window-config)
