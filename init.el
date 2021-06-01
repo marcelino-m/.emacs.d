@@ -50,16 +50,16 @@ NAME can be used to set the name of the defined function."
   (advice-add 'backward-kill-word
               :around
               (lambda (origfn &rest args)
-                "First delete blanks before point"
-                (if (looking-back "[ \t]+" nil t)
+                "First delete blanks before point if there is at least three blanks"
+                (if (looking-back "[ \t]\\{3,\\}" nil t)
                     (replace-match "" nil nil)
                   (apply origfn args))))
 
   (advice-add 'kill-word
               :around
               (lambda (origfn &rest args)
-                "First delete blanks after point"
-                (if (looking-at "[ \t]+")
+                "First delete blanks after point if there is at least three blanks"
+                (if (looking-at "[ \t]\\{3,\\}")
                     (replace-match "" nil nil)
                   (apply origfn args)))))
 
