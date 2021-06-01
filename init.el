@@ -272,10 +272,9 @@ NAME can be used to set the name of the defined function."
      (latex   . t)
      (ditaa   . t)
      (calc    . t)
-     (ruby    . t)))
+     (ruby    . t))))
 
-  ;; use ivy with org-goto
-  (setq org-goto-interface 'outline-path-completion))
+
 
 (use-package org-src
   :custom
