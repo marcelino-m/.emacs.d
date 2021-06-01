@@ -1273,17 +1273,10 @@ NAME can be used to set the name of the defined function."
 (use-package google-translate
   :straight t
   :bind ("C-c t" . google-translate-smooth-translate)
-  :custom
-  (google-translate-translation-directions-alist '(("en" . "es") ("es" . "en")))
-
-  :init
-  (use-package google-translate-smooth-ui)
-
   :config
-  ;; taken from https://github.com/atykhonov/google-translate/issues/137#issuecomment-723938431
-  (defun google-translate--search-tkk ()
-    "Search TKK."
-    (list 430675 2721866130)))
+  (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
+  (setq google-translate-translation-directions-alist '(("en" . "es") ("es" . "en")))
+  (use-package google-translate-smooth-ui))
 
 (use-package paradox
   :disabled
