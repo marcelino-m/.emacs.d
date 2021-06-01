@@ -594,8 +594,39 @@ NAME can be used to set the name of the defined function."
   :config
   (use-package spaceline-config
     :config
-    (spaceline-emacs-theme))
-  )
+    (spaceline-define-segment version-control
+      "Show vc-mode in downcase"
+      (when vc-mode
+        (powerline-raw
+         (s-trim (concat (downcase vc-mode)
+                         (when (buffer-file-name)
+                           (pcase (vc-state (buffer-file-name))
+                             (`up-to-date " ")
+                             (`edited  " Mod")
+                             (`added " Add")
+                             (`unregistered " ??")
+                             (`removed " Del")
+                             (`needs-merge " Con")
+                             (`needs-update " Upd")
+                             (`ignored " Ign")
+                             (_ " Unk"))))))))
+
+    (spaceline-define-segment workspace-number
+      "Show windows config number always when use eyebrowse"
+      (when (bound-and-true-p eyebrowse-mode)
+        (let* ((wsc (length (eyebrowse--get 'window-configs)))
+               (num (eyebrowse--get 'current-slot))
+               (tag (when num (nth 2 (assoc num (eyebrowse--get 'window-configs)))))
+               (str (if (and tag (< 0 (length tag)))
+                        (format "%d:%s" num tag)
+                      (when num (int-to-string num)))))
+          (setq str (format "%s/%d" str wsc))
+          (propertize str 'face 'bold))))
+
+
+
+    (spaceline-compile)
+    (spaceline-spacemacs-theme)))
 
 (use-package ivy
   :straight t
