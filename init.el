@@ -537,15 +537,15 @@ NAME can be used to set the name of the defined function."
           ("zenburn-fg"       . "#BDBDBD")
           ("zenburn-fg+1"     . "#D7D7D7")
           ("zenburn-fg+2"     . "#F2F2F2")
-          ("zenburn-bg-2"     . "#000000")
-          ("zenburn-bg-1"     . "#171717")
-          ("zenburn-bg-08"    . "#232323")
-          ("zenburn-bg-05"    . "#2F2F2F")
+          ("zenburn-bg-2"     . "#1f1f1f")
+          ("zenburn-bg-1"     . "#252525")
+          ("zenburn-bg-08"    . "#2b2b2b")
+          ("zenburn-bg-05"    . "#313131")
           ("zenburn-bg"       . "#383838")
-          ("zenburn-bg+05"    . "#404040")
-          ("zenburn-bg+1"     . "#525252")
-          ("zenburn-bg+2"     . "#5F5F5F")
-          ("zenburn-bg+3"     . "#6D6D6D")
+          ("zenburn-bg+05"    . "#3e3e3e")
+          ("zenburn-bg+1"     . "#414141")
+          ("zenburn-bg+2"     . "#4c4c4c")
+          ("zenburn-bg+3"     . "#575757")
     ))
 
   (load-theme 'zenburn t)
@@ -556,6 +556,7 @@ NAME can be used to set the name of the defined function."
 
        `(org-link ((t (:foreground ,zenburn-yellow-2 :underline nil :bold t))))
 
+       ;; magit
        `(magit-diff-added    ((t (:background nil  :foreground ,zenburn-green))))
        `(magit-diff-changed  ((t (:background nil  :foreground ,zenburn-yellow-1))))
        `(magit-diff-removed  ((t (:background nil  :foreground ,zenburn-red-2))))
@@ -563,9 +564,29 @@ NAME can be used to set the name of the defined function."
        `(magit-diff-changed-highlight  ((t (:background ,zenburn-bg+05  :foreground ,zenburn-yellow-1))))
        `(magit-diff-removed-highlight  ((t (:background ,zenburn-bg+05  :foreground ,zenburn-red-2))))
 
+       ;; diff
        `(diff-refine-added   ((t (:background nil  :foreground ,zenburn-green+4))))
        `(diff-refine-changed ((t (:background nil  :foreground ,zenburn-yellow))))
        `(diff-refine-removed ((t (:background nil  :foreground ,zenburn-red+1))))
+
+       ;; edif
+       `(ediff-current-diff-A ((t (:foreground ,zenburn-red-4  :background ,zenburn-bg+05))))
+       `(ediff-current-diff-Ancestor ((t (:foreground ,zenburn-red-4 :background ,zenburn-bg+05))))
+       `(ediff-current-diff-B ((t (:foreground ,zenburn-green-2 :background ,zenburn-bg+05))))
+       `(ediff-current-diff-C ((t (:foreground ,zenburn-blue-5 :background ,zenburn-bg+05))))
+       `(ediff-even-diff-A ((t (:background ,zenburn-bg-05))))
+       `(ediff-even-diff-Ancestor ((t (:background ,zenburn-bg-05))))
+       `(ediff-even-diff-B ((t (:background ,zenburn-bg-05))))
+       `(ediff-even-diff-C ((t (:background ,zenburn-bg-05))))
+       `(ediff-fine-diff-A ((t (:foreground ,zenburn-red-2 :background nil :weight bold))))
+       `(ediff-fine-diff-Ancestor ((t (:foreground ,zenburn-red-2 :background nil weight bold))))
+       `(ediff-fine-diff-B ((t (:foreground ,zenburn-green :background nil :weight bold))))
+       `(ediff-fine-diff-C ((t (:foreground ,zenburn-blue-3 :background nil :weight bold ))))
+       `(ediff-odd-diff-A ((t (:background ,zenburn-bg-05))))
+       `(ediff-odd-diff-Ancestor ((t (:background ,zenburn-bg-05))))
+       `(ediff-odd-diff-B ((t (:background ,zenburn-bg-05))))
+       `(ediff-odd-diff-C ((t (:background ,zenburn-bg-05))))
+
 
        `(font-lock-comment-face ((t (:foreground ,zenburn-fg-2))))
        `(font-lock-comment-delimiter-face ((t (:foreground ,zenburn-fg-2))))
