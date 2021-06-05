@@ -248,10 +248,12 @@ NAME can be used to set the name of the defined function."
                         ("home" . ?h)
                         ("finance" . ?f)
                         ("week" . ?w)
-                        ("english" . ?e))
-
-        )
-
+                        ("english" . ?e)
+                        ("office"  . ?o)
+                        ("chore" . ?c)
+                        ("fix" . ?F)
+                        ("bug" . ?b)
+                        ("feat" . ?a)))
 
 
   (setq org-confirm-babel-evaluate nil)
