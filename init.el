@@ -1107,9 +1107,7 @@ NAME can be used to set the name of the defined function."
   :bind (("C-M-s-r" . avy-goto-line)
          ("C-M-s-f" . avy-goto-subword-1)
          ("C-M-s-v" . avy-goto-char-timer)
-         ("C-M-s-g" . avy-goto-char-in-line)
-         :map org-mode-map
-         ("C-."   . counsel-imenu))
+         ("C-M-s-g" . avy-goto-char-in-line))
 
   :custom-face
   (avy-goto-char-timer-face ((t (:inherit isearch))))
