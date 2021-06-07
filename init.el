@@ -1104,7 +1104,8 @@ NAME can be used to set the name of the defined function."
 
 (use-package avy
   :straight t
-  :bind (("C-M-s-r" . avy-goto-line)
+  :bind (("C-M-s-e" . avy-goto-line)
+         ("C-M-s-r" . avy-goto-end-of-line)
          ("C-M-s-f" . avy-goto-subword-1)
          ("C-M-s-v" . avy-goto-char-timer)
          ("C-M-s-g" . avy-goto-char-in-line))
@@ -1114,6 +1115,7 @@ NAME can be used to set the name of the defined function."
 
   :custom
   (avy-timeout-seconds 10.0) ;; confirm with RET
+  (avy-indent-line-overlay t)
 
   :config
   ;; filter blank lines when use avy-goto-char
@@ -1128,6 +1130,13 @@ NAME can be used to set the name of the defined function."
                         (goto-char (car l))
                         (unless  (string-blank-p (thing-at-point 'line))
                           (add-to-list 'filtered l))))))))
+
+  ;; put overlays at end of line when using avy-goto-end-of-line
+  (advice-add 'avy-goto-end-of-line
+              :around
+              (lambda (origfn &rest args)
+                (let ((avy-style 'post))
+                  (apply origfn args))))
 
   :init
   (global-set-key (kbd "C-z") nil))
