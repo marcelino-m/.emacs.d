@@ -1062,7 +1062,57 @@ NAME can be used to set the name of the defined function."
 
 (use-package transpose-frame
   :straight t
-  :bind ("C-c f t" . transpose-frame))
+  :commands hydra-transpose-frame/body
+  :after (hydra windmove)
+  :init
+  (defun ma/hydra-move-splitter-left (arg)
+    "Move window splitter left."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'right))
+        (shrink-window-horizontally arg)
+      (enlarge-window-horizontally arg)))
+
+  (defun ma/hydra-move-splitter-right (arg)
+    "Move window splitter right."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'right))
+        (enlarge-window-horizontally arg)
+      (shrink-window-horizontally arg)))
+
+  (defun ma/hydra-move-splitter-up (arg)
+    "Move window splitter up."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'up))
+        (enlarge-window arg)
+      (shrink-window arg)))
+
+  (defun ma/hydra-move-splitter-down (arg)
+    "Move window splitter down."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'up))
+        (shrink-window arg)
+      (enlarge-window arg)))
+
+  (defhydra hydra-transpose-frame (global-map "C-c f")
+    "Frame comands"
+    ("t" transpose-frame)
+    ("v" flop-frame)
+    ("b" flip-frame)
+    ("f" windmove-right)
+    ("s" windmove-left)
+    ("e" windmove-up)
+    ("d" windmove-down)
+    ("x" delete-window)
+    ("c" delete-other-windows)
+    ("r" rotate-frame-anticlockwise)
+    ("j" ma/hydra-move-splitter-left)
+    ("k" ma/hydra-move-splitter-down)
+    ("i" ma/hydra-move-splitter-up)
+    ("l" ma/hydra-move-splitter-right)))
 
 (use-package json-mode
   :straight t
@@ -1783,16 +1833,11 @@ which call (newline) command"
   (add-hook 'org-mode-hook 'display-line-numbers-mode)
   (add-hook 'text-mode-hook 'display-line-numbers-mode))
 
-
 (use-package hydra
-  :straight t)
-
-(use-package use-package-hydra
   :straight t)
 
 (use-package eyebrowse
   :straight t
-  :after hydra
   :custom
   (eyebrowse-new-workspace  t)
   (eyebrowse-wrap-around    t)
@@ -1800,21 +1845,22 @@ which call (newline) command"
 
   :config
   (eyebrowse-mode 1)
+  (defhydra hydra-eye (eyebrowse-mode-map "s-a")
+    "eyebrowse"
+    ("a"  eyebrowse-switch-to-window-config-1)
+    ("s"  eyebrowse-switch-to-window-config-2)
+    ("d"  eyebrowse-switch-to-window-config-3)
+    ("f"  eyebrowse-switch-to-window-config-4)
+    ("g"  eyebrowse-switch-to-window-config-5)
+    ("x"  eyebrowse-close-window-config)
+    ("r"  eyebrowse-rename-window-config)
+    ("c"  eyebrowse-create-window-config)
+    ("t"  eyebrowse-rename-window-config)
+    ("p"  projectile-switch-project)
+    ("<left>"  eyebrowse-prev-window-config)
+    ("<right>" eyebrowse-next-window-config))
+  (hydra-set-property 'hydra-eye :verbosity 0))
 
-  :hydra hydra-eye (eyebrowse-mode-map "s-a")
-  "eyebrowse"
-  ("a"  eyebrowse-switch-to-window-config-1)
-  ("s"  eyebrowse-switch-to-window-config-2)
-  ("d"  eyebrowse-switch-to-window-config-3)
-  ("f"  eyebrowse-switch-to-window-config-4)
-  ("g"  eyebrowse-switch-to-window-config-5)
-  ("x"  eyebrowse-close-window-config)
-  ("r"  eyebrowse-rename-window-config)
-  ("c"  eyebrowse-create-window-config)
-  ("t"  eyebrowse-rename-window-config)
-  ("p"  projectile-switch-project)
-  ("<left>"  eyebrowse-prev-window-config)
-  ("<right>" eyebrowse-next-window-config))
 
 (use-package engtool
   :diminish
