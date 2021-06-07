@@ -336,6 +336,14 @@ NAME can be used to set the name of the defined function."
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
             (org-agenda-prefix-format " ")))
 
+          ("wc" "Coded related todos"
+           ((tags-todo "+@work+bug")
+            (tags-todo "+@work+fix")
+            (tags-todo "+@work+chore")
+            (tags-todo "+@work+feat"))
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
+            (org-agenda-prefix-format " ")))
+
           ("w!" "To work this week" tags "+@work+week"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
             (org-agenda-prefix-format " "))))))
@@ -687,7 +695,8 @@ NAME can be used to set the name of the defined function."
   :diminish
   :requires ivy
   :bind (:map counsel-mode-map
-              ("M-x" . counsel-M-x))
+              ("M-x" . counsel-M-x)
+              ("C-." . counsel-imenu))
   :config
   (setq ivy-initial-inputs-alist nil)
   (counsel-mode))
@@ -893,6 +902,10 @@ NAME can be used to set the name of the defined function."
                           'magit-insert-recent-commits
                           'magit-insert-unpushed-to-upstream
                           'append))
+
+(use-package forge
+  :straight t
+  :after magit)
 
 (use-package gitignore-mode
   :straight t)
@@ -1109,6 +1122,7 @@ NAME can be used to set the name of the defined function."
     ("x" delete-window)
     ("c" delete-other-windows)
     ("r" rotate-frame-anticlockwise)
+    ("n" make-frame-command)
     ("j" ma/hydra-move-splitter-left)
     ("k" ma/hydra-move-splitter-down)
     ("i" ma/hydra-move-splitter-up)
@@ -1626,7 +1640,6 @@ which call (newline) command"
   :bind (:map lsp-mode-map
               ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
               ([remap xref-find-references]  . lsp-ui-peek-find-references)
-              ("C-."                         . counsel-imenu)
               ("C-c C-l d"                   . lsp-ui-doc-show))
   :custom
   (lsp-ui-sideline-enable nil)
@@ -1866,3 +1879,8 @@ which call (newline) command"
   :diminish
   :config
   (engtool-mode 1))
+
+(use-package orgit
+  :straight t
+  :custom
+  (orgit-log-save-arguments  t))
