@@ -999,6 +999,37 @@ NAME can be used to set the name of the defined function."
   :straight t
   :mode        "\\.js\\'")
 
+(use-package windmove
+  :custom
+  (windmove-create-window  t)
+
+  :bind (("s-f"       . windmove-right)
+         ("s-F"       . ma/show-current-after-move-to-right)
+         ("s-s"       . windmove-left)
+         ("s-S"       . ma/show-current-after-move-to-left)
+         ("s-e"       . windmove-up)
+         ("s-E"       . ma/show-current-after-move-to-up)
+         ("s-d"       . windmove-down)
+         ("s-D"       . ma/show-current-after-move-to-down))
+
+  :config
+  (defun ma/show-current-after-move-to (dir)
+    (let ( (buff (window-buffer)))
+      (windmove-do-window-select dir nil)
+      (switch-to-buffer buff)))
+  (defun ma/show-current-after-move-to-left ()
+    (interactive)
+    (ma/show-current-after-move-to 'left))
+  (defun ma/show-current-after-move-to-right ()
+    (interactive)
+    (ma/show-current-after-move-to 'right))
+  (defun ma/show-current-after-move-to-up ()
+    (interactive)
+    (ma/show-current-after-move-to 'up))
+  (defun ma/show-current-after-move-to-down ()
+    (interactive)
+    (ma/show-current-after-move-to 'down)))
+
 (use-package company
   :straight t
   :diminish company-mode
