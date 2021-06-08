@@ -196,7 +196,7 @@ NAME can be used to set the name of the defined function."
   (define-key global-map (kbd "C-c l") 'org-store-link)
   (define-key global-map (kbd "C-c a") 'org-agenda)
 
-  (setq org-ellipsis " ▼")
+  (setq org-ellipsis "...▼")
   (setq org-special-ctrl-a/e t)
   (setq org-special-ctrl-k t)
 
