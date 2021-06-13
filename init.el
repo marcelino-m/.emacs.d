@@ -253,7 +253,8 @@ NAME can be used to set the name of the defined function."
                         ("chore" . ?c)
                         ("fix" . ?F)
                         ("bug" . ?b)
-                        ("feat" . ?a)))
+                        ("feat" . ?a)
+                        ("codrev" . ?v)))
 
 
   (setq org-confirm-babel-evaluate nil)
@@ -296,6 +297,24 @@ NAME can be used to set the name of the defined function."
 (use-package org-agenda
   :config
   (add-hook 'org-agenda-mode-hook #'hl-line-mode)
+
+  ;; window-text-width not sustract line-number-display-width from the
+  ;; width of window-text
+  (advice-add 'org-agenda-align-tags
+              :around
+              (lambda (origfn &rest args)
+                (if (fboundp 'line-number-display-width)
+                    (cl-letf* ((winw (window-text-width))
+                               (dlnw (line-number-display-width 'columns))
+                               (lf (car (window-fringes)))
+                               (rf (cadr (window-fringes)))
+                               (maybe1 (if (or (zerop lf) (zerop rf))
+                                           1
+                                         0))
+                               ((symbol-function 'window-text-width) (lambda (&optional _ _) (round (- winw dlnw maybe1)))))
+                      (apply origfn args))
+                  (apply origfn args))))
+
   (setq org-agenda-files
       (mapcar 'abbreviate-file-name
               (split-string
@@ -313,7 +332,7 @@ NAME can be used to set the name of the defined function."
 
           ("!" "To work this week" tags "-@work+week"
            ((org-agenda-sorting-strategy '(todo-state-down  priority-down))
-            (org-agenda-prefix-format " ")))
+            (org-agenda-prefix-format " > ")))
 
           ("I" "Very Personal related task" tags-todo "-@work-home"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
@@ -329,8 +348,13 @@ NAME can be used to set the name of the defined function."
 
           ("w" . "Work related comand")
 
-          ("wa" "Agenda for current day or week" agenda ""
-           ((org-agenda-tag-filter-preset '("+@work"))))
+          ("wa" "Agenda for current day or week"
+           ((agenda "")
+            (tags "+@work+week"
+            ((org-use-tag-inheritance nil)
+             (org-agenda-sorting-strategy '(todo-state-down priority-down))
+             (org-agenda-prefix-format " ")
+             (org-agenda-tag-filter-preset '("+@work"))))))
 
           ("wt" "All todos" tags-todo "+@work"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
@@ -345,8 +369,31 @@ NAME can be used to set the name of the defined function."
             (org-agenda-prefix-format " ")))
 
           ("w!" "To work this week" tags "+@work+week"
+           ((org-use-tag-inheritance nil)
+            (org-agenda-sorting-strategy '(todo-state-down priority-down))
+            (org-agenda-prefix-format " ")))
+
+          ("wn" "Quick notes" tags "+@work"
+           ((org-use-tag-inheritance nil)
+            (org-agenda-prefix-format " > ")
+            (org-agenda-files '("~/syncthing/org/capture/work/quick-notes.org"))))
+
+          ("wj" "Journal personal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
+           ((org-agenda-sorting-strategy '(alpha-down))
+            (org-agenda-max-entries 20)
+            (org-use-tag-inheritance nil)
+            (org-agenda-prefix-format " > ")
+            (org-agenda-files '("~/syncthing/org/capture/work/journal.org"))))
+
+          ("wJ" "Journal team" tags "+@work"
+           ((org-agenda-max-entries 20)
+            (org-use-tag-inheritance nil)
+            (org-agenda-prefix-format " > ")
+            (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))
+
+          ("wz" "Code review notes" tags-todo "+@work+codrev"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-prefix-format " "))))))
+            (org-agenda-prefix-format " > "))))))
 
 (use-package org-habit
   :custom
@@ -387,6 +434,10 @@ NAME can be used to set the name of the defined function."
            entry (file "~/syncthing/org/capture/work/quick-notes.org")
            "* %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2)
 
+          ("wz" "Code review: Saved notes when review code"
+           entry (file "~/syncthing/org/capture/work/code-review.org")
+           "* Feat:  %? :@work:codrev:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2)
+
           ("wo" "One to one meeting"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "One to One")
            "* TODO %? :@work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
@@ -405,7 +456,11 @@ NAME can be used to set the name of the defined function."
 
           ("wj" "Journal"
            item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
-           "%?" :tree-type week))))
+           "%?" :tree-type week)
+
+          ("wJ" "Journal team"
+           entry (file "~/syncthing/org/capture/work/journal-team.org" )
+           "* Iter %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2))))
 
 
 (use-package org-indent
@@ -1891,11 +1946,17 @@ which call (newline) command"
   (eyebrowse-mode 1)
   (defhydra hydra-eye (eyebrowse-mode-map "s-a")
     "eyebrowse"
-    ("a"  eyebrowse-switch-to-window-config-1)
-    ("s"  eyebrowse-switch-to-window-config-2)
-    ("d"  eyebrowse-switch-to-window-config-3)
-    ("f"  eyebrowse-switch-to-window-config-4)
+    ("a"  eyebrowse-switch-to-window-config-1 :exit t)
+    ("s"  eyebrowse-switch-to-window-config-2 :exit t)
+    ("d"  eyebrowse-switch-to-window-config-3 :exit t)
+    ("f"  eyebrowse-switch-to-window-config-4 :exit t)
+    ("g"  eyebrowse-switch-to-window-config-5 :exit t)
+    ("C-a"  eyebrowse-switch-to-window-config-1)
+    ("C-s"  eyebrowse-switch-to-window-config-2)
+    ("C-d"  eyebrowse-switch-to-window-config-3)
+    ("C-f"  eyebrowse-switch-to-window-config-4)
     ("g"  eyebrowse-switch-to-window-config-5)
+
     ("x"  eyebrowse-close-window-config)
     ("r"  eyebrowse-rename-window-config)
     ("c"  eyebrowse-create-window-config)
