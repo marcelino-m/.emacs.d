@@ -130,8 +130,6 @@ NAME can be used to set the name of the defined function."
                                         (width                . 0.80)
                                         (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
-                                        (left-fringe          .    0)
-                                        (right-fringe         .    0)
                                         (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
 
 ;; unbind from global map
@@ -327,8 +325,13 @@ NAME can be used to set the name of the defined function."
           (search category-keep)))
 
   (setq org-agenda-custom-commands
-        '(("A" "Personal agenda for current day or week" agenda ""
-           ((org-agenda-tag-filter-preset '("-@work"))))
+        '(("A" "Personal agenda for current day or week"
+           ((agenda "")
+            (tags "+week"
+                  ((org-use-tag-inheritance nil)
+                   (org-agenda-sorting-strategy '(todo-state-down priority-down))
+                   (org-agenda-prefix-format "> "))))
+           ((org-agenda-tag-filter  '("-@work"))))
 
           ("!" "To work this week" tags "-@work+week"
            ((org-agenda-sorting-strategy '(todo-state-down  priority-down))
@@ -350,23 +353,24 @@ NAME can be used to set the name of the defined function."
 
           ("wa" "Agenda for current day or week"
            ((agenda "")
-            (tags "+@work+week"
+            (tags "+week"
             ((org-use-tag-inheritance nil)
              (org-agenda-sorting-strategy '(todo-state-down priority-down))
-             (org-agenda-prefix-format " ")
-             (org-agenda-tag-filter-preset '("+@work"))))))
+             (org-agenda-prefix-format "> "))))
+           ((org-agenda-tag-filter-preset '("+@work"))))
 
           ("wt" "All todos" tags-todo "+@work"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
             (org-agenda-prefix-format " ")))
 
           ("wc" "Coded related todos"
-           ((tags-todo "+@work+bug")
-            (tags-todo "+@work+fix")
-            (tags-todo "+@work+chore")
-            (tags-todo "+@work+feat"))
+           ((tags-todo "+bug")
+            (tags-todo "+fix")
+            (tags-todo "+feat")
+            (tags-todo "+chore"))
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-prefix-format " ")))
+            (org-agenda-tag-filter-preset '("+@work"))
+            (org-agenda-prefix-format "> ")))
 
           ("w!" "To work this week" tags "+@work+week"
            ((org-use-tag-inheritance nil)
@@ -375,25 +379,25 @@ NAME can be used to set the name of the defined function."
 
           ("wn" "Quick notes" tags "+@work"
            ((org-use-tag-inheritance nil)
-            (org-agenda-prefix-format " > ")
+            (org-agenda-prefix-format "> ")
             (org-agenda-files '("~/syncthing/org/capture/work/quick-notes.org"))))
 
           ("wj" "Journal personal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
            ((org-agenda-sorting-strategy '(alpha-down))
             (org-agenda-max-entries 20)
             (org-use-tag-inheritance nil)
-            (org-agenda-prefix-format " > ")
+            (org-agenda-prefix-format "> ")
             (org-agenda-files '("~/syncthing/org/capture/work/journal.org"))))
 
           ("wJ" "Journal team" tags "+@work"
            ((org-agenda-max-entries 20)
             (org-use-tag-inheritance nil)
-            (org-agenda-prefix-format " > ")
+            (org-agenda-prefix-format "> ")
             (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))
 
           ("wz" "Code review notes" tags-todo "+@work+codrev"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-prefix-format " > "))))))
+            (org-agenda-prefix-format "> "))))))
 
 (use-package org-habit
   :custom
@@ -619,6 +623,13 @@ NAME can be used to set the name of the defined function."
       (custom-theme-set-faces
        'zenburn
 
+       ;; fringe
+       `(fringe ((t (:foreground ,zenburn-fg :background ,zenburn-bg))))
+
+       ;; display-line-numbers
+       `(line-number ((t (:foreground ,zenburn-bg+3 :background ,zenburn-bg :bold nil :slant italic :box nil))))
+       `(line-number-current-line ((t (:inherit line-number :foreground ,zenburn-yellow-2 ))))
+
        `(org-link ((t (:foreground ,zenburn-yellow-2 :underline nil :bold t))))
 
        ;; magit
@@ -666,7 +677,19 @@ NAME can be used to set the name of the defined function."
 
 (use-package expand-region
   :straight t
-  :bind ("C-=" . er/expand-region))
+  :after hydra
+  :commands hydra-er/body
+
+  :custom
+  (expand-region-fast-keys-enabled  nil)
+
+  :init
+  (defhydra hydra-er (global-map "C-*")
+    "Expand region hydra"
+    ("e" er/expand-region)
+    ("d" er/contract-region     :bind nil)
+    ("w" kill-ring-save :exit t :bind nil)
+    ("W" kill-region    :exit t :bind nil)))
 
 (use-package move-text
   :straight t
@@ -1710,7 +1733,7 @@ which call (newline) command"
 (use-package lsp-mode
   :straight t
   :diminish
-  :hook ((go-mode python-mode) . lsp-deferred)
+  :hook ((go-mode python-mode c-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-diagnostic-package :none)
