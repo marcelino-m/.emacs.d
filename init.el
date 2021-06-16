@@ -296,8 +296,12 @@ NAME can be used to set the name of the defined function."
   :config
   (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 
-  ;; window-text-width not sustract line-number-display-width from the
-  ;; width of window-text
+  ;; tags are bad aligned when display-line-numbers mode is enabled or
+  ;; when   fringe  are   disabled,   the   former  happened   because
+  ;; window-text-width  function  no  subtract the  columns  used  for
+  ;; display-line-numbers and the latest are because the latest column
+  ;; is not used for display text, in both cases tags appear truncated
+  ;; at end of line in agenda views
   (advice-add 'org-agenda-align-tags
               :around
               (lambda (origfn &rest args)
@@ -645,7 +649,7 @@ NAME can be used to set the name of the defined function."
        `(diff-refine-changed ((t (:background nil  :foreground ,zenburn-yellow))))
        `(diff-refine-removed ((t (:background nil  :foreground ,zenburn-red+1))))
 
-       ;; edif
+       ;; ediff
        `(ediff-current-diff-A ((t (:foreground ,zenburn-red-4  :background ,zenburn-bg+05))))
        `(ediff-current-diff-Ancestor ((t (:foreground ,zenburn-red-4 :background ,zenburn-bg+05))))
        `(ediff-current-diff-B ((t (:foreground ,zenburn-green-2 :background ,zenburn-bg+05))))
