@@ -684,12 +684,23 @@ NAME can be used to set the name of the defined function."
   (expand-region-fast-keys-enabled  nil)
 
   :init
-  (defhydra hydra-er (global-map "C-*")
+  (defhydra hydra-er nil
     "Expand region hydra"
     ("e" er/expand-region)
     ("d" er/contract-region     :bind nil)
     ("w" kill-ring-save :exit t :bind nil)
-    ("W" kill-region    :exit t :bind nil)))
+    ("W" kill-region    :exit t :bind nil)
+    ("s" (lambda (beg end)
+           (interactive "r")
+           (setq mark-active nil)
+           (swiper (buffer-substring beg end)))))
+
+  (defun ma/expand-region ()
+    (interactive)
+    (er/expand-region 1)
+    (hydra-er/body))
+
+  (global-set-key (kbd "C-*") 'ma/expand-region))
 
 (use-package move-text
   :straight t
