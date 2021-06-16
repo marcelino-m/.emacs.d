@@ -275,8 +275,6 @@ NAME can be used to set the name of the defined function."
      (calc    . t)
      (ruby    . t))))
 
-
-
 (use-package org-src
   :custom
   ;; https://lists.gnu.org/archive/html/emacs-orgmode/2018-08/msg00127.html
@@ -348,6 +346,11 @@ NAME can be used to set the name of the defined function."
           ("i" "Personal related task" tags-todo "-@work"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
             (org-agenda-prefix-format " ")))
+
+          ("n" "Quick notes" tags "-@work"
+           ((org-use-tag-inheritance nil)
+            (org-agenda-prefix-format "> ")
+            (org-agenda-files '("~/syncthing/org/capture/quick-notes.org"))))
 
           ("h" "Home related task" tags-todo "+home"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
@@ -2004,11 +2007,23 @@ which call (newline) command"
     ("<right>" eyebrowse-next-window-config))
   (hydra-set-property 'hydra-eye :verbosity 0))
 
+(use-package mpv
+  :straight t)
 
 (use-package engtool
   :diminish
+  :after hydra
   :config
-  (engtool-mode 1))
+  (engtool-mode 1)
+  (defhydra hyadra-engtool nil
+    "engtool"
+    ("SPC" mpv-pause)
+    ("q"   mpv-kill :exit t)
+    ("F"   mpv-seek-forward)
+    ("f"   (lambda () (interactive) (mpv-seek-forward 2)))
+    ("m"   engtool-mpv-mark-position)
+    ("b"   (lambda () (interactive) (mpv-seek-backward 2)))
+    ("B"   mpv-seek-backward)))
 
 (use-package orgit
   :straight t
