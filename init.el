@@ -700,13 +700,8 @@ NAME can be used to set the name of the defined function."
   (defhydra hydra-er nil
     "Expand region hydra"
     ("e" er/expand-region)
-    ("d" er/contract-region     :bind nil)
-    ("w" kill-ring-save :exit t :bind nil)
-    ("W" kill-region    :exit t :bind nil)
-    ("s" (lambda (beg end)
-           (interactive "r")
-           (setq mark-active nil)
-           (swiper (buffer-substring beg end)))))
+    ("d" er/contract-region     :bind nil))
+  (hydra-set-property 'hydra-er :verbosity 0)
 
   (defun ma/expand-region ()
     (interactive)
@@ -2027,6 +2022,21 @@ which call (newline) command"
     ("m"   engtool-mpv-mark-position)
     ("b"   (lambda () (interactive) (mpv-seek-backward 2)))
     ("B"   mpv-seek-backward)))
+(use-package selected
+  :straight t
+  :diminish selected-minor-mode
+  :bind (:map selected-keymap
+              ("q" . selected-off)
+              ("u" . upcase-region)
+              ("d" . downcase-region)
+              ("w" . kill-ring-save)
+              ("W" . kill-region)
+              ("s" . (lambda (beg end)
+                       (interactive "r")
+                       (setq mark-active nil)
+                       (swiper (buffer-substring beg end)))))
+  :init
+  (selected-global-mode))
 
 (use-package orgit
   :straight t
