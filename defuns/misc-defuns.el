@@ -1,40 +1,3 @@
-(require 'flash-region)
-
-;; Add spaces and proper formatting to linum-mode. It uses more room than
-;; necessary, but that's not a problem since it's only in use when going to
-;; lines.
-(setq linum-format (lambda (line)
-                     (propertize
-                      (format (concat " %"
-                                      (number-to-string
-                                       (length (number-to-string
-                                                (line-number-at-pos (point-max)))))
-                                      "d ")
-                              line)
-                      'face 'linum)))
-
-
-(defun ma/goto-line-with-feedback ()
-  "Show line numbers temporarily, while prompting for the line number input, this func
-require linum-relative"
-  (interactive)
-  (let ((is-linum-on (bound-and-true-p display-line-numbers-mode))
-        (linumnum-avail (boundp 'display-line-numbers))
-        (linum-fn nil))
-    (if linumnum-avail
-        (setq linum-fn 'display-line-numbers-mode)
-      (setq linum-fn 'linum-mode))
-    (unwind-protect
-        (progn
-          (unless is-linum-on
-            (funcall linum-fn))
-          (call-interactively (if (and linumnum-avail
-                                       (or (eq display-line-numbers-type 'relative)
-                                           (eq display-line-numbers-type 'visual)))
-                                  (forward-line (read-number "Goto line: " 0))
-                                'goto-line)))
-      (unless is-linum-on
-        (funcall linum-fn -1)))))
 
 (defun ma/open-line-and-indent ()
   (interactive)
@@ -212,7 +175,7 @@ Version 2016-08-11"
 
 (defun ma/kill-ring-save-line-or-region (beg end &optional region)
   "Save current  line to kill ring  if no region is  active, with
-feedback. Otherwise call `mouse-kill-ring-save'"
+feedback."
  (interactive (list (mark) (point)))
   (if mark-active
       (kill-ring-save beg end region)
@@ -250,17 +213,6 @@ feedback. Otherwise call `mouse-kill-ring-save'"
           (skip-syntax-backward " ")
           (setq end (point))
           (kill-region beg end region))))))
-
-
-(defun ma/yank-with-feedback (&optional arg)
-  (interactive "*P")
-  (let ((beg (point)))
-    (yank arg)
-    (flash-region beg (point) 'highlight 0.1)))
-
-;; in case delete-selection-mode (delsel.el) is being used
-(put 'ma/yank-with-feedback 'delete-selection t)
-
 
 
 (defun ma/org-toggle-view ()
