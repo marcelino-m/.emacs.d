@@ -769,6 +769,7 @@ NAME can be used to set the name of the defined function."
   :custom
   (ivy-use-virtual-buffers      t)
   (enable-recursive-minibuffers t)
+  (ivy-fixed-height-minibuffer  t)
 
   :init
   ;; hint: invoking  the  completion  command  you're  interested
