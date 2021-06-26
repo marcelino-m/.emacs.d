@@ -192,7 +192,6 @@ NAME can be used to set the name of the defined function."
   (org-ellipsis  ((t (:underline nil :foreground nil))))
 
   :config
-  (add-to-list 'org-modules 'org-habit)
   (require 'org-defun)
 
   (unbind-key "C-c C->" org-mode-map)
@@ -222,7 +221,7 @@ NAME can be used to set the name of the defined function."
 
   (setq org-todo-keywords
         '((sequence
-           "WANT(a)" "WAIT(s@/!)" "TODO(d)" "STOPED(f@)" "DOING(j!)"  "|" "CANCELED(;@)" "DELEGATED(l@)" "DONE(k@)")))
+           "WANT(w)" "WAIT(W@/!)" "TODO(t)" "STOPED(s@)" "DOING(d!)" "DELEGATED(o@)" "|" "CANCELED(;c)"  "DONE(D@)")))
 
   (setq org-todo-keyword-faces
         '(("WANT"   . "gray")
@@ -245,20 +244,41 @@ NAME can be used to set the name of the defined function."
                         ("@void" . ?V) ("@collecting" . ?C) ("@ready" . ?R)
                         (:endgroup)
 
-                        ("read" . ?r)
+                        (:startgrouptag)
+                        ("@read")
+                        (:grouptags)
+                        ("article")
+                        ("book")
+                        (:endgrouptag)
+
+                        (:startgrouptag)
+                        ("@play")
+                        (:grouptags)
+                        ("podcast")
+                        ("video")
+                        ("audiobook")
+                        (:endgrouptag)
+
+                        (:startgrouptag)
+                        ("@code")
+                        (:grouptags)
+                        ("chore" . ?c)
+                        ("fix" . ?F)
+                        ("bug" . ?b)
+                        ("feat" . ?a)
+                        ("codrev" . ?v)
+                        (:endgrouptag)
+
                         ("interesting" . ?i)
-                        ("emacs" . ?e)
+                        ("emacs" . ?E)
                         ("idea" . ?t)
                         ("home" . ?h)
                         ("finance" . ?f)
                         ("week" . ?w)
                         ("english" . ?e)
-                        ("office"  . ?o)
-                        ("chore" . ?c)
-                        ("fix" . ?F)
-                        ("bug" . ?b)
-                        ("feat" . ?a)
-                        ("codrev" . ?v)))
+                        ("office"  . ?o)))
+
+
 
 
   (setq org-confirm-babel-evaluate nil)
@@ -326,6 +346,12 @@ NAME can be used to set the name of the defined function."
               (split-string
                (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n" t)))
 
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %?-12t% s")
+          (todo . " %i> ")
+          (tags . " %i> ")
+          (search . " %i> ")))
+
   (setq org-agenda-sorting-strategy
         '((agenda habit-down time-up priority-down category-keep)
           (todo priority-down category-down todo-state-up)
@@ -337,30 +363,21 @@ NAME can be used to set the name of the defined function."
            ((agenda "")
             (tags "+week"
                   ((org-use-tag-inheritance nil)
-                   (org-agenda-sorting-strategy '(todo-state-down priority-down))
-                   (org-agenda-prefix-format "> "))))
+                   (org-agenda-sorting-strategy '(todo-state-down priority-down)))))
            ((org-agenda-tag-filter  '("-@work"))))
 
-          ("!" "To work this week" tags "-@work+week"
-           ((org-agenda-sorting-strategy '(todo-state-down  priority-down))
-            (org-agenda-prefix-format " > ")))
-
           ("I" "Very Personal related task" tags-todo "-@work-home"
-           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-prefix-format " ")))
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
           ("i" "Personal related task" tags-todo "-@work"
-           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-prefix-format " ")))
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
           ("n" "Quick notes" tags "-@work"
            ((org-use-tag-inheritance nil)
-            (org-agenda-prefix-format "> ")
             (org-agenda-files '("~/syncthing/org/capture/quick-notes.org"))))
 
           ("h" "Home related task" tags-todo "+home"
-           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-prefix-format " ")))
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
           ("w" . "Work related comand")
 
@@ -368,13 +385,11 @@ NAME can be used to set the name of the defined function."
            ((agenda "")
             (tags "+week"
             ((org-use-tag-inheritance nil)
-             (org-agenda-sorting-strategy '(todo-state-down priority-down))
-             (org-agenda-prefix-format "> "))))
+             (org-agenda-sorting-strategy '(todo-state-down priority-down)))))
            ((org-agenda-tag-filter-preset '("+@work"))))
 
           ("wt" "All todos" tags-todo "+@work"
-           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-prefix-format " ")))
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
           ("wc" "Coded related todos"
            ((tags-todo "+bug")
@@ -382,40 +397,26 @@ NAME can be used to set the name of the defined function."
             (tags-todo "+feat")
             (tags-todo "+chore"))
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-tag-filter-preset '("+@work"))
-            (org-agenda-prefix-format "> ")))
-
-          ("w!" "To work this week" tags "+@work+week"
-           ((org-use-tag-inheritance nil)
-            (org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-prefix-format " ")))
+            (org-agenda-tag-filter-preset '("+@work"))))
 
           ("wn" "Quick notes" tags "+@work"
            ((org-use-tag-inheritance nil)
-            (org-agenda-prefix-format "> ")
             (org-agenda-files '("~/syncthing/org/capture/work/quick-notes.org"))))
 
           ("wj" "Journal personal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
            ((org-agenda-sorting-strategy '(alpha-down))
             (org-agenda-max-entries 20)
             (org-use-tag-inheritance nil)
-            (org-agenda-prefix-format "> ")
             (org-agenda-files '("~/syncthing/org/capture/work/journal.org"))))
 
           ("wJ" "Journal team" tags "+@work"
            ((org-agenda-max-entries 20)
             (org-use-tag-inheritance nil)
-            (org-agenda-prefix-format "> ")
             (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))
 
           ("wz" "Code review notes" tags-todo "+@work+codrev"
-           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-prefix-format "> "))))))
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down)))))))
 
-(use-package org-habit
-  :custom
-  (org-habit-graph-column 70)
-  (org-habit-show-habits-only-for-today nil))
 
 (use-package org-capture
   :config
@@ -432,7 +433,7 @@ NAME can be used to set the name of the defined function."
 
           ("n" "Note: Quick and misc note about anything"
            entry (file "~/syncthing/org/capture/quick-notes.org")
-           "* %? \n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2)
+           "* %? \n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
 
           ("h" "Home and domestic related task"
            entry (file "~/syncthing/org/capture/home-task.org")
@@ -445,15 +446,15 @@ NAME can be used to set the name of the defined function."
 
           ("wm" "Meetings notes"
            entry (file "~/syncthing/org/capture/work/meeting.org" )
-           "* Meeting %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2)
+           "* Meeting %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
 
           ("wn" "Note: Quick and misc note about anything"
            entry (file "~/syncthing/org/capture/work/quick-notes.org")
-           "* %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2)
+           "* %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
 
           ("wz" "Code review: Saved notes when review code"
            entry (file "~/syncthing/org/capture/work/code-review.org")
-           "* Feat:  %? :@work:codrev:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2)
+           "* DOING %?  :@work:codrev:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
 
           ("wo" "One to one meeting"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "One to One")
@@ -477,7 +478,7 @@ NAME can be used to set the name of the defined function."
 
           ("wJ" "Journal team"
            entry (file "~/syncthing/org/capture/work/journal-team.org" )
-           "* Iter %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-before 2))))
+           "* Iteracion %^{Iteration number} (semana %^{On week Month/Day}) :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2))))
 
 
 (use-package org-indent
@@ -892,6 +893,7 @@ NAME can be used to set the name of the defined function."
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
   (projectile-mode-line-function     (lambda ()  (format "proj: %s" (projectile-project-name))))
   (projectile-project-search-path    '("~/lab"))
+  (projectile-find-dir-includes-top-level t)
 
   :config
   (defun projectile--file-name-sans-extensions (file-name)
@@ -1571,7 +1573,7 @@ NAME can be used to set the name of the defined function."
 (use-package go-mode
   :straight t
   :bind (:map go-mode-map
-              ("C-:" . (lambda () (interactive) (insert ":="))))
+              ("C-=" . (lambda () (interactive) (insert ":="))))
   :init
   (setq gofmt-command "goimports")
   (add-hook 'go-mode-hook
@@ -1956,7 +1958,8 @@ which call (newline) command"
 
 (use-package compile
   :custom
-  (compilation-ask-about-save  nil))
+  (compilation-ask-about-save   nil)
+  (compilation-scroll-output   'first-error))
 
 (use-package ledger-mode
   :straight t
@@ -1986,16 +1989,16 @@ which call (newline) command"
   (eyebrowse-mode 1)
   (defhydra hydra-eye (eyebrowse-mode-map "s-a")
     "eyebrowse"
-    ("a"  eyebrowse-switch-to-window-config-1 :exit t)
-    ("s"  eyebrowse-switch-to-window-config-2 :exit t)
-    ("d"  eyebrowse-switch-to-window-config-3 :exit t)
-    ("f"  eyebrowse-switch-to-window-config-4 :exit t)
-    ("g"  eyebrowse-switch-to-window-config-5 :exit t)
-    ("C-a"  eyebrowse-switch-to-window-config-1)
-    ("C-s"  eyebrowse-switch-to-window-config-2)
-    ("C-d"  eyebrowse-switch-to-window-config-3)
-    ("C-f"  eyebrowse-switch-to-window-config-4)
+    ("a"  eyebrowse-switch-to-window-config-1)
+    ("s"  eyebrowse-switch-to-window-config-2)
+    ("d"  eyebrowse-switch-to-window-config-3)
+    ("f"  eyebrowse-switch-to-window-config-4)
     ("g"  eyebrowse-switch-to-window-config-5)
+    ("C-a"  eyebrowse-switch-to-window-config-1 :exit t)
+    ("C-s"  eyebrowse-switch-to-window-config-2 :exit t)
+    ("C-d"  eyebrowse-switch-to-window-config-3 :exit t)
+    ("C-f"  eyebrowse-switch-to-window-config-4 :exit t)
+    ("g"  eyebrowse-switch-to-window-config-5   :exit t)
 
     ("x"  eyebrowse-close-window-config)
     ("r"  eyebrowse-rename-window-config)
@@ -2023,21 +2026,25 @@ which call (newline) command"
     ("m"   engtool-mpv-mark-position)
     ("b"   (lambda () (interactive) (mpv-seek-backward 2)))
     ("B"   mpv-seek-backward)))
+
 (use-package selected
   :straight t
   :diminish selected-minor-mode
+  :hook
+  ((prog-mode) . selected-minor-mode)
+
   :bind (:map selected-keymap
               ("q" . selected-off)
               ("u" . upcase-region)
-              ("d" . downcase-region)
+              ("l" . downcase-region)
               ("w" . kill-ring-save)
               ("W" . kill-region)
+              ("y" . yank)
+              (";" . comment-dwim)
               ("s" . (lambda (beg end)
                        (interactive "r")
                        (setq mark-active nil)
-                       (swiper (buffer-substring beg end)))))
-  :init
-  (selected-global-mode))
+                       (swiper (buffer-substring beg end))))))
 
 (use-package orgit
   :straight t
