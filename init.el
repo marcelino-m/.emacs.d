@@ -32,6 +32,22 @@ NAME can be used to set the name of the defined function."
        (add-hook (quote ,hook) (function ,fname)))))
 
 
+(define-key global-map (kbd "C-<backspace>")
+  (lambda (args)
+    "First delete blanks before point if there is at least three blanks"
+    (interactive "p")
+    (if (looking-back "[ \t]\\{3,\\}" nil t)
+        (replace-match "" nil nil)
+      (backward-kill-word args))))
+
+(define-key global-map (kbd "M-d")
+  (lambda (args)
+    "First delete blanks after point if there is at least three blanks"
+    (interactive "p")
+    (if (looking-at "[ \t]\\{3,\\}")
+        (replace-match "" nil nil)
+      (kill-word args))))
+
 (use-package frame
   :init
   ;; in gnome stealing focus doesn't work correctly
@@ -41,22 +57,6 @@ NAME can be used to set the name of the defined function."
 
 (use-package simple
   :config
-  (advice-add 'backward-kill-word
-              :around
-              (lambda (origfn &rest args)
-                "First delete blanks before point if there is at least three blanks"
-                (if (looking-back "[ \t]\\{3,\\}" nil t)
-                    (replace-match "" nil nil)
-                  (apply origfn args))))
-
-  (advice-add 'kill-word
-              :around
-              (lambda (origfn &rest args)
-                "First delete blanks after point if there is at least three blanks"
-                (if (looking-at "[ \t]\\{3,\\}")
-                    (replace-match "" nil nil)
-                  (apply origfn args))))
-
   (advice-add 'yank
               :around
               (lambda (origfn &rest args)
