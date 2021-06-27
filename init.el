@@ -93,6 +93,8 @@ NAME can be used to set the name of the defined function."
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 
 ;; global options
 
@@ -2017,7 +2019,7 @@ which call (newline) command"
   :after hydra
   :config
   (engtool-mode 1)
-  (defhydra hyadra-engtool nil
+  (defhydra hyadra-engtool (engtool-mpv-mode-map "C-c m")
     "engtool"
     ("SPC" mpv-pause)
     ("q"   mpv-kill :exit t)
@@ -2030,8 +2032,10 @@ which call (newline) command"
 (use-package selected
   :straight t
   :diminish selected-minor-mode
-  :hook
-  ((prog-mode) . selected-minor-mode)
+
+  :init
+  (setq selected-org-mode-map (make-sparse-keymap))
+  (selected-minor-mode 1)
 
   :bind (:map selected-keymap
               ("q" . selected-off)
@@ -2044,7 +2048,15 @@ which call (newline) command"
               ("s" . (lambda (beg end)
                        (interactive "r")
                        (setq mark-active nil)
-                       (swiper (buffer-substring beg end))))))
+                       (swiper (buffer-substring beg end))))
+
+              :map selected-org-mode-map
+              ("*" . (lambda () (interactive) (org-emphasize ?*)))
+              ("/" . (lambda () (interactive) (org-emphasize ?/)))
+              ("_" . (lambda () (interactive) (org-emphasize ?_)))
+              ("=" . (lambda () (interactive) (org-emphasize ?=)))
+              ("~" . (lambda () (interactive) (org-emphasize ?~)))
+              ("+" . (lambda () (interactive) (org-emphasize ?+)))))
 
 (use-package orgit
   :straight t
