@@ -106,7 +106,7 @@ NAME can be used to set the name of the defined function."
 (xterm-mouse-mode)
 
 (setq-default
- cursor-type                          'bar
+ cursor-type                          'box
  case-fold-search                     t
  column-number-mode                   t
  mouse-yank-at-point                  t
@@ -134,8 +134,7 @@ NAME can be used to set the name of the defined function."
  default-input-method                 "latin-prefix"
  frame-resize-pixelwise                t
  browse-url-browser-function          'browse-url-firefox
- default-frame-alist                  '((cursor-color         . "#CCDC90")
-                                        (width                . 0.80)
+ default-frame-alist                  '((width                . 0.80)
                                         (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
                                         (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
@@ -639,7 +638,7 @@ NAME can be used to set the name of the defined function."
       (custom-theme-set-faces
        'zenburn
 
-       ;; fringe
+       `(cursor ((t (:foreground ,zenburn-fg :background ,zenburn-fg))))
        `(fringe ((t (:foreground ,zenburn-fg :background ,zenburn-bg))))
 
        ;; display-line-numbers
@@ -2027,7 +2026,11 @@ which call (newline) command"
     ("f"   (lambda () (interactive) (mpv-seek-forward 2)))
     ("m"   engtool-mpv-mark-position)
     ("b"   (lambda () (interactive) (mpv-seek-backward 2)))
-    ("B"   mpv-seek-backward)))
+    ("B"   mpv-seek-backward)
+    ("d"   mpv-speed-decrease)
+    ("e"   mpv-speed-increase)
+    ("r"   (lambda () (interactive) (mpv-speed-set 1))))
+  )
 
 (use-package selected
   :straight t
