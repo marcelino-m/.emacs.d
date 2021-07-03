@@ -238,14 +238,7 @@ NAME can be used to set the name of the defined function."
   ;; position of tags in right margin
   (setq org-tags-column -95)
 
-  (setq org-tag-alist '((:startgroup)
-                        ("@personal" . ?P) ("@work" . ?W)
-                        (:endgroup)
-                        (:startgroup)
-                        ("@void" . ?V) ("@collecting" . ?C) ("@ready" . ?R)
-                        (:endgroup)
-
-                        (:startgrouptag)
+  (setq org-tag-alist '((:startgrouptag)
                         ("@read")
                         (:grouptags)
                         ("article")
@@ -263,23 +256,22 @@ NAME can be used to set the name of the defined function."
                         (:startgrouptag)
                         ("@code")
                         (:grouptags)
-                        ("chore" . ?c)
-                        ("fix" . ?F)
-                        ("bug" . ?b)
-                        ("feat" . ?a)
-                        ("codrev" . ?v)
+                        ("chore")
+                        ("fix")
+                        ("bug")
+                        ("feat")
+                        ("codrev")
                         (:endgrouptag)
 
-                        ("interesting" . ?i)
-                        ("emacs" . ?E)
-                        ("idea" . ?t)
-                        ("home" . ?h)
-                        ("finance" . ?f)
-                        ("week" . ?w)
-                        ("english" . ?e)
-                        ("office"  . ?o)))
-
-
+                        ("work" . ?w)
+                        ("pined")
+                        ("interesting")
+                        ("emacs")
+                        ("idea")
+                        ("home")
+                        ("finance")
+                        ("english")
+                        ("office")))
 
 
   (setq org-confirm-babel-evaluate nil)
@@ -362,18 +354,18 @@ NAME can be used to set the name of the defined function."
   (setq org-agenda-custom-commands
         '(("A" "Personal agenda for current day or week"
            ((agenda "")
-            (tags "+week"
+            (tags "+pined"
                   ((org-use-tag-inheritance nil)
                    (org-agenda-sorting-strategy '(todo-state-down priority-down)))))
-           ((org-agenda-tag-filter  '("-@work"))))
+           ((org-agenda-tag-filter  '("-work"))))
 
-          ("I" "Very Personal related task" tags-todo "-@work-home"
+          ("I" "Very Personal related task" tags-todo "-work-home"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
-          ("i" "Personal related task" tags-todo "-@work"
+          ("i" "Personal related task" tags-todo "-work"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
-          ("n" "Quick notes" tags "-@work"
+          ("n" "Quick notes" tags "-work"
            ((org-use-tag-inheritance nil)
             (org-agenda-files '("~/syncthing/org/capture/quick-notes.org"))))
 
@@ -384,12 +376,12 @@ NAME can be used to set the name of the defined function."
 
           ("wa" "Agenda for current day or week"
            ((agenda "")
-            (tags "+week"
+            (tags "+pined"
             ((org-use-tag-inheritance nil)
              (org-agenda-sorting-strategy '(todo-state-down priority-down)))))
-           ((org-agenda-tag-filter-preset '("+@work"))))
+           ((org-agenda-tag-filter-preset '("+work"))))
 
-          ("wt" "All todos" tags-todo "+@work"
+          ("wt" "All todos" tags-todo "+work"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
           ("wc" "Coded related todos"
@@ -398,9 +390,9 @@ NAME can be used to set the name of the defined function."
             (tags-todo "+feat")
             (tags-todo "+chore"))
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-tag-filter-preset '("+@work"))))
+            (org-agenda-tag-filter-preset '("+work"))))
 
-          ("wn" "Quick notes" tags "+@work"
+          ("wn" "Quick notes" tags "+work"
            ((org-use-tag-inheritance nil)
             (org-agenda-files '("~/syncthing/org/capture/work/quick-notes.org"))))
 
@@ -410,12 +402,12 @@ NAME can be used to set the name of the defined function."
             (org-use-tag-inheritance nil)
             (org-agenda-files '("~/syncthing/org/capture/work/journal.org"))))
 
-          ("wJ" "Journal team" tags "+@work"
+          ("wJ" "Journal team" tags "+work"
            ((org-agenda-max-entries 20)
             (org-use-tag-inheritance nil)
             (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))
 
-          ("wz" "Code review notes" tags-todo "+@work+codrev"
+          ("wz" "Code review notes" tags-todo "+work+codrev"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down)))))))
 
 
@@ -443,35 +435,35 @@ NAME can be used to set the name of the defined function."
           ("w" "work related captures")
           ("wt" "Task"
            entry (file "~/syncthing/org/capture/work/task.org")
-           "* TODO %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wm" "Meetings notes"
            entry (file "~/syncthing/org/capture/work/meeting.org" )
-           "* Meeting %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
+           "* Meeting %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
 
           ("wn" "Note: Quick and misc note about anything"
            entry (file "~/syncthing/org/capture/work/quick-notes.org")
-           "* %? :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
+           "* %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
 
           ("wz" "Code review: Saved notes when review code"
            entry (file "~/syncthing/org/capture/work/code-review.org")
-           "* DOING %?  :@work:codrev:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
+           "* DOING %?  :work:codrev:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
 
           ("wo" "One to one meeting"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "One to One")
-           "* TODO %? :@work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %? :work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wl" "Lead meeting"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
-           "* TODO %? :@work:lead:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %? :work:lead:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("ws" "Stand up"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
-           "* TODO %? :@work:standup:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %? :work:standup:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wr" "Retro"
            entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Retrospective")
-           "* TODO %? :@work:retro:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %? :work:retro:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wj" "Journal"
            item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
@@ -479,7 +471,7 @@ NAME can be used to set the name of the defined function."
 
           ("wJ" "Journal team"
            entry (file "~/syncthing/org/capture/work/journal-team.org" )
-           "* Iteracion %^{Iteration number} (semana %^{On week Month/Day}) :@work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2))))
+           "* Iteracion %^{Iteration number} (semana %^{On week Month/Day}) :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2))))
 
 
 (use-package org-indent
@@ -2048,6 +2040,7 @@ which call (newline) command"
               ("W" . kill-region)
               ("y" . yank)
               (";" . comment-dwim)
+              ("i" . ispell-region)
               ("s" . (lambda (beg end)
                        (interactive "r")
                        (setq mark-active nil)
