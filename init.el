@@ -2058,3 +2058,8 @@ which call (newline) command"
   :straight t
   :custom
   (orgit-log-save-arguments  t))
+
+(use-package bookmark
+  :defer t
+  :custom
+  (bookmark-fontify nil))
