@@ -261,6 +261,7 @@ NAME can be used to set the name of the defined function."
                         ("bug")
                         ("feat")
                         ("codrev")
+                        ("refactor")
                         (:endgrouptag)
 
                         ("work" . ?w)
@@ -815,6 +816,9 @@ NAME can be used to set the name of the defined function."
 
 (use-package smex
   :straight t
+  ;; :bind (("M-x" . smex)
+  ;;        ("M-X" . smex-major-mode-commands))
+
   :config
   (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory)))
 
@@ -880,7 +884,7 @@ NAME can be used to set the name of the defined function."
 
 
   :custom
-  (projectile-completion-system      'ivy)
+  ;; (projectile-completion-system      'ivy)
   (projectile-indexing-method        'hybrid)
   (projectile-sort-order             'modification-time)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
@@ -961,6 +965,7 @@ NAME can be used to set the name of the defined function."
   (magit-section-visibility-indicator     nil)
   (magit-diff-adjust-tab-width            'always)
   (magit-diff-refine-hunk                 'all)
+  (magit-copy-revision-abbreviated        t)
   (magit-section-initial-visibility-alist '((untracked . hide)
                                             (unstaged  . show)
                                             (staged    . show)
@@ -1011,6 +1016,7 @@ NAME can be used to set the name of the defined function."
   (smerge-command-prefix  "\C-cm"))
 
 (use-package helm
+  :disabled
   :straight t
   :diminish helm-ff-cache-mode
   :bind ("M-y" . helm-show-kill-ring)
@@ -1031,12 +1037,14 @@ NAME can be used to set the name of the defined function."
                  (window-height . 0.4))))
 
 (use-package helm-ag
+  :disabled
   :straight t
   :custom
   (helm-ag-fuzzy-match     t)
   (helm-ag-insert-at-point 'symbol))
 
 (use-package helm-descbinds
+  :disabled
   :straight t
   :bind ("C-h b" . helm-descbinds)
   :config
@@ -1365,10 +1373,33 @@ NAME can be used to set the name of the defined function."
               (diminish 'dired-omit-mode))))
 
 (use-package dired
+  :bind (:map dired-mode-map
+              ("k"    . ma/dired-kill-or-up-subdir)
+              ("I"    . dired-find-file))
+
   :custom
   (dired-dwim-target                       t)
   (wdired-allow-to-change-permissions      t)
-  (dired-listing-switches             "-alh"))
+  (setq dired-listing-switches             "-alh --time-style=iso")
+
+
+  :init
+  (defun ma/dired-kill-or-up-subdir ()
+    "Kill  current  subtree  but  if   it's  top  level  so  call
+`dired-up-directory'"
+
+    (interactive)
+    (let ((in-header (dired-get-subdir))
+          (cur-dir   (dired-current-directory)))
+
+      (if (equal cur-dir (expand-file-name default-directory))
+          (dired-up-directory)
+        (progn
+          (when (not in-header)
+            (call-interactively 'dired-prev-subdir)
+            (setq dir (dired-get-subdir)))
+          (dired-do-kill-lines '(4))
+          (dired-goto-file dir))))))
 
 (use-package dired-narrow
   :straight t
@@ -1376,12 +1407,36 @@ NAME can be used to set the name of the defined function."
               ("/" . dired-narrow)))
 
 (use-package dired-subtree
+  :disabled
   :straight t
   :bind (:map dired-mode-map
               ("TAB"  . dired-subtree-toggle))
   :custom
   (dired-subtree-use-backgrounds nil)
   (dired-subtree-line-prefix      ""))
+
+(use-package all-the-icons
+  ;; after install run the command (all-the-icons-install-fonts)
+  :defer t
+  :straight t)
+
+(use-package all-the-icons-dired
+  :straight t
+  :custom
+  (all-the-icons-dired-monochrome  nil)
+
+  :hook
+  (dired-mode . all-the-icons-dired-mode)
+
+  :init
+  (defface all-the-icons-dired-dir-face
+    '((((background dark)) :foreground "#BDBDBD"))
+    "Face for the directory icon"
+    :group 'all-the-icons-faces)
+
+  :config
+  (add-to-list 'all-the-icons-extension-icon-alist
+               '("go" all-the-icons-alltheicon "go" :height 1.0  :face all-the-icons-blue)))
 
 (use-package tex
   :straight auctex
@@ -2063,3 +2118,11 @@ which call (newline) command"
   :defer t
   :custom
   (bookmark-fontify nil))
+
+(use-package iedit
+  :straight t
+  :diminish)
+
+(use-package wgrep
+  :straight t
+  :diminish)
