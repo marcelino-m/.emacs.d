@@ -56,6 +56,8 @@ NAME can be used to set the name of the defined function."
 
 
 (use-package simple
+  :after hydra
+
   :config
   (advice-add 'yank
               :around
@@ -63,7 +65,52 @@ NAME can be used to set the name of the defined function."
                 "flashing after yanked text"
                 (let ((beg (point)))
                   (apply origfn args)
-                  (flash-region beg (point) 'highlight 0.1)))))
+                  (flash-region beg (point) 'highlight 0.1))))
+
+
+  (defun ma/quick-modal-activate-advice (cmd &rest args)
+    (apply cmd args)
+    (when (bound-and-true-p ma/quick-modal-minor-mode)
+
+      (unless (bound-and-true-p ma/quick-modal-navigation-flag)
+        (setq-local ma/quick-modal-navigation-flag t)
+        (hydra-navigation/body))))
+
+  (fset 'ma/next-line     #'next-line)
+  (fset 'ma/previous-line #'previous-line)
+  (fset 'ma/forward-char  #'forward-char)
+  (fset 'ma/backward-char #'backward-char)
+
+  (advice-add  'ma/next-line     :around #'ma/quick-modal-activate-advice)
+  (advice-add  'ma/previous-line :around #'ma/quick-modal-activate-advice)
+  (advice-add  'ma/forward-char  :around #'ma/quick-modal-activate-advice)
+  (advice-add  'ma/backward-char :around #'ma/quick-modal-activate-advice)
+
+  (define-key global-map [remap next-line] 'ma/next-line)
+  (define-key global-map [remap previous-line] 'ma/previous-line)
+  (define-key global-map [remap forward-char] 'ma/forward-char)
+  (define-key global-map [remap backward-char] 'ma/backward-char)
+
+  (defhydra hydra-navigation (:pre
+                              (progn
+                                (set-cursor-color "#e52b50"))
+                              :post (progn
+                                      (setq ma/quick-modal-navigation-flag nil)
+                                      (set-cursor-color "#bdbdbd")))
+    "Navigation hydra"
+    ("n" ma/next-line)
+    ("p" ma/previous-line)
+    ("f" ma/forward-char)
+    ("b" ma/backward-char))
+
+
+  (hydra-set-property 'hydra-navigation :verbosity 0)
+
+
+  (define-minor-mode ma/quick-modal-minor-mode
+    "Function collection to help english learning")
+
+  )
 
 
 (use-package flash-region
@@ -1183,8 +1230,11 @@ NAME can be used to set the name of the defined function."
        nil)))
 
 (use-package winner
-  :defer 5
-  :init
+  :after hydra
+  :custom
+  (winner-dont-bind-my-keys t)
+
+  :config
   (setq winner-boring-buffers
         '("*Completions*"
           "*Compile-Log*"
@@ -1203,7 +1253,15 @@ NAME can be used to set the name of the defined function."
           "*helm etags*"
           "*helm-mt*"
           "\\*magit*"))
-  (winner-mode 1))
+  (winner-mode 1)
+
+  (defhydra hydra-winner (global-map "C-c")
+    "Winner"
+    ("p" (progn
+           (winner-undo)
+           (setq this-command 'winner-undo))
+     "back")
+    ("o" winner-redo "forward" :exit t :bind nil)))
 
 (use-package transpose-frame
   :straight t
@@ -1289,6 +1347,7 @@ NAME can be used to set the name of the defined function."
 
 
 (use-package beacon
+  :disabled
   :straight t
   :diminish beacon-mode
   :init
