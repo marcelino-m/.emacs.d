@@ -68,47 +68,127 @@ NAME can be used to set the name of the defined function."
                   (flash-region beg (point) 'highlight 0.1))))
 
 
-  (defun ma/quick-modal-activate-advice (cmd &rest args)
-    (apply cmd args)
-    (when (bound-and-true-p ma/quick-modal-minor-mode)
-
-      (unless (bound-and-true-p ma/quick-modal-navigation-flag)
-        (setq-local ma/quick-modal-navigation-flag t)
-        (hydra-navigation/body))))
-
-  (fset 'ma/next-line     #'next-line)
-  (fset 'ma/previous-line #'previous-line)
-  (fset 'ma/forward-char  #'forward-char)
-  (fset 'ma/backward-char #'backward-char)
-
-  (advice-add  'ma/next-line     :around #'ma/quick-modal-activate-advice)
-  (advice-add  'ma/previous-line :around #'ma/quick-modal-activate-advice)
-  (advice-add  'ma/forward-char  :around #'ma/quick-modal-activate-advice)
-  (advice-add  'ma/backward-char :around #'ma/quick-modal-activate-advice)
-
-  (define-key global-map [remap next-line] 'ma/next-line)
-  (define-key global-map [remap previous-line] 'ma/previous-line)
-  (define-key global-map [remap forward-char] 'ma/forward-char)
-  (define-key global-map [remap backward-char] 'ma/backward-char)
-
-  (defhydra hydra-navigation (:pre
-                              (progn
-                                (set-cursor-color "#e52b50"))
-                              :post (progn
-                                      (setq ma/quick-modal-navigation-flag nil)
-                                      (set-cursor-color "#bdbdbd")))
-    "Navigation hydra"
-    ("n" ma/next-line)
-    ("p" ma/previous-line)
-    ("f" ma/forward-char)
-    ("b" ma/backward-char))
+  ;; (defun ma/last-kt-kill-line-or-region ()
+  ;;   (interactive)
+  ;;   (if (eq last-command 'ma/kill-ring-save-line-or-region)
+  ;;       (call-interactively 'ma/kill-ring-save-line-or-region)
+  ;;     (call-interactively 'ma/kill-line-or-region)))
 
 
-  (hydra-set-property 'hydra-navigation :verbosity 0)
+  ;; (setq ma/last-forward-command #'ma/forward-char)
+  ;; (defun ma/last-forward-command ()
+  ;;   (interactive)
+  ;;   (call-interactively ma/last-forward-command))
+
+  ;; (setq ma/last-backward-command #'ma/backward-char)
+  ;; (defun ma/last-backward-command ()
+  ;;   (interactive)
+  ;;   (call-interactively ma/last-backward-command))
+
+  ;; (defun ma/register-last-forward-command (cmd &rest args)
+  ;;   (setq ma/last-forward-command cmd)
+  ;;   (apply cmd args))
+
+  ;; (defun ma/register-last-backward-command (cmd &rest args)
+  ;;   (setq ma/last-backward-command cmd)
+  ;;   (apply cmd args))
 
 
-  (define-minor-mode ma/quick-modal-minor-mode
-    "Function collection to help english learning")
+  (defun ma/kill-ring-save-line-or-region (beg end &optional region)
+    "Save current  line to kill ring  if no region is  active, with
+feedback."
+    (interactive (list (mark) (point)))
+    (if mark-active
+        (kill-ring-save beg end region)
+      (let (beg end)
+        (save-excursion
+          (back-to-indentation)
+          (setq beg (point))
+          (end-of-line)
+          (skip-syntax-backward " ")
+          (setq end (point))
+          (flash-region beg end 'highlight 0.1)
+          (kill-ring-save beg end)))))
+
+  (define-key global-map (kbd "C-w") 'ma/kill-line-or-region)
+
+
+  ;; (defun ma/quick-modal-activate-advice (cmd &rest args)
+  ;;   (apply cmd args)
+  ;;   (when (bound-and-true-p ma/quick-modal-minor-mode)
+
+  ;;     (unless (bound-and-true-p ma/quick-modal-navigation-flag)
+  ;;       (setq-local ma/quick-modal-navigation-flag t)
+  ;;       (hydra-navigation/body))))
+
+  ;; (fset 'ma/next-line     #'next-line)
+  ;; (fset 'ma/previous-line #'previous-line)
+
+  ;; ;; char command
+  ;; (fset 'ma/forward-char  #'forward-char)
+  ;; (fset 'ma/backward-char #'backward-char)
+  ;; (put  'ma/forward-char  'command-type 'char)
+  ;; (put  'ma/backward-char 'command-type 'char)
+
+  ;; ;; word command
+  ;; (fset 'ma/forward-word  #'forward-word)
+  ;; (fset 'ma/backward-word #'backward-word)
+  ;; (put  'ma/forward-word  'command-type 'word)
+  ;; (put  'ma/backward-word 'command-type 'word)
+
+  ;; (fset 'ma/yank          #'yank)
+  ;; (put  'ma/yank 'delete-selection 'yank)
+
+  ;; (advice-add  'ma/next-line     :around #'ma/quick-modal-activate-advice)
+  ;; (advice-add  'ma/previous-line :around #'ma/quick-modal-activate-advice)
+
+  ;; ;; forward commad
+  ;; (advice-add  'ma/forward-char  :around #'ma/quick-modal-activate-advice)
+  ;; (advice-add  'ma/forward-word  :around #'ma/quick-modal-activate-advice)
+  ;; (advice-add  'ma/forward-char  :around #'ma/register-last-forward-command)
+  ;; (advice-add  'ma/forward-word  :around #'ma/register-last-forward-command)
+
+  ;; ;; backward command
+  ;; (advice-add  'ma/backward-char :around #'ma/quick-modal-activate-advice)
+  ;; (advice-add  'ma/backward-word :around #'ma/quick-modal-activate-advice)
+  ;; (advice-add  'ma/backward-char :around #'ma/register-last-backward-command)
+  ;; (advice-add  'ma/backward-word :around #'ma/register-last-backward-command)
+
+  ;; (advice-add  'ma/kill-line-or-region :around #'ma/quick-modal-activate-advice)
+  ;; (advice-add  'ma/yank :around #'ma/quick-modal-activate-advice)
+
+  ;; (define-key global-map [remap next-line]     'ma/next-line)
+  ;; (define-key global-map [remap previous-line] 'ma/previous-line)
+  ;; (define-key global-map [remap forward-char]  'ma/forward-char)
+  ;; (define-key global-map [remap backward-char] 'ma/backward-char)
+  ;; (define-key global-map [remap forward-word]  'ma/forward-word)
+  ;; (define-key global-map [remap backward-word] 'ma/backward-word)
+  ;; (define-key global-map [remap yank]          'ma/yank)
+
+  ;; (defhydra hydra-navigation (:pre
+  ;;                             (progn
+  ;;                               (set-cursor-color "#e52b50"))
+  ;;                             :post (progn
+  ;;                                     (setq ma/quick-modal-navigation-flag nil)
+  ;;                                     (set-cursor-color "#bdbdbd")))
+  ;;   "Navigation hydra"
+  ;;   ("n" ma/next-line)
+  ;;   ("p" ma/previous-line)
+  ;;   ("f" ma/last-forward-command)
+  ;;   ("b" ma/last-backward-command)
+  ;;   ("w" ma/last-kt-kill-line-or-region)
+  ;;   ("y" ma/yank)
+  ;;   ("l" recenter-top-bottom)
+  ;;   )
+
+  ;; (hydra-set-property 'hydra-navigation :verbosity 0)
+
+  ;; (define-minor-mode ma/quick-modal-minor-mode
+  ;;   "Function collection to help english learning")
+
+  ;; (add-hook 'prog-mode-hook 'ma/quick-modal-minor-mode)
+  ;; (add-hook 'text-mode-hook 'ma/quick-modal-minor-mode)
+
 
   )
 
@@ -269,7 +349,11 @@ NAME can be used to set the name of the defined function."
 
   (setq org-todo-keywords
         '((sequence
-           "WANT(w)" "WAIT(W@/!)" "TODO(t)" "STOPED(s@)" "DOING(d!)" "DELEGATED(o@)" "|" "CANCELED(;c)"  "DONE(D@)")))
+           "TODO(t)" "DOING(d)" "|" )
+          (sequence
+           "WAITING(w)" "|" )
+          (type
+           "|" "CANCELED(;)"  "DONE(D@)")))
 
   (setq org-todo-keyword-faces
         '(("WANT"   . "gray")
@@ -303,23 +387,27 @@ NAME can be used to set the name of the defined function."
                         (:startgrouptag)
                         ("@code")
                         (:grouptags)
-                        ("chore")
-                        ("fix")
-                        ("bug")
-                        ("feat")
-                        ("codrev")
-                        ("refactor")
+                        ("chore" . ?c)
+                        ("fix" . ?F)
+                        ("bug" . ?b)
+                        ("feat" . ?f)
+                        ("codrev" . ?C)
+                        ("refactor" . ?r)
                         (:endgrouptag)
 
-                        ("work" . ?w)
-                        ("pined")
                         ("interesting")
                         ("emacs")
                         ("idea")
                         ("home")
                         ("finance")
                         ("english")
-                        ("office")))
+
+                        ("work" . ?w)
+                        ("pined" . ?p)
+                        ("standup")
+                        ("iteracion")
+                        ("comment" . ?t)
+                        ("office" . ?o)))
 
 
   (setq org-confirm-babel-evaluate nil)
@@ -341,6 +429,11 @@ NAME can be used to set the name of the defined function."
      (ditaa   . t)
      (calc    . t)
      (ruby    . t))))
+
+(use-package org-contrib
+  :straight t
+  :diminish)
+
 
 (use-package org-src
   :custom
@@ -424,9 +517,13 @@ NAME can be used to set the name of the defined function."
 
           ("wa" "Agenda for current day or week"
            ((agenda "")
+            (tags-todo "+iteracion")
+            (tags-todo "+standup")
             (tags "+pined"
             ((org-use-tag-inheritance nil)
-             (org-agenda-sorting-strategy '(todo-state-down priority-down)))))
+             (org-agenda-sorting-strategy '(todo-state-down priority-down))))
+            (tags-todo "+office-pined")
+            )
            ((org-agenda-tag-filter-preset '("+work"))))
 
           ("wt" "All todos" tags-todo "+work"
@@ -443,6 +540,10 @@ NAME can be used to set the name of the defined function."
           ("wn" "Quick notes" tags "+work"
            ((org-use-tag-inheritance nil)
             (org-agenda-files '("~/syncthing/org/capture/work/quick-notes.org"))))
+
+          ("wm" "Meeting notes" tags "+work"
+           ((org-use-tag-inheritance nil)
+            (org-agenda-files '("~/syncthing/org/capture/work/meeting.org"))))
 
           ("wj" "Journal personal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
            ((org-agenda-sorting-strategy '(alpha-down))
@@ -841,6 +942,10 @@ NAME can be used to set the name of the defined function."
   (setq ivy-initial-inputs-alist nil)
   (counsel-mode))
 
+(use-package imenu-anywhere
+  :straight t)
+
+
 (use-package ivy-posframe
   :disabled
   :straight t
@@ -989,6 +1094,9 @@ NAME can be used to set the name of the defined function."
               ("C-,"   . nil)
               ("C-."   . nil)
               ("C-c $" . nil))
+  :hook
+  (org-mode      . flyspell-mode)
+  (markdown-mode . flyspell-mode)
 
   :custom
   (flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face)))
@@ -1052,7 +1160,7 @@ NAME can be used to set the name of the defined function."
   :straight t
   :after magit)
 
-(use-package gitignore-mode
+(use-package git-modes
   :straight t)
 
 (use-package git-timemachine
@@ -1407,7 +1515,6 @@ NAME can be used to set the name of the defined function."
   (global-set-key (kbd "C-c j")         #'ma/join-line)
   (global-set-key (kbd "C-c J")         (lambda () (interactive) (ma/join-line t)))
   (global-set-key (kbd "M-w")           #'ma/kill-ring-save-line-or-region)
-  (global-set-key (kbd "C-w")           #'ma/kill-line-or-region)
   (global-set-key (kbd "C-c C-SPC")     #'ma/jump-to-mark-skip-same-line))
 
 (use-package crux
@@ -2176,12 +2283,17 @@ which call (newline) command"
 (use-package bookmark
   :defer t
   :custom
-  (bookmark-fontify nil))
+  (bookmark-fontify nil)
+  (bookmark-set-fringe-mark nil))
 
 (use-package iedit
   :straight t
   :diminish)
 
 (use-package wgrep
+  :straight t
+  :diminish)
+
+(use-package string-inflection
   :straight t
   :diminish)
