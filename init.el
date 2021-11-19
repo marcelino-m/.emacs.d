@@ -2268,6 +2268,7 @@ which call (newline) command"
               ("w" . kill-ring-save)
               ("W" . kill-region)
               ("y" . yank)
+              ("g" . google-this-region)
               (";" . comment-dwim)
               ("i" . ispell-region)
               ("s" . (lambda (beg end)
@@ -2307,5 +2308,9 @@ which call (newline) command"
   :diminish)
 
 (use-package alarm-clock
+  :straight t
+  :diminish)
+
+(use-package google-this
   :straight t
   :diminish)
