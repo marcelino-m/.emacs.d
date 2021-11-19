@@ -407,6 +407,7 @@ feedback."
                         ("standup")
                         ("iteracion")
                         ("comment" . ?t)
+                        ("one2one")
                         ("office" . ?o)))
 
 
@@ -425,12 +426,16 @@ feedback."
      (sql     . t)
      (sqlite  . t)
      (python  . t)
-     (latex   . t)
      (ditaa   . t)
      (calc    . t)
-     (ruby    . t))))
+     (go      . t))))
 
 (use-package org-contrib
+  :straight t
+  :diminish)
+
+
+(use-package ob-go
   :straight t
   :diminish)
 
@@ -607,7 +612,7 @@ feedback."
            "* TODO %? :work:lead:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("ws" "Stand up"
-           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
+           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Standup meeting")
            "* TODO %? :work:standup:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wr" "Retro"
@@ -824,7 +829,9 @@ feedback."
        `(font-lock-comment-delimiter-face ((t (:foreground ,zenburn-fg-2))))
        `(font-lock-doc-face ((t (:foreground ,zenburn-green-1))))
 
-       `(ledger-font-xact-highlight-face ((t (:background ,zenburn-bg+05))))))))
+       `(ledger-font-xact-highlight-face ((t (:background ,zenburn-bg+05))))
+       ;; org mode
+       `(org-checkbox ((t (:foreground ,zenburn-fg+1 :weight bold))))))))
 
 
 (use-package csv-mode
@@ -1168,7 +1175,7 @@ feedback."
 
 (use-package smerge-mode
   :custom
-  (smerge-command-prefix  "\C-cm"))
+  (smerge-command-prefix  "C-c m"))
 
 (use-package helm
   :disabled
@@ -1266,7 +1273,8 @@ feedback."
          ("s-e"       . windmove-up)
          ("s-E"       . ma/show-current-after-move-to-up)
          ("s-d"       . windmove-down)
-         ("s-D"       . ma/show-current-after-move-to-down))
+         ("s-D"       . ma/show-current-after-move-to-down)
+         ("s-b"       . balance-windows))
 
   :config
   (defun ma/show-current-after-move-to (dir)
@@ -2295,5 +2303,9 @@ which call (newline) command"
   :diminish)
 
 (use-package string-inflection
+  :straight t
+  :diminish)
+
+(use-package alarm-clock
   :straight t
   :diminish)
