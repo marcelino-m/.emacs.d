@@ -342,6 +342,9 @@ feedback."
   ;; log state chages into a drawer
   (setq org-log-into-drawer t)
 
+  ;; block parent todo's until subtask are marked as done
+  (setq org-enforce-todo-dependencies t)
+
   ;; priority range
   (setq org-priority-highest ?A)
   (setq org-priority-lowest  ?G)
@@ -1030,6 +1033,10 @@ feedback."
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 
+(use-package edit-indirect
+  :straight t)
+
+
 (use-package projectile
   :straight t
   :bind-keymap ("C-,"   . projectile-command-map)
@@ -1214,7 +1221,8 @@ feedback."
 
 (use-package window
   :config
-  :bind (("s-x" . delete-window)
+  :bind (("s-r" . (lambda () (interactive) (delete-window) (balance-windows)))
+         ("s-x" . delete-window)
          ("s-c" . delete-other-windows)))
 
 (use-package ace-window
@@ -1227,10 +1235,10 @@ feedback."
 (use-package windmove
   :custom
   (windmove-create-window  t)
-  :bind (("s-f"       . windmove-right)
-         ("s-s"       . windmove-left)
-         ("s-e"       . windmove-up)
-         ("s-d"       . windmove-down)))
+  :bind (("s-f"       . (lambda () (interactive) (windmove-right) (balance-windows)))
+         ("s-s"       . (lambda () (interactive) (windmove-left) (balance-windows)))
+         ("s-e"       . (lambda () (interactive) (windmove-up) (balance-windows)))
+         ("s-d"       . (lambda () (interactive) (windmove-down) (balance-windows)))))
 
 (use-package emmet-mode
   :straight t
@@ -2314,3 +2322,8 @@ which call (newline) command"
 (use-package google-this
   :straight t
   :diminish)
+
+(use-package undo-tree
+  :straight t
+  :init
+  (global-undo-tree-mode))
