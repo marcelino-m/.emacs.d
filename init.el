@@ -328,6 +328,16 @@ feedback."
   (define-key global-map (kbd "C-c a") 'org-agenda)
 
   (setq org-ellipsis "...▼")
+
+  (setq org-emphasis-alist '(("*" (:inherit bold :bold t :foreground "#df6967"))
+                            ("/" italic)
+                            ("_" underline)
+                            ("=" (:inherit org-verbatim :foreground "#8D8D8D"))
+                            ("~" (:inherit org-code :foreground "#8D8D8D"))
+                            ("+"
+                             (:strike-through t))))
+
+
   (setq org-special-ctrl-a/e t)
   (setq org-special-ctrl-k t)
 
@@ -344,6 +354,9 @@ feedback."
 
   ;; block parent todo's until subtask are marked as done
   (setq org-enforce-todo-dependencies t)
+
+  ;; control inline image size,
+  (setq org-image-actual-width 300)
 
   ;; priority range
   (setq org-priority-highest ?A)
@@ -400,10 +413,14 @@ feedback."
 
                         ("interesting")
                         ("emacs")
+                        ("org")
+                        ("need")
                         ("idea")
                         ("home")
                         ("finance")
                         ("english")
+                        ("trekking")
+                        ("gis")
 
                         ("work" . ?w)
                         ("pined" . ?p)
@@ -415,7 +432,7 @@ feedback."
 
 
   (setq org-confirm-babel-evaluate nil)
-  (setq org-babel-python-command "ipython --no-banner --nosep --simple-prompt  -i")
+  (setq org-babel-python-command "python3")
   (setq org-babel-results-keyword "results")
 
   ;; redisply omages inline when image change
@@ -433,14 +450,22 @@ feedback."
      (calc    . t)
      (go      . t))))
 
+
 (use-package org-contrib
   :straight t
+  :after org
   :diminish)
 
+(use-package org-inlinetask
+  :after org
+  :diminish
+  :init
+  (setq org-inlinetask-min-level 5))
 
 (use-package ob-go
   :straight t
   :diminish)
+
 
 
 (use-package org-src
@@ -794,8 +819,6 @@ feedback."
        `(line-number ((t (:foreground ,zenburn-bg+3 :background ,zenburn-bg :bold nil :slant italic :box nil))))
        `(line-number-current-line ((t (:inherit line-number :foreground ,zenburn-yellow-2 ))))
 
-       `(org-link ((t (:foreground ,zenburn-yellow-2 :underline nil :bold t))))
-
        ;; magit
        `(magit-diff-added    ((t (:background nil  :foreground ,zenburn-green))))
        `(magit-diff-changed  ((t (:background nil  :foreground ,zenburn-yellow-1))))
@@ -834,7 +857,8 @@ feedback."
 
        `(ledger-font-xact-highlight-face ((t (:background ,zenburn-bg+05))))
        ;; org mode
-       `(org-checkbox ((t (:foreground ,zenburn-fg+1 :weight bold))))))))
+       `(org-checkbox ((t (:foreground ,zenburn-fg+1 :weight bold))))
+       `(org-link ((t (:foreground ,zenburn-yellow-2 :underline nil :bold t))))))))
 
 
 (use-package csv-mode
@@ -1034,6 +1058,7 @@ feedback."
          ("\\.markdown\\'" . markdown-mode)))
 
 (use-package edit-indirect
+  :after markdown
   :straight t)
 
 
@@ -1675,6 +1700,7 @@ feedback."
                       (local-set-key (kbd "<f7>") 'ma/run-biber))))
 
 (use-package gist
+  :disabled
   :straight t
   :init
   (setq
@@ -1725,10 +1751,11 @@ feedback."
 (use-package google-translate
   :straight t
   :bind ("C-c t" . google-translate-smooth-translate)
-  :config
-  (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
+  :init
   (setq google-translate-translation-directions-alist '(("en" . "es") ("es" . "en")))
-  (use-package google-translate-smooth-ui))
+  :config
+  (use-package google-translate-smooth-ui)
+  (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130)))
 
 (use-package paradox
   :disabled
@@ -1982,7 +2009,7 @@ which call (newline) command"
 (use-package lsp-mode
   :straight t
   :diminish
-  :hook ((go-mode python-mode c-mode) . lsp-deferred)
+  :hook ((go-mode python-mode c-mode ess-r-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-diagnostic-package :none)
@@ -2323,7 +2350,47 @@ which call (newline) command"
   :straight t
   :diminish)
 
+
 (use-package undo-tree
   :straight t
+  :diminish
   :init
   (global-undo-tree-mode))
+
+(use-package ess
+  :straight t
+  :custom
+  (ess-R-font-lock-keywords '((ess-R-fl-keyword:keywords . t)
+                              (ess-R-fl-keyword:constants . t)
+                              (ess-R-fl-keyword:modifiers . t)
+                              (ess-R-fl-keyword:fun-defs . t)
+                              (ess-R-fl-keyword:assign-ops . t)
+                              (ess-R-fl-keyword:%op% . t)
+                              (ess-fl-keyword:fun-calls . t)
+                              (ess-fl-keyword:numbers)
+                              (ess-fl-keyword:operators)
+                              (ess-fl-keyword:delimiters)
+                              (ess-fl-keyword:=)
+                              (ess-R-fl-keyword:F&T))))
+
+(use-package ess-r-mode
+  :commands R)
+
+(use-package org-xournalpp
+  :straight (:host gitlab
+                   :repo "vherrmann/org-xournalpp"
+                   :type git
+                   :files ("*.el" "resources"))
+  :custom
+  (org-xournalpp-executable "xournalpp-1.1.0-x86_64.AppImage")
+
+  :diminish
+  :config
+  (add-hook 'org-mode-hook 'org-xournalpp-mode))
+
+(use-package org-download
+  :straight t
+  :diminish
+  :config
+  (add-hook 'dired-mode-hook 'org-download-enable))
+
