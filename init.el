@@ -1075,7 +1075,7 @@ feedback."
 
 
   :custom
-  ;; (projectile-completion-system      'ivy)
+  (projectile-completion-system      'ivy)
   (projectile-indexing-method        'hybrid)
   (projectile-sort-order             'modification-time)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
@@ -1136,9 +1136,10 @@ feedback."
   :hook
   (org-mode      . flyspell-mode)
   (markdown-mode . flyspell-mode)
+  (prog-mode     . flyspell-prog-mode)
 
-  :custom
-  (flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face)))
+  :config
+  (set-variable-in-hook prog-mode-hook flyspell-persistent-highlight nil))
 
 (use-package flyspell-correct
   :straight t
@@ -1155,7 +1156,7 @@ feedback."
          ("C-c d" . ma/magit-diff-buffer-file))
   :custom
   (magit-save-repository-buffers          'dontask)
-  (magit-display-buffer-function          'magit-display-buffer-fullframe-status-v1)
+  (magit-display-buffer-function          'magit-display-buffer-same-window-except-diff-v1)
   (magit-section-visibility-indicator     nil)
   (magit-diff-adjust-tab-width            'always)
   (magit-diff-refine-hunk                 'all)
@@ -1255,15 +1256,41 @@ feedback."
   :custom
   (aw-ignore-current t)
   (aw-keys '(?a ?s ?d ?f ?g ?h))
-  :bind (("s-z" . ace-window)))
+  :bind (("s-o" . ace-window)
+         ("s-z" . ace-delete-window)))
+
 
 (use-package windmove
   :custom
   (windmove-create-window  t)
+
   :bind (("s-f"       . (lambda () (interactive) (windmove-right) (balance-windows)))
+         ("s-F"       . ma/show-current-after-move-to-right)
          ("s-s"       . (lambda () (interactive) (windmove-left) (balance-windows)))
+         ("s-S"       . ma/show-current-after-move-to-left)
          ("s-e"       . (lambda () (interactive) (windmove-up) (balance-windows)))
-         ("s-d"       . (lambda () (interactive) (windmove-down) (balance-windows)))))
+         ("s-E"       . ma/show-current-after-move-to-up)
+         ("s-d"       . (lambda () (interactive) (windmove-down) (balance-windows)))
+         ("s-D"       . ma/show-current-after-move-to-down)
+         ("s-b"       . balance-windows))
+
+  :config
+  (defun ma/show-current-after-move-to (dir)
+    (let ( (buff (window-buffer)))
+      (windmove-do-window-select dir nil)
+      (switch-to-buffer buff)))
+  (defun ma/show-current-after-move-to-left ()
+    (interactive)
+    (ma/show-current-after-move-to 'left))
+  (defun ma/show-current-after-move-to-right ()
+    (interactive)
+    (ma/show-current-after-move-to 'right))
+  (defun ma/show-current-after-move-to-up ()
+    (interactive)
+    (ma/show-current-after-move-to 'up))
+  (defun ma/show-current-after-move-to-down ()
+    (interactive)
+    (ma/show-current-after-move-to 'down)))
 
 (use-package emmet-mode
   :straight t
@@ -1295,37 +1322,6 @@ feedback."
   :straight t
   :mode        "\\.js\\'")
 
-(use-package windmove
-  :custom
-  (windmove-create-window  t)
-
-  :bind (("s-f"       . windmove-right)
-         ("s-F"       . ma/show-current-after-move-to-right)
-         ("s-s"       . windmove-left)
-         ("s-S"       . ma/show-current-after-move-to-left)
-         ("s-e"       . windmove-up)
-         ("s-E"       . ma/show-current-after-move-to-up)
-         ("s-d"       . windmove-down)
-         ("s-D"       . ma/show-current-after-move-to-down)
-         ("s-b"       . balance-windows))
-
-  :config
-  (defun ma/show-current-after-move-to (dir)
-    (let ( (buff (window-buffer)))
-      (windmove-do-window-select dir nil)
-      (switch-to-buffer buff)))
-  (defun ma/show-current-after-move-to-left ()
-    (interactive)
-    (ma/show-current-after-move-to 'left))
-  (defun ma/show-current-after-move-to-right ()
-    (interactive)
-    (ma/show-current-after-move-to 'right))
-  (defun ma/show-current-after-move-to-up ()
-    (interactive)
-    (ma/show-current-after-move-to 'up))
-  (defun ma/show-current-after-move-to-down ()
-    (interactive)
-    (ma/show-current-after-move-to 'down)))
 
 (use-package company
   :straight t
