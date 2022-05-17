@@ -382,8 +382,6 @@ feedback."
           ("CANCELED"  . "SpringGreen")))
 
 
-  ;; position of tags in right margin
-  (setq org-tags-column -95)
 
   (setq org-tag-alist '((:startgrouptag)
                         ("@read")
@@ -507,6 +505,10 @@ feedback."
                                ((symbol-function 'window-text-width) (lambda (&optional _ _) (round (- winw dlnw maybe1)))))
                       (apply origfn args))
                   (apply origfn args))))
+
+  (setq org-agenda-tags-column 85
+        org-tags-column        85)
+
 
   (setq org-agenda-files
       (mapcar 'abbreviate-file-name
@@ -1097,6 +1099,9 @@ feedback."
   (defadvice projectile-project-root (around ignore-remote first activate)
     (unless (file-remote-p default-directory) ad-do-it))
 
+  ;; (advice-add 'counsel-projectile-switch-project-action :override 'counsel-projectile-switch-project-action-find-file)
+  ;; (advice-add 'counsel-projectile-find-file :override '+projectile-find-file)
+
   (add-to-list 'projectile-other-file-alist '("ts"   . ("css" "html")))
   (add-to-list 'projectile-other-file-alist '("html" . ("css" "ts")))
   (add-to-list 'projectile-other-file-alist '("css"  . ("ts" "html")))
@@ -1208,7 +1213,8 @@ feedback."
 
 (use-package smerge-mode
   :custom
-  (smerge-command-prefix  "C-c m"))
+  (smerge-command-prefix  "\C-cm"))
+
 
 (use-package helm
   :disabled
@@ -1246,6 +1252,13 @@ feedback."
   (helm-descbinds-mode))
 
 (use-package window
+  :after hydra
+  :init
+  (defhydra hydra-window (global-map "C-x")
+    "Some hydra for windows related command"
+    ("<left>"  previous-buffer)
+    ("<right>" next-buffer))
+
   :config
   :bind (("s-r" . (lambda () (interactive) (delete-window) (balance-windows)))
          ("s-x" . delete-window)
@@ -1264,13 +1277,13 @@ feedback."
   :custom
   (windmove-create-window  t)
 
-  :bind (("s-f"       . (lambda () (interactive) (windmove-right) (balance-windows)))
+  :bind (("s-f"       . (lambda () (interactive) (windmove-right)))
          ("s-F"       . ma/show-current-after-move-to-right)
-         ("s-s"       . (lambda () (interactive) (windmove-left) (balance-windows)))
+         ("s-s"       . (lambda () (interactive) (windmove-left)))
          ("s-S"       . ma/show-current-after-move-to-left)
-         ("s-e"       . (lambda () (interactive) (windmove-up) (balance-windows)))
+         ("s-e"       . (lambda () (interactive) (windmove-up)))
          ("s-E"       . ma/show-current-after-move-to-up)
-         ("s-d"       . (lambda () (interactive) (windmove-down) (balance-windows)))
+         ("s-d"       . (lambda () (interactive) (windmove-down)))
          ("s-D"       . ma/show-current-after-move-to-down)
          ("s-b"       . balance-windows))
 
@@ -1748,10 +1761,10 @@ feedback."
   :straight t
   :bind ("C-c t" . google-translate-smooth-translate)
   :init
-  (setq google-translate-translation-directions-alist '(("en" . "es") ("es" . "en")))
-  :config
   (use-package google-translate-smooth-ui)
+  (setq google-translate-translation-directions-alist '(("en" . "es") ("es" . "en")))
   (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130)))
+
 
 (use-package paradox
   :disabled
@@ -1833,6 +1846,14 @@ feedback."
             (lambda ()
               (add-hook 'before-save-hook 'gofmt-before-save)
               (setq tab-width 4))))
+
+(use-package go-playground
+  :straight t
+  :diminish
+  :custom
+  (go-playground-basedir "~/lab/go-playgrounds")
+  (go-playground-init-command "go mod init whoiscare.com/m"))
+
 
 (use-package highlight-symbol
   :straight t
@@ -2013,6 +2034,10 @@ which call (newline) command"
   (lsp-enable-symbol-highlighting nil)
   (lsp-modeline-diagnostics-enable nil)
   (lsp-headerline-breadcrumb-enable nil))
+
+(use-package lsp-lens
+  :after lsp-lens
+  :diminish)
 
 (use-package lsp-ui
   :straight t
@@ -2287,10 +2312,10 @@ which call (newline) command"
 (use-package selected
   :straight t
   :diminish selected-minor-mode
-
   :init
+  (selected-global-mode 1)
   (setq selected-org-mode-map (make-sparse-keymap))
-  (selected-minor-mode 1)
+
 
   :bind (:map selected-keymap
               ("q" . selected-off)
@@ -2389,4 +2414,3 @@ which call (newline) command"
   :diminish
   :config
   (add-hook 'dired-mode-hook 'org-download-enable))
-
