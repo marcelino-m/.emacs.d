@@ -407,6 +407,7 @@ feedback."
                         ("feat" . ?f)
                         ("codrev" . ?C)
                         ("refactor" . ?r)
+                        ("check"   . ?R)
                         (:endgrouptag)
 
                         ("interesting")
@@ -568,7 +569,8 @@ feedback."
            ((tags-todo "+bug")
             (tags-todo "+fix")
             (tags-todo "+feat")
-            (tags-todo "+chore"))
+            (tags-todo "+chore")
+            (tags-todo "+@code-bug-fix-feat-chore"))
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
             (org-agenda-tag-filter-preset '("+work"))))
 
@@ -1086,13 +1088,13 @@ feedback."
   (projectile-find-dir-includes-top-level t)
 
   :config
-  (defun projectile--file-name-sans-extensions (file-name)
-    "Return FILE-NAME sans any extensions."
-    (file-name-base file-name))
+  ;; (defun projectile--file-name-sans-extensions (file-name)
+  ;;   "Return FILE-NAME sans any extensions."
+  ;;   (file-name-base file-name))
 
-  (defun projectile--file-name-extensions (file-name)
-    "Return FILE-NAME's extensions."
-    (file-name-extension file-name))
+  ;; (defun projectile--file-name-extensions (file-name)
+  ;;   "Return FILE-NAME's extensions."
+  ;;   (file-name-extension file-name))
 
   ;; projectile slows down tramp-mode
   ;; https://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
@@ -1596,7 +1598,7 @@ feedback."
   :custom
   (dired-dwim-target                       t)
   (wdired-allow-to-change-permissions      t)
-  (setq dired-listing-switches             "-alh --time-style=iso")
+  (dired-listing-switches             "-alh --time-style=iso")
 
 
   :init
@@ -2376,7 +2378,9 @@ which call (newline) command"
   :straight t
   :diminish
   :init
-  (global-undo-tree-mode))
+  (global-undo-tree-mode)
+  :custom
+  (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
 (use-package ess
   :straight t

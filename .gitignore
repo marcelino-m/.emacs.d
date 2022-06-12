@@ -28,3 +28,4 @@ var/
 /.no-shared.el
 /straight/
 /eln-cache/
+/undo/
