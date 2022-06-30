@@ -264,6 +264,7 @@ feedback."
  default-frame-alist                  '((width                . 0.80)
                                         (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
+                                        (cursor-color         . "#e52b50")
                                         (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
 
 ;; unbind from global map
@@ -350,7 +351,7 @@ feedback."
   (remove-hook 'org-cycle-hook #'org-optimize-window-after-visibility-change)
 
   ;; log state chages into a drawer
-  (setq org-log-into-drawer t)
+  (setq org-log-done 'time)
 
   ;; block parent todo's until subtask are marked as done
   (setq org-enforce-todo-dependencies t)
@@ -369,7 +370,7 @@ feedback."
           (sequence
            "WAITING(w)" "|" )
           (type
-           "|" "CANCELED(;)"  "DONE(D@)")))
+           "|" "CANCELED(c)"  "DONE(e)")))
 
   (setq org-todo-keyword-faces
         '(("WANT"   . "gray")
