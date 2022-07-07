@@ -409,6 +409,27 @@ feedback."
                         ("codrev" . ?C)
                         ("refactor" . ?r)
                         ("check"   . ?R)
+                        ("techdebt" . ?t)
+                        (:endgrouptag)
+
+                        (:startgrouptag)
+                        ("@feedback")
+                        (:grouptags)
+                        ("lean" . ?l)
+                        ("one2one")
+                        ("leadmeeting")
+                        (:endgrouptag)
+
+                        (:startgrouptag)
+                        ("@people")
+                        (:grouptags)
+                        ("{p_.+}")
+                        (:endgrouptag)
+
+                        (:startgrouptag)
+                        ("@team")
+                        (:grouptags)
+                        ("{t_.+}")
                         (:endgrouptag)
 
                         ("interesting")
@@ -426,8 +447,6 @@ feedback."
                         ("pined" . ?p)
                         ("standup")
                         ("iteracion")
-                        ("comment" . ?t)
-                        ("one2one")
                         ("office" . ?o)))
 
 
@@ -509,7 +528,8 @@ feedback."
                   (apply origfn args))))
 
   (setq org-agenda-tags-column 85
-        org-tags-column        85)
+        org-tags-column        85
+        org-agenda-block-separator (make-string org-tags-column ?=))
 
 
   (setq org-agenda-files
@@ -2275,11 +2295,6 @@ which call (newline) command"
     ("d"  eyebrowse-switch-to-window-config-3)
     ("f"  eyebrowse-switch-to-window-config-4)
     ("g"  eyebrowse-switch-to-window-config-5)
-    ("C-a"  eyebrowse-switch-to-window-config-1 :exit t)
-    ("C-s"  eyebrowse-switch-to-window-config-2 :exit t)
-    ("C-d"  eyebrowse-switch-to-window-config-3 :exit t)
-    ("C-f"  eyebrowse-switch-to-window-config-4 :exit t)
-    ("g"  eyebrowse-switch-to-window-config-5   :exit t)
 
     ("x"  eyebrowse-close-window-config)
     ("r"  eyebrowse-rename-window-config)
