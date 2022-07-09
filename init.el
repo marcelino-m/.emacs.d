@@ -2349,6 +2349,10 @@ which call (newline) command"
                        (interactive "r")
                        (setq mark-active nil)
                        (swiper (buffer-substring beg end))))
+              ("S" . (lambda ()
+                       (interactive)
+                       (let ((counsel-projectile-ag-initial-input '(projectile-symbol-or-selection-at-point)))
+                         (counsel-projectile-ag))))
 
               :map selected-org-mode-map
               ("*" . (lambda () (interactive) (org-emphasize ?*)))
