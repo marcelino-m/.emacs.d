@@ -38,7 +38,7 @@ NAME can be used to set the name of the defined function."
     (interactive "p")
     (if (looking-back "[ \t]\\{3,\\}" nil t)
         (replace-match "" nil nil)
-      (backward-kill-word args))))
+      (delete-region (point) (progn (forward-word (- args)) (point))))))
 
 (define-key global-map (kbd "M-d")
   (lambda (args)
@@ -46,7 +46,8 @@ NAME can be used to set the name of the defined function."
     (interactive "p")
     (if (looking-at "[ \t]\\{3,\\}")
         (replace-match "" nil nil)
-      (kill-word args))))
+      (delete-region (point) (progn (forward-word args) (point))))))
+
 
 (use-package frame
   :init
@@ -988,7 +989,11 @@ feedback."
 
 (use-package swiper
   :straight t
-  :bind ("C-s" . swiper))
+  :bind (("C-s" . swiper)
+         (("C-S-s" . (lambda (&optional initial-input)
+                       (interactive)
+                       (let ((search-invisible nil))
+                         (swiper initial-input)))))))
 
 (use-package counsel
   :straight t
@@ -2054,7 +2059,7 @@ which call (newline) command"
   :custom
   (lsp-diagnostic-package :none)
   (lsp-signature-auto-activate nil)
-  (lsp-enable-symbol-highlighting nil)
+  (lsp-enable-symbol-highlighting t)
   (lsp-modeline-diagnostics-enable nil)
   (lsp-headerline-breadcrumb-enable nil))
 
@@ -2438,3 +2443,7 @@ which call (newline) command"
   :diminish
   :config
   (add-hook 'dired-mode-hook 'org-download-enable))
+
+
+(use-package ztree
+  :straight t)
