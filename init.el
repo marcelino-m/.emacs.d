@@ -537,11 +537,11 @@ feedback."
               (split-string
                (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n" t)))
 
-  (setq org-agenda-prefix-format
-        '((agenda . " %i %?-12t% s")
-          (todo . " %i> ")
-          (tags . " %i> ")
-          (search . " %i> ")))
+  ;; (setq org-agenda-prefix-format
+  ;;       '((agenda . " %i %?-12t% s")
+  ;;         (todo . " %i> ")
+  ;;         (tags . " %i> ")
+  ;;         (search . " %i> ")))
 
   (setq org-agenda-sorting-strategy
         '((agenda habit-down time-up priority-down category-keep)
@@ -988,7 +988,11 @@ feedback."
 
 (use-package swiper
   :straight t
-  :bind ("C-s" . swiper))
+  :bind (("C-s" . swiper)
+         ("C-S-s" . (lambda (&optional initial-input)
+                      (interactive)
+                      (let ((search-invisible nil))
+                        (swiper initial-input))))))
 
 (use-package counsel
   :straight t
@@ -2438,3 +2442,6 @@ which call (newline) command"
   :diminish
   :config
   (add-hook 'dired-mode-hook 'org-download-enable))
+
+(use-package org-transform-tree-table
+  :straight t)

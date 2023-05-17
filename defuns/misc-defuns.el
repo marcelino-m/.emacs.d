@@ -51,7 +51,7 @@ prefix argument keep point in curretn position"
 ;;----------------------------------------------------------------------------
 (defun ma/rename-this-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
-  (interactive "sNew name: ")
+  (interactive (list (read-string "Your name: " (buffer-name))))
   (let ((name (buffer-name))
         (filename (buffer-file-name)))
     (unless filename
