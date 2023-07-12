@@ -407,10 +407,9 @@ feedback."
                         ("fix" . ?F)
                         ("bug" . ?b)
                         ("feat" . ?f)
-                        ("codrev" . ?C)
                         ("refactor" . ?r)
                         ("check"   . ?R)
-                        ("techdebt" . ?t)
+                        ("next"    . ?N)
                         (:endgrouptag)
 
                         (:startgrouptag)
@@ -528,8 +527,15 @@ feedback."
                       (apply origfn args))
                   (apply origfn args))))
 
-  (setq org-agenda-tags-column 85
-        org-tags-column        85
+
+  ;; narrow item when go to it
+  (advice-add 'org-agenda-goto :after
+              (lambda (&rest args)
+                (org-narrow-to-subtree)))
+
+  (setq org-agenda-tags-column         85
+        org-tags-column                85
+        org-agenda-todo-list-sublevels nil
         org-agenda-block-separator (make-string org-tags-column ?=))
 
 
@@ -575,12 +581,12 @@ feedback."
 
           ("wa" "Agenda for current day or week"
            ((agenda "")
-            (tags-todo "+iteracion")
-            (tags-todo "+standup")
             (tags "+pined"
-            ((org-use-tag-inheritance nil)
-             (org-agenda-sorting-strategy '(todo-state-down priority-down))))
-            (tags-todo "+office-pined")
+                  ((org-use-tag-inheritance nil)
+                   (org-agenda-sorting-strategy '(todo-state-down priority-down))))
+            ;; (tags-todo "+iteracion")
+            ;; (tags-todo "+standup")
+            ;; (tags-todo "+office-pined")
             )
            ((org-agenda-tag-filter-preset '("+work"))))
 
@@ -588,35 +594,35 @@ feedback."
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
           ("wc" "Coded related todos"
-           ((tags-todo "+bug")
+           ((tags-todo "+next")
+            (tags-todo "+bug")
             (tags-todo "+fix")
             (tags-todo "+feat")
-            (tags-todo "+chore")
-            (tags-todo "+@code-bug-fix-feat-chore"))
+            (tags-todo "+refactor")
+            (tags-todo "+check")
+            (tags-todo "+@code-bug-fix-feat-chore-refactor-check-next"))
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))
             (org-agenda-tag-filter-preset '("+work"))))
 
           ("wn" "Quick notes" tags "+work"
            ((org-use-tag-inheritance nil)
+            (org-agenda-include-inactive-timestamps nil)
             (org-agenda-files '("~/syncthing/org/capture/work/quick-notes.org"))))
 
-          ("wm" "Meeting notes" tags "+work"
+          ("wr" "Retro and Leand" tags "+work"
            ((org-use-tag-inheritance nil)
-            (org-agenda-files '("~/syncthing/org/capture/work/meeting.org"))))
+            (org-agenda-files '("~/syncthing/org/capture/work/retro-and-leancoffe.org"))))
 
           ("wj" "Journal personal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
            ((org-agenda-sorting-strategy '(alpha-down))
-            (org-agenda-max-entries 20)
             (org-use-tag-inheritance nil)
             (org-agenda-files '("~/syncthing/org/capture/work/journal.org"))))
 
           ("wJ" "Journal team" tags "+work"
            ((org-agenda-max-entries 20)
             (org-use-tag-inheritance nil)
-            (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))
-
-          ("wz" "Code review notes" tags-todo "+work+codrev"
-           ((org-agenda-sorting-strategy '(todo-state-down priority-down)))))))
+            (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))))
+  )
 
 
 (use-package org-capture
@@ -1170,9 +1176,12 @@ feedback."
   (org-mode      . flyspell-mode)
   (markdown-mode . flyspell-mode)
   (prog-mode     . flyspell-prog-mode)
+  (yaml-mode     . flyspell-prog-mode)
 
   :config
-  (set-variable-in-hook prog-mode-hook flyspell-persistent-highlight nil))
+  (set-variable-in-hook prog-mode-hook flyspell-persistent-highlight nil)
+  (set-variable-in-hook yaml-mode-hook flyspell-persistent-highlight nil)
+  )
 
 (use-package flyspell-correct
   :straight t
@@ -1666,6 +1675,7 @@ feedback."
 
 (use-package all-the-icons-dired
   :straight t
+  :diminish
   :custom
   (all-the-icons-dired-monochrome  nil)
 
@@ -2026,22 +2036,48 @@ which call (newline) command"
   :straight t
   :mode "\\.qml\\'")
 
-(use-package popwin
+;; (use-package popwin
+;;   :straight t
+;;   :init
+;;   (defun ma/bury-compile-buffer  (buf str)
+;;     (when (null (string-match ".*exited abnormally.*" str))
+;;       ;;no errors, make the compilation window go away in a 1 seconds
+;;       (run-with-timer 1 nil #'popwin:close-popup-window)
+;;       (message "No Compilation Errors!")))
+
+;;   (add-hook 'compilation-finish-functions #'ma/bury-compile-buffer)
+
+;;   :config
+;;   (push '(inferior-python-mode :height 20 :noselect t :tail t :stick t) popwin:special-display-config)
+;;   (push '("*Google Translate*" :noselect t :height 20) popwin:special-display-config)
+;;   (push '("*Projectile Commander Help*"  :height 22) popwin:special-display-config)
+;;   (popwin-mode 1))
+
+(use-package popper
   :straight t
+  :bind (("C-`"   . popper-toggle-latest)
+         ("M-`"   . popper-cycle)
+         ("C-M-`" . popper-toggle-type))
+  :custom
+  (popper-window-height (lambda ()
+                          (fit-window-to-buffer
+                           win
+                           (floor (frame-height) 2)
+                           (floor (frame-height) 3))))
   :init
-  (defun ma/bury-compile-buffer  (buf str)
-    (when (null (string-match ".*exited abnormally.*" str))
-      ;;no errors, make the compilation window go away in a 1 seconds
-      (run-with-timer 1 nil #'popwin:close-popup-window)
-      (message "No Compilation Errors!")))
-
-  (add-hook 'compilation-finish-functions #'ma/bury-compile-buffer)
-
-  :config
-  (push '(inferior-python-mode :height 20 :noselect t :tail t :stick t) popwin:special-display-config)
-  (push '("*Google Translate*" :noselect t :height 20) popwin:special-display-config)
-  (push '("*Projectile Commander Help*"  :height 22) popwin:special-display-config)
-  (popwin-mode 1))
+  (setq popper-reference-buffers
+        '("\\*Messages\\*"
+          "Output\\*$"
+          "\\*Async Shell Command\\*"
+          "\\*Google Translate\\*"
+          help-mode
+          inferior-python-mode
+          compilation-mode))
+  (setq popper-reference-buffers
+        (append popper-reference-buffers
+                '("^\\*eshell.*\\*$" eshell-mode)))
+  (popper-mode +1)
+  (popper-echo-mode +1))
 
 (use-package protobuf-mode
   :straight t)
