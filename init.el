@@ -255,9 +255,9 @@ feedback."
  indent-tabs-mode                     nil
  scroll-preserve-screen-position      t
  scroll-step                          1
+ hscroll-step                         1
  vc-follow-symlinks                   t
  auto-hscroll-mode                    'current-line
- hscroll-step 1
  async-shell-command-buffer           'new-buffer
  default-input-method                 "latin-prefix"
  frame-resize-pixelwise                t
@@ -1073,8 +1073,7 @@ feedback."
 
 
 (use-package prog-mode
-  :init
-  (set-variable-in-hook prog-mode-hook tab-width 4))
+  :init)
 
 (use-package elec-pair
   :custom
@@ -1091,7 +1090,9 @@ feedback."
 (use-package markdown-mode
   :straight t
   :mode (("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode)))
+         ("\\.markdown\\'" . markdown-mode))
+  :custom
+  (markdown-fontify-code-blocks-natively t))
 
 (use-package edit-indirect
   :after markdown
@@ -1200,7 +1201,7 @@ feedback."
   (magit-save-repository-buffers          'dontask)
   (magit-display-buffer-function          'magit-display-buffer-same-window-except-diff-v1)
   (magit-section-visibility-indicator     nil)
-  (magit-diff-adjust-tab-width            'always)
+  (magit-diff-adjust-tab-width            tab-width)
   (magit-diff-refine-hunk                 'all)
   (magit-copy-revision-abbreviated        t)
   (magit-section-initial-visibility-alist '((untracked . hide)
@@ -1882,8 +1883,7 @@ feedback."
   (setq gofmt-command "goimports")
   (add-hook 'go-mode-hook
             (lambda ()
-              (add-hook 'before-save-hook 'gofmt-before-save)
-              (setq tab-width 4))))
+              (add-hook 'before-save-hook 'gofmt-before-save))))
 
 (use-package go-playground
   :straight t
