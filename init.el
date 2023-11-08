@@ -797,7 +797,7 @@ feedback."
       (remove-hook 'after-make-frame-functions #'ma/setup-appearence)
       (load-theme 'spacemacs-dark t)
       (set-face-attribute 'region nil :background "#3d3b40")
-      (add-hook 'org-mode-hook (lambda () (set-face-attribute 'org-block-begin-line nil :extend nil)))))
+      (add-hook 'org-mode-hook (lambda () (set-face-attribute 'org-block-begin-line 'unspecified :extend nil)))))
 
   (if (daemonp)
       (add-hook 'after-make-frame-functions #'ma/setup-appearence)
@@ -876,17 +876,17 @@ feedback."
        `(line-number-current-line ((t (:inherit line-number :foreground ,zenburn-yellow-2 ))))
 
        ;; magit
-       `(magit-diff-added    ((t (:background nil  :foreground ,zenburn-green))))
-       `(magit-diff-changed  ((t (:background nil  :foreground ,zenburn-yellow-1))))
-       `(magit-diff-removed  ((t (:background nil  :foreground ,zenburn-red-2))))
+       `(magit-diff-added    ((t (:background unspecified  :foreground ,zenburn-green))))
+       `(magit-diff-changed  ((t (:background unspecified  :foreground ,zenburn-yellow-1))))
+       `(magit-diff-removed  ((t (:background unspecified  :foreground ,zenburn-red-2))))
        `(magit-diff-added-highlight    ((t (:background ,zenburn-bg+05  :foreground ,zenburn-green))))
        `(magit-diff-changed-highlight  ((t (:background ,zenburn-bg+05  :foreground ,zenburn-yellow-1))))
        `(magit-diff-removed-highlight  ((t (:background ,zenburn-bg+05  :foreground ,zenburn-red-2))))
 
        ;; diff
-       `(diff-refine-added   ((t (:background nil  :foreground ,zenburn-green+4))))
-       `(diff-refine-changed ((t (:background nil  :foreground ,zenburn-yellow))))
-       `(diff-refine-removed ((t (:background nil  :foreground ,zenburn-red+1))))
+       `(diff-refine-added   ((t (:background unspecified  :foreground ,zenburn-green+4))))
+       `(diff-refine-changed ((t (:background unspecified  :foreground ,zenburn-yellow))))
+       `(diff-refine-removed ((t (:background unspecified  :foreground ,zenburn-red+1))))
 
        ;; ediff
        `(ediff-current-diff-A ((t (:foreground ,zenburn-red-4  :background ,zenburn-bg+05))))
@@ -1696,6 +1696,7 @@ feedback."
 (use-package all-the-icons
   ;; after install run the command (all-the-icons-install-fonts)
   :defer t
+  :diminish
   :straight t)
 
 (use-package all-the-icons-dired
@@ -2112,6 +2113,7 @@ which call (newline) command"
   :hook ((go-mode python-mode c-mode c++-mode ess-r-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
+  (lsp-warn-no-matched-clients nil)
   (lsp-diagnostic-package :none)
   (lsp-signature-auto-activate nil)
   (lsp-enable-symbol-highlighting t)
