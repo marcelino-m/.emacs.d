@@ -234,6 +234,7 @@ feedback."
 (xterm-mouse-mode)
 
 (setq-default
+ tab-width                            4
  cursor-type                          'box
  case-fold-search                     t
  column-number-mode                   t
@@ -266,7 +267,7 @@ feedback."
                                         (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
                                         (cursor-color         . "#e52b50")
-                                        (font                 . "Source Code Pro-9.3:weight=semi-bold:width=normal")))
+                                        (font                 . "Fira Code-11")))
 
 ;; unbind from global map
 (global-unset-key (kbd "<menu>"))
@@ -1103,9 +1104,9 @@ feedback."
   :straight t
   :bind-keymap ("C-,"   . projectile-command-map)
   :bind-keymap ("C-c p" . projectile-command-map)
-  :bind (([f3]  . next-error)
-         ([f4] . 'recompile)
-         ([f5]  . projectile-compile-project)
+  :bind (([f6] .  next-error)
+         ([f7] . 'recompile)
+         ([f8] .  projectile-compile-project)
          :map projectile-command-map
               ("s a" . counsel-projectile-ag)
               (","   . projectile-switch-project))
