@@ -652,41 +652,53 @@ feedback."
            entry (file "~/syncthing/org/capture/work/task.org")
            "* TODO %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
-          ("wm" "Meetings notes"
-           entry (file "~/syncthing/org/capture/work/meeting.org" )
-           "* Meeting %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
-
           ("wn" "Note: Quick and misc note about anything"
            entry (file "~/syncthing/org/capture/work/quick-notes.org")
-           "* %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
+           "* %T %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
 
-          ("wz" "Code review: Saved notes when review code"
-           entry (file "~/syncthing/org/capture/work/code-review.org")
-           "* DOING %?  :work:codrev:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2)
-
-          ("wo" "One to one meeting"
-           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "One to One")
+          ;;;;;;;;;;;; one to one related capture
+          ("wo" "one to one related task")
+          ("wom" "thinhg that I want to share"
+           entry (file+headline "~/syncthing/org/capture/work/oneone-meeting.org" "Marcelo")
            "* TODO %? :work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
-          ("wl" "Lead meeting"
-           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Lead meeting")
-           "* TODO %? :work:lead:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+          ("wof" "thinhg that I want to share to felipe"
+           entry (file+headline "~/syncthing/org/capture/work/oneone-meeting.org" "Felipe")
+           "* TODO %? :work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
-          ("ws" "Stand up"
-           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Standup meeting")
-           "* TODO %? :work:standup:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+          ("wor" "thinhg that I want to share to roberto"
+           entry (file+headline "~/syncthing/org/capture/work/oneone-meeting.org" "Roberto")
+           "* TODO %? :work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
-          ("wr" "Retro"
-           entry (file+headline "~/syncthing/org/capture/work/for-next-meeting.org" "Retrospective")
+          ("woc" "thinhg that I want to share to fernando"
+           entry (file+headline "~/syncthing/org/capture/work/oneone-meeting.org" "Fernando")
+           "* TODO %? :work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+
+          ("wol" "thinhg that I want to share to lord"
+           entry (file+headline "~/syncthing/org/capture/work/oneone-meeting.org" "Edgardo")
+           "* TODO %? :work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+
+          ("wop" "thinhg that I want to share to rosario"
+           entry (file+headline "~/syncthing/org/capture/work/oneone-meeting.org" "Rosario")
+           "* TODO %? :work:one2one:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+
+          ;;;;;;;;;;;
+
+          ("wr" "Retro and Lean"
+           entry (file+headline "~/syncthing/org/capture/work/retro-and-leancoffe.org" "Retrospective")
            "* TODO %? :work:retro:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+
+          ("wl" "Lead meeting"
+           entry (file+headline "~/syncthing/org/capture/work/lead-meeting.org" "Topics to deal with")
+           "* TODO %? :work:leadmeeting:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
           ("wj" "Journal"
            item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
            "%?" :tree-type week)
 
           ("wJ" "Journal team"
-           entry (file "~/syncthing/org/capture/work/journal-team.org" )
-           "* Iteracion %^{Iteration number} (semana %^{On week Month/Day}) :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :prepend t :empty-lines-after 2))))
+           item (file+olp+datetree "~/syncthing/org/capture/work/journal-team.org")
+           "%?" :tree-type week))))
 
 
 (use-package org-indent
@@ -793,7 +805,6 @@ feedback."
     (set-face-attribute 'region nil :background "#3d3b40")))
 
 (use-package solarized-theme
-  :disabled
   :straight t
   :custom
   (solarized-use-variable-pitch      nil)
@@ -813,12 +824,24 @@ feedback."
   (org-block-begin-line ((t (:underline "#c2bdb2"  :foreground "#c2bdb2"))))
   (org-block-end-line   ((t (:overline nil  :underline nil  :foreground "#c2bdb2"))))
   (org-checkbox         ((t :box nil)))
+  ;;(magit-diff-added     ((t (:background nil  :foreground "#2f4321"))))
+  ;; (magit-diff-changed   ((t (:background nil  :foreground nil))))
+  ;; (magit-diff-removed   ((t (:background nil  :foreground nil))))
+  ;; (magit-diff-added-highlight    ((t (:background nil  :foreground nil))))
+  ;; (magit-diff-changed-highlight  ((t (:background nil  :foreground nil))))
+  ;; (magit-diff-removed-highlight  ((t (:background nil  :foreground nil))))
+  (diff-refine-added   ((t (:background nil  :foreground "#9fd702"))))
+  (diff-refine-changed ((t (:background nil  :foreground "#0000ff"))))
+  (diff-refine-removed ((t (:background nil  :foreground "#ff0000"))))
+
+
 
   :config
   (load-theme 'solarized-light t))
 
 
 (use-package zenburn-theme
+  :disabled
   :straight t
   :config
   (setq zenburn-override-colors-alist
@@ -1211,9 +1234,9 @@ feedback."
                                             (stashes   . hide)
                                             (recent    . show)))
 
-  :custom-face
-  (smerge-refined-added   ((t :inverse-video nil)))
-  (smerge-refined-removed ((t :inverse-video nil)))
+  ;; :custom-face
+  ;; (smerge-refined-added   ((t :inverse-video nil)))
+  ;; (smerge-refined-removed ((t :inverse-video nil)))
 
   :hook
   (git-commit-mode . git-commit-turn-on-flyspell)
@@ -1417,14 +1440,14 @@ feedback."
   :init
   (company-ycmd-setup))
 
-(use-package company-auctex
-  :straight t
-  :init
-  (company-auctex-init)
-  (eval-after-load "company-auctex"
-    ;; override this function, bad alignament in company
-    '(defun company-auctex-symbol-annotation (candidate)
-       nil)))
+;; (use-package company-auctex
+;;   :straight t
+;;   :init
+;;   (company-auctex-init)
+;;   (eval-after-load "company-auctex"
+;;     ;; override this function, bad alignament in company
+;;     '(defun company-auctex-symbol-annotation (candidate)
+;;        nil)))
 
 (use-package winner
   :after hydra
@@ -1854,11 +1877,6 @@ feedback."
   :init (global-hl-todo-mode)
   :config
   (setq hl-todo-activate-in-modes '(prog-mode)))
-
-(use-package scss-mode
-  :straight t
-  :init
-  (setq scss-compile-at-save nil))
 
 (use-package nginx-mode
   :straight t)
@@ -2486,3 +2504,7 @@ which call (newline) command"
 
 (use-package org-transform-tree-table
   :straight t)
+
+(use-package dotenv-mode
+  :straight t
+  :diminish)

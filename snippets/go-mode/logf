@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: debug fmt.Printf
-# key: logf
+# name: fmt.Printf
+# key: fmtf
 # --
 fmt.Printf("$2", $1)$0

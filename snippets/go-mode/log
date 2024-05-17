@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: debug fmt.Println
-# key: log
+# key: fmt
 # --
 fmt.Println($1)$0
