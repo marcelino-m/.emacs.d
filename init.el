@@ -534,8 +534,8 @@ feedback."
               (lambda (&rest args)
                 (org-narrow-to-subtree)))
 
-  (setq org-agenda-tags-column         85
-        org-tags-column                85
+  (setq org-agenda-tags-column         82
+        org-tags-column                82
         org-agenda-todo-list-sublevels nil
         org-agenda-block-separator (make-string org-tags-column ?=))
 
@@ -1658,7 +1658,7 @@ feedback."
   :custom
   (dired-dwim-target                       t)
   (wdired-allow-to-change-permissions      t)
-  (dired-listing-switches             "-alh --time-style=iso")
+  (dired-listing-switches             "-aGlhv --group-directories-first --time-style=long-iso")
 
 
   :init
@@ -2109,7 +2109,7 @@ which call (newline) command"
 (use-package lsp-mode
   :straight t
   :diminish
-  :hook ((go-mode python-mode c-mode ess-r-mode) . lsp-deferred)
+  :hook ((go-mode python-mode c-mode c++-mode ess-r-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-diagnostic-package :none)
@@ -2508,3 +2508,10 @@ which call (newline) command"
 (use-package dotenv-mode
   :straight t
   :diminish)
+
+
+(use-package clang-format+
+  :straight t
+  :diminish
+  :config
+  (add-hook 'c-mode-common-hook #'clang-format+-mode))
