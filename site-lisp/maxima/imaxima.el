@@ -804,8 +804,9 @@ cleardictstack 0 get restore\n")
 	   (when (string-match "\\(\\([^]*\\)\\)" str)
 	      (setq label (match-string 2 str))
 	      (setq str (replace-match "" t t str 1)))
-	   (if no-label-p (setq label nil)) ;; override label to nil if no-label-p
-	   (imaxima-tex-to-dvi str label (concat filename ".tex"))
+	   ;;(if no-label-p (setq label nil)) ;; override label to nil if no-label-p
+       (setq label nil)
+       (imaxima-tex-to-dvi str label (concat filename ".tex"))
 	   (imaxima-dvi-to-ps filename)
 	   )
 	  ((eql eps-or-latex 'eps)

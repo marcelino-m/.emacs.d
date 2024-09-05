@@ -19,6 +19,7 @@
 
 (straight-use-package 'use-package)
 
+
 ;; taken from https://gustafwaldemarson.com/posts/set-variable-in-hook/
 (defmacro set-variable-in-hook (hook variable value &optional name)
   "Create a proper  HOOK function for setting  VARIABLE to VALUE.
@@ -69,31 +70,6 @@ NAME can be used to set the name of the defined function."
                   (flash-region beg (point) 'highlight 0.1))))
 
 
-  ;; (defun ma/last-kt-kill-line-or-region ()
-  ;;   (interactive)
-  ;;   (if (eq last-command 'ma/kill-ring-save-line-or-region)
-  ;;       (call-interactively 'ma/kill-ring-save-line-or-region)
-  ;;     (call-interactively 'ma/kill-line-or-region)))
-
-
-  ;; (setq ma/last-forward-command #'ma/forward-char)
-  ;; (defun ma/last-forward-command ()
-  ;;   (interactive)
-  ;;   (call-interactively ma/last-forward-command))
-
-  ;; (setq ma/last-backward-command #'ma/backward-char)
-  ;; (defun ma/last-backward-command ()
-  ;;   (interactive)
-  ;;   (call-interactively ma/last-backward-command))
-
-  ;; (defun ma/register-last-forward-command (cmd &rest args)
-  ;;   (setq ma/last-forward-command cmd)
-  ;;   (apply cmd args))
-
-  ;; (defun ma/register-last-backward-command (cmd &rest args)
-  ;;   (setq ma/last-backward-command cmd)
-  ;;   (apply cmd args))
-
 
   (defun ma/kill-ring-save-line-or-region (beg end &optional region)
     "Save current  line to kill ring  if no region is  active, with
@@ -110,88 +86,7 @@ feedback."
           (setq end (point))
           (flash-region beg end 'highlight 0.1)
           (kill-ring-save beg end)))))
-
-  (define-key global-map (kbd "C-w") 'ma/kill-line-or-region)
-
-
-  ;; (defun ma/quick-modal-activate-advice (cmd &rest args)
-  ;;   (apply cmd args)
-  ;;   (when (bound-and-true-p ma/quick-modal-minor-mode)
-
-  ;;     (unless (bound-and-true-p ma/quick-modal-navigation-flag)
-  ;;       (setq-local ma/quick-modal-navigation-flag t)
-  ;;       (hydra-navigation/body))))
-
-  ;; (fset 'ma/next-line     #'next-line)
-  ;; (fset 'ma/previous-line #'previous-line)
-
-  ;; ;; char command
-  ;; (fset 'ma/forward-char  #'forward-char)
-  ;; (fset 'ma/backward-char #'backward-char)
-  ;; (put  'ma/forward-char  'command-type 'char)
-  ;; (put  'ma/backward-char 'command-type 'char)
-
-  ;; ;; word command
-  ;; (fset 'ma/forward-word  #'forward-word)
-  ;; (fset 'ma/backward-word #'backward-word)
-  ;; (put  'ma/forward-word  'command-type 'word)
-  ;; (put  'ma/backward-word 'command-type 'word)
-
-  ;; (fset 'ma/yank          #'yank)
-  ;; (put  'ma/yank 'delete-selection 'yank)
-
-  ;; (advice-add  'ma/next-line     :around #'ma/quick-modal-activate-advice)
-  ;; (advice-add  'ma/previous-line :around #'ma/quick-modal-activate-advice)
-
-  ;; ;; forward commad
-  ;; (advice-add  'ma/forward-char  :around #'ma/quick-modal-activate-advice)
-  ;; (advice-add  'ma/forward-word  :around #'ma/quick-modal-activate-advice)
-  ;; (advice-add  'ma/forward-char  :around #'ma/register-last-forward-command)
-  ;; (advice-add  'ma/forward-word  :around #'ma/register-last-forward-command)
-
-  ;; ;; backward command
-  ;; (advice-add  'ma/backward-char :around #'ma/quick-modal-activate-advice)
-  ;; (advice-add  'ma/backward-word :around #'ma/quick-modal-activate-advice)
-  ;; (advice-add  'ma/backward-char :around #'ma/register-last-backward-command)
-  ;; (advice-add  'ma/backward-word :around #'ma/register-last-backward-command)
-
-  ;; (advice-add  'ma/kill-line-or-region :around #'ma/quick-modal-activate-advice)
-  ;; (advice-add  'ma/yank :around #'ma/quick-modal-activate-advice)
-
-  ;; (define-key global-map [remap next-line]     'ma/next-line)
-  ;; (define-key global-map [remap previous-line] 'ma/previous-line)
-  ;; (define-key global-map [remap forward-char]  'ma/forward-char)
-  ;; (define-key global-map [remap backward-char] 'ma/backward-char)
-  ;; (define-key global-map [remap forward-word]  'ma/forward-word)
-  ;; (define-key global-map [remap backward-word] 'ma/backward-word)
-  ;; (define-key global-map [remap yank]          'ma/yank)
-
-  ;; (defhydra hydra-navigation (:pre
-  ;;                             (progn
-  ;;                               (set-cursor-color "#e52b50"))
-  ;;                             :post (progn
-  ;;                                     (setq ma/quick-modal-navigation-flag nil)
-  ;;                                     (set-cursor-color "#bdbdbd")))
-  ;;   "Navigation hydra"
-  ;;   ("n" ma/next-line)
-  ;;   ("p" ma/previous-line)
-  ;;   ("f" ma/last-forward-command)
-  ;;   ("b" ma/last-backward-command)
-  ;;   ("w" ma/last-kt-kill-line-or-region)
-  ;;   ("y" ma/yank)
-  ;;   ("l" recenter-top-bottom)
-  ;;   )
-
-  ;; (hydra-set-property 'hydra-navigation :verbosity 0)
-
-  ;; (define-minor-mode ma/quick-modal-minor-mode
-  ;;   "Function collection to help english learning")
-
-  ;; (add-hook 'prog-mode-hook 'ma/quick-modal-minor-mode)
-  ;; (add-hook 'text-mode-hook 'ma/quick-modal-minor-mode)
-
-
-  )
+  (define-key global-map (kbd "C-w") 'ma/kill-line-or-region))
 
 
 (use-package flash-region
@@ -267,7 +162,7 @@ feedback."
                                         (height               . 0.65)
                                         (vertical-scroll-bars .  nil)
                                         (cursor-color         . "#e52b50")
-                                        (font                 . "Fira Code-11")))
+                                        (font                 . "Fira Code-9")))
 
 ;; unbind from global map
 (global-unset-key (kbd "<menu>"))
@@ -309,6 +204,7 @@ feedback."
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize)
   (add-to-list 'exec-path "~/.local/bin/")
+  (add-to-list 'exec-path "/home/marce/.nvm/versions/node/v22.7.0/bin")
   (add-to-list 'exec-path (concat (getenv "PYTHONUSERBASE") "/bin")))
 
 
@@ -374,15 +270,15 @@ feedback."
           (type
            "|" "CANCELED(c)"  "DONE(e)")))
 
-  (setq org-todo-keyword-faces
-        '(("WANT"   . "gray")
-          ("WAIT"   . "Yellow")
-          ("TODO"   . "OrangeRed")
-          ("DOING"  . "Orange")
-          ("STOPPED" . "Yellow")
-          ("DONE"    . "SpringGreen")
-          ("DELEGATED" . "SpringGreen")
-          ("CANCELED"  . "SpringGreen")))
+  ;; (setq org-todo-keyword-faces
+  ;;       '(("WANT"   . "gray")
+  ;;         ("WAIT"   . "Yellow")
+  ;;         ("TODO"   . "OrangeRed")
+  ;;         ("DOING"  . "Orange")
+  ;;         ("STOPPED" . "Yellow")
+  ;;         ("DONE"    . "SpringGreen")
+  ;;         ("DELEGATED" . "SpringGreen")
+  ;;         ("CANCELED"  . "SpringGreen")))
 
 
 
@@ -1093,7 +989,9 @@ feedback."
   (yas-reload-all)
   (add-hook 'go-mode-hook 'yas-minor-mode)
   (add-hook 'python-mode-hook 'yas-minor-mode)
-  (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode))
+  (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
+  (add-hook 'tsx-mode-hook 'yas-minor-mode)
+  (add-hook 'tsx-ts-mode-hook 'yas-minor-mode))
 
 
 (use-package prog-mode
@@ -1172,12 +1070,14 @@ feedback."
   :after projectile)
 
 (use-package helm-projectile
+  :disabled
   :straight t)
 
 (use-package ggtags
   :straight t)
 
 (use-package cmake-mode
+  :disabled
   :straight t
   :bind ((:map cmake-mode-map
                ("<f5>" . 'recompile)))
@@ -1391,11 +1291,8 @@ feedback."
   (web-mode-enable-element-content-fontification t)
   (web-mode-enable-element-tag-fontification     t)
   (web-mode-markup-indent-offset                 2)
-  (web-mode-code-indent-offset                   4))
-
-(use-package js2-mode
-  :straight t
-  :mode        "\\.js\\'")
+  ;;(web-mode-code-indent-offset                   4)
+  )
 
 
 (use-package company
@@ -1408,7 +1305,6 @@ feedback."
          ("C-p" . company-select-previous))
 
   :hook ((emacs-lisp-mode    . company-mode)
-         (js2-mode           . company-mode)
          (web-mode           . company-mode)
          (css-mode           . company-mode)
          (c++-mode           . company-mode)
@@ -1791,10 +1687,6 @@ feedback."
 (use-package typescript-mode
   :straight t)
 
-(use-package tide
-  :straight t
-  :after (typescript-mode company)
-  :hook ((typescript-mode . tide-setup)))
 
 (use-package mocha-snippets
   :straight t)
@@ -1958,6 +1850,7 @@ feedback."
   :straight t)
 
 (use-package see-mode
+  :disabled
   :straight t
   :init
   (setq see-use-align-quotes t))
@@ -2099,8 +1992,6 @@ which call (newline) command"
   (popper-mode +1)
   (popper-echo-mode +1))
 
-(use-package protobuf-mode
-  :straight t)
 
 (use-package eros
   :straight t
@@ -2368,9 +2259,11 @@ which call (newline) command"
   (hydra-set-property 'hydra-eye :verbosity 0))
 
 (use-package mpv
+  :disabled
   :straight t)
 
 (use-package engtool
+  :disabled
   :diminish
   :after hydra
   :config
@@ -2447,14 +2340,9 @@ which call (newline) command"
   :straight t
   :diminish)
 
-(use-package alarm-clock
-  :straight t
-  :diminish)
-
 (use-package google-this
   :straight t
   :diminish)
-
 
 (use-package undo-tree
   :straight t
@@ -2465,6 +2353,7 @@ which call (newline) command"
   (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
 (use-package ess
+  :disabled
   :straight t
   :custom
   (ess-R-font-lock-keywords '((ess-R-fl-keyword:keywords . t)
@@ -2481,30 +2370,18 @@ which call (newline) command"
                               (ess-R-fl-keyword:F&T))))
 
 (use-package ess-r-mode
+  :disabled
   :commands R)
 
-(use-package org-xournalpp
-  :straight (:host gitlab
-                   :repo "vherrmann/org-xournalpp"
-                   :type git
-                   :files ("*.el" "resources"))
-  :custom
-  (org-xournalpp-executable "xournalpp-1.1.0-x86_64.AppImage")
-
-  :diminish
-  :config
-  (add-hook 'org-mode-hook 'org-xournalpp-mode))
-
 (use-package org-download
+  :disabled
   :straight t
   :diminish
   :config
   (add-hook 'dired-mode-hook 'org-download-enable))
 
-(use-package ztree
-  :straight t)
-
 (use-package org-transform-tree-table
+  :disabled
   :straight t)
 
 (use-package dotenv-mode
@@ -2517,3 +2394,85 @@ which call (newline) command"
   :diminish
   :config
   (add-hook 'c-mode-common-hook #'clang-format+-mode))
+
+(setq warning-minimum-level :error)
+(use-package tsx-ts-mode
+  :custom
+  (typescript-ts-mode-indent-offset 4)
+  (typescript-indent-level 4)
+  (js-indent-level 4)
+
+  :hook
+  (tsx-ts-mode . lsp-deferred)
+  :init
+  (add-to-list 'treesit-language-source-alist '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+  ;;(dolist (lang '(tsx)) (treesit-install-language-grammar lang))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . tsx-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.ts\\'"  . tsx-ts-mode)))
+
+(use-package apheleia
+  :straight t
+  :diminish
+  :hook
+  (tsx-ts-mode . apheleia-mode)
+  (typescript-mode . apheleia-mode)
+  (typescript-ts-mode . apheleia-mode))
+
+((straight-use-package 'apheleia))
+;; (use-package jtsx
+;;   :straight t
+;;   :hook
+;;   (jtsx-jsx-mode . lsp-deferred)
+;;   (jtsx-tsx-mode . lsp-deferred)
+
+;;   :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
+;;          ("\\.tsx\\'" . jtsx-tsx-mode)
+;;          ("\\.ts\\'" . jtsx-typescript-mode))
+;;   :commands jtsx-install-treesit-language
+;;   ;; :hook ((jtsx-jsx-mode . hs-minor-mode)
+;;   ;;        (jtsx-tsx-mode . hs-minor-mode)
+;;   ;;        (jtsx-typescript-mode . hs-minor-mode))
+;;   :custom
+;;   (js-indent-level 2)
+;;   (typescript-ts-mode-indent-offset 2)
+;;   ;; (jtsx-switch-indent-offset 0)
+;;   ;; (jtsx-indent-statement-block-regarding-standalone-parent nil)
+;;   ;; (jtsx-jsx-element-move-allow-step-out t)
+;;   ;; (jtsx-enable-jsx-electric-closing-element t)
+;;   ;; (jtsx-enable-electric-open-newline-between-jsx-element-tags t)
+;;   ;; (jtsx-enable-jsx-element-tags-auto-sync nil)
+;;   ;; (jtsx-enable-all-syntax-highlighting-features t)
+;;   ;; :config
+;;   ;; (defun jtsx-bind-keys-to-mode-map (mode-map)
+;;   ;;   "Bind keys to MODE-MAP."
+;;   ;;   (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
+;;   ;;   (define-key mode-map (kbd "C-c j o") 'jtsx-jump-jsx-opening-tag)
+;;   ;;   (define-key mode-map (kbd "C-c j c") 'jtsx-jump-jsx-closing-tag)
+;;   ;;   (define-key mode-map (kbd "C-c j r") 'jtsx-rename-jsx-element)
+;;   ;;   (define-key mode-map (kbd "C-c <down>") 'jtsx-move-jsx-element-tag-forward)
+;;   ;;   (define-key mode-map (kbd "C-c <up>") 'jtsx-move-jsx-element-tag-backward)
+;;   ;;   (define-key mode-map (kbd "C-c C-<down>") 'jtsx-move-jsx-element-forward)
+;;   ;;   (define-key mode-map (kbd "C-c C-<up>") 'jtsx-move-jsx-element-backward)
+;;   ;;   (define-key mode-map (kbd "C-c C-S-<down>") 'jtsx-move-jsx-element-step-in-forward)
+;;   ;;   (define-key mode-map (kbd "C-c C-S-<up>") 'jtsx-move-jsx-element-step-in-backward)
+;;   ;;   (define-key mode-map (kbd "C-c j w") 'jtsx-wrap-in-jsx-element)
+;;   ;;   (define-key mode-map (kbd "C-c j u") 'jtsx-unwrap-jsx)
+;;   ;;   (define-key mode-map (kbd "C-c j d") 'jtsx-delete-jsx-node)
+;;   ;;   (define-key mode-map (kbd "C-c j t") 'jtsx-toggle-jsx-attributes-orientation)
+;;   ;;   (define-key mode-map (kbd "C-c j h") 'jtsx-rearrange-jsx-attributes-horizontally)
+;;   ;;   (define-key mode-map (kbd "C-c j v") 'jtsx-rearrange-jsx-attributes-vertically))
+
+;;   ;; (defun jtsx-bind-keys-to-jtsx-jsx-mode-map ()
+;;   ;;     (jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
+
+;;   ;; (defun jtsx-bind-keys-to-jtsx-tsx-mode-map ()
+;;   ;;     (jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
+
+;;   ;; (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
+;;   ;; (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
+;;   )
+
+(use-package insert-shebang
+  :straight t
+  :diminish)
