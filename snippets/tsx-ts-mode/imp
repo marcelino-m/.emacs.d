@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: impts
+# key: imp
+# --
+import { $2 } $3from '$1';

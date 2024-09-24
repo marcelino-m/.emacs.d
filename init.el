@@ -270,15 +270,15 @@ feedback."
           (type
            "|" "CANCELED(c)"  "DONE(e)")))
 
-  ;; (setq org-todo-keyword-faces
-  ;;       '(("WANT"   . "gray")
-  ;;         ("WAIT"   . "Yellow")
-  ;;         ("TODO"   . "OrangeRed")
-  ;;         ("DOING"  . "Orange")
-  ;;         ("STOPPED" . "Yellow")
-  ;;         ("DONE"    . "SpringGreen")
-  ;;         ("DELEGATED" . "SpringGreen")
-  ;;         ("CANCELED"  . "SpringGreen")))
+  (setq org-todo-keyword-faces
+        '(("WANT"   . "gray")
+          ("WAIT"   . "Yellow")
+          ("TODO"   . "OrangeRed")
+          ("DOING"  . "Orange")
+          ("STOPPED" . "Yellow")
+          ("DONE"    . "SpringGreen")
+          ("DELEGATED" . "SpringGreen")
+          ("CANCELED"  . "SpringGreen")))
 
 
 
@@ -701,6 +701,7 @@ feedback."
     (set-face-attribute 'region nil :background "#3d3b40")))
 
 (use-package solarized-theme
+  :disabled
   :straight t
   :custom
   (solarized-use-variable-pitch      nil)
@@ -720,24 +721,22 @@ feedback."
   (org-block-begin-line ((t (:underline "#c2bdb2"  :foreground "#c2bdb2"))))
   (org-block-end-line   ((t (:overline nil  :underline nil  :foreground "#c2bdb2"))))
   (org-checkbox         ((t :box nil)))
-  ;;(magit-diff-added     ((t (:background nil  :foreground "#2f4321"))))
-  ;; (magit-diff-changed   ((t (:background nil  :foreground nil))))
-  ;; (magit-diff-removed   ((t (:background nil  :foreground nil))))
-  ;; (magit-diff-added-highlight    ((t (:background nil  :foreground nil))))
-  ;; (magit-diff-changed-highlight  ((t (:background nil  :foreground nil))))
-  ;; (magit-diff-removed-highlight  ((t (:background nil  :foreground nil))))
-  (diff-refine-added   ((t (:background nil  :foreground "#9fd702"))))
+  ;; (magit-diff-added     ((t (:background "blue"  :foreground "#106634"))))
+  ;; (magit-diff-changed   ((t (:background "#f1ead8"  :foreground nil))))
+  ;; (magit-diff-removed   ((t (:background "#f1ead8"  :foreground nil))))
+  ;; (magit-section-highlight ((t (:background nil  :foreground "#f1ead8"))))
+  ;;  (magit-diff-added-highlight    ((t (:background "#f1ead8"  :foreground "#106634"))))
+  ;; ;; (magit-diff-changed-highlight  ((t (:background "#f1ead8"  :foreground "blue"))))
+  ;; (magit-diff-removed-highlight  ((t (:background "#f1ead8"  :foreground "#b0554c"))))
+  (diff-refine-added   ((t (:background nil  :foreground "#689a01"))))
   (diff-refine-changed ((t (:background nil  :foreground "#0000ff"))))
   (diff-refine-removed ((t (:background nil  :foreground "#ff0000"))))
-
-
 
   :config
   (load-theme 'solarized-light t))
 
 
 (use-package zenburn-theme
-  :disabled
   :straight t
   :config
   (setq zenburn-override-colors-alist
@@ -990,8 +989,9 @@ feedback."
   (add-hook 'go-mode-hook 'yas-minor-mode)
   (add-hook 'python-mode-hook 'yas-minor-mode)
   (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
-  (add-hook 'tsx-mode-hook 'yas-minor-mode)
-  (add-hook 'tsx-ts-mode-hook 'yas-minor-mode))
+  (add-hook 'tsx-ts-mode-hook 'yas-minor-mode)
+  ;; (add-hook 'typescript-ts-mode-hook 'yas-minor-mode)
+  (add-hook 'web-mode-hook 'yas-minor-mode))
 
 
 (use-package prog-mode
@@ -1106,6 +1106,7 @@ feedback."
   :config
   (set-variable-in-hook prog-mode-hook flyspell-persistent-highlight nil)
   (set-variable-in-hook yaml-mode-hook flyspell-persistent-highlight nil)
+  (set-variable-in-hook python-mode-hook flyspell-persistent-highlight nil)
   )
 
 (use-package flyspell-correct
@@ -1269,7 +1270,8 @@ feedback."
 
 (use-package emmet-mode
   :straight t
-  :hook web-mode)
+  :diminish
+  :hook (web-mode tsx-ts-mode typescript-ts-mode))
 
 (use-package web-mode
   :straight t
@@ -1869,10 +1871,9 @@ feedback."
               ("C-c C-n"   . ma/python-eval-current-line))
 
   :custom
-  (python-indent-offset                 4)
-  (python-shell-interpreter      "ipython")
+  (python-indent-offset 4)
+  (python-shell-interpreter "ipython")
   (python-shell-interpreter-args "--simple-prompt -i")
-
 
   :config
   (defun ma/python-eval-current-line (&optional keep)
@@ -1985,7 +1986,9 @@ which call (newline) command"
           "\\*Google Translate\\*"
           help-mode
           inferior-python-mode
-          compilation-mode))
+          compilation-mode
+          flycheck-error-list-mode
+          ))
   (setq popper-reference-buffers
         (append popper-reference-buffers
                 '("^\\*eshell.*\\*$" eshell-mode)))
@@ -2005,11 +2008,15 @@ which call (newline) command"
   :commands (lsp lsp-deferred)
   :custom
   (lsp-warn-no-matched-clients nil)
-  (lsp-diagnostic-package :none)
+  (lsp-diagnostics-provider :flycheck)
+  (lsp-diagnostics-disabled-modes '(python-mode))
   (lsp-signature-auto-activate nil)
   (lsp-enable-symbol-highlighting t)
-  (lsp-modeline-diagnostics-enable nil)
-  (lsp-headerline-breadcrumb-enable nil))
+  (lsp-modeline-diagnostics-enable t)
+  (lsp-eldoc-render-all nil)
+
+  (lsp-headerline-breadcrumb-enable nil)
+  )
 
 (use-package lsp-lens
   :after lsp-lens
@@ -2059,6 +2066,20 @@ which call (newline) command"
 
   (advice-add #'lsp-ui-peek--peek-new :override #'lsp-ui-peek--peek-display)
   (advice-add #'lsp-ui-peek--peek-hide :override #'lsp-ui-peek--peek-destroy)
+  )
+
+(use-package flycheck
+  :straight t
+  :hook ((python-mode) . flycheck-mode)
+  :custom
+  (flycheck-display-errors-function  nil)
+  :init
+  (add-hook 'python-mode-hook #'(lambda ()
+                                  (setq-local flycheck-checker 'python-ruff)))
+  (add-hook 'jtsx-jsx-mode-hook #'(lambda ()
+                                    (setq-local flycheck-checker 'javascript-eslint)))
+  (add-hook 'jtsx-tsx-mode-hook #'(lambda ()
+                                  (setq-local flycheck-checker 'javascript-eslint)))
   )
 
 (use-package posframe ;; for lsp-ui-peek
@@ -2220,8 +2241,9 @@ which call (newline) command"
   :mode "\\.journal\\'")
 
 (use-package display-line-numbers
+  :disabled
   :custom
-  (display-line-numbers-type  'visual)
+  (display-line-numbers-type  'relative)
   (display-line-numbers-current-absolute nil)
 
   :config
@@ -2397,19 +2419,61 @@ which call (newline) command"
 
 (setq warning-minimum-level :error)
 (use-package tsx-ts-mode
+  :disabled
   :custom
   (typescript-ts-mode-indent-offset 4)
   (typescript-indent-level 4)
   (js-indent-level 4)
 
   :hook
-  (tsx-ts-mode . lsp-deferred)
+  (tsx-ts-mode        . flycheck-mode)
+  (tsx-ts-mode        . lsp-deferred)
+  (typescript-ts-mode . flycheck-mode)
+  (typescript-ts-mode . lsp-deferred)
+
+
   :init
   (add-to-list 'treesit-language-source-alist '(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
   ;;(dolist (lang '(tsx)) (treesit-install-language-grammar lang))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . tsx-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.ts\\'"  . tsx-ts-mode)))
+
+(use-package jtsx
+  :straight t
+  :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
+         ("\\.tsx\\'" . jtsx-tsx-mode)
+         ("\\.ts\\'" . jtsx-tsx-mode))
+  :commands jtsx-install-treesit-language
+  :hook
+  (jtsx-jsx-mode . hs-minor-mode)
+  (jtsx-tsx-mode . hs-minor-mode)
+  (jtsx-typescript-mode . hs-minor-mode)
+  (jtsx-tsx-mode        . flycheck-mode)
+  (jtsx-tsx-mode        . lsp-deferred)
+  (jtsx-jsx-mode        . flycheck-mode)
+  (jtsx-jsx-mode        . lsp-deferred)
+  (jtsx-typescript-mode . flycheck-mode)
+  (jtsx-typescript-mode . lsp-deferred)
+
+  :custom
+  (typescript-ts-mode-indent-offset 4)
+  (typescript-indent-level 4)
+  (js-indent-level 4)
+
+  ;; Optional customizations
+  ;; (js-indent-level 2)
+  ;; (typescript-ts-mode-indent-offset 2)
+  ;; (jtsx-switch-indent-offset 0)
+  ;; (jtsx-indent-statement-block-regarding-standalone-parent nil)
+  ;; (jtsx-jsx-element-move-allow-step-out t)
+  ;; (jtsx-enable-electric-open-newline-between-jsx-element-tags t)
+  ;; (jtsx-enable-jsx-element-tags-auto-sync nil)
+  ;; (jtsx-enable-all-syntax-highlighting-features t)
+ )
+
+
+
 
 (use-package apheleia
   :straight t
@@ -2419,59 +2483,7 @@ which call (newline) command"
   (typescript-mode . apheleia-mode)
   (typescript-ts-mode . apheleia-mode))
 
-((straight-use-package 'apheleia))
-;; (use-package jtsx
-;;   :straight t
-;;   :hook
-;;   (jtsx-jsx-mode . lsp-deferred)
-;;   (jtsx-tsx-mode . lsp-deferred)
 
-;;   :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
-;;          ("\\.tsx\\'" . jtsx-tsx-mode)
-;;          ("\\.ts\\'" . jtsx-typescript-mode))
-;;   :commands jtsx-install-treesit-language
-;;   ;; :hook ((jtsx-jsx-mode . hs-minor-mode)
-;;   ;;        (jtsx-tsx-mode . hs-minor-mode)
-;;   ;;        (jtsx-typescript-mode . hs-minor-mode))
-;;   :custom
-;;   (js-indent-level 2)
-;;   (typescript-ts-mode-indent-offset 2)
-;;   ;; (jtsx-switch-indent-offset 0)
-;;   ;; (jtsx-indent-statement-block-regarding-standalone-parent nil)
-;;   ;; (jtsx-jsx-element-move-allow-step-out t)
-;;   ;; (jtsx-enable-jsx-electric-closing-element t)
-;;   ;; (jtsx-enable-electric-open-newline-between-jsx-element-tags t)
-;;   ;; (jtsx-enable-jsx-element-tags-auto-sync nil)
-;;   ;; (jtsx-enable-all-syntax-highlighting-features t)
-;;   ;; :config
-;;   ;; (defun jtsx-bind-keys-to-mode-map (mode-map)
-;;   ;;   "Bind keys to MODE-MAP."
-;;   ;;   (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
-;;   ;;   (define-key mode-map (kbd "C-c j o") 'jtsx-jump-jsx-opening-tag)
-;;   ;;   (define-key mode-map (kbd "C-c j c") 'jtsx-jump-jsx-closing-tag)
-;;   ;;   (define-key mode-map (kbd "C-c j r") 'jtsx-rename-jsx-element)
-;;   ;;   (define-key mode-map (kbd "C-c <down>") 'jtsx-move-jsx-element-tag-forward)
-;;   ;;   (define-key mode-map (kbd "C-c <up>") 'jtsx-move-jsx-element-tag-backward)
-;;   ;;   (define-key mode-map (kbd "C-c C-<down>") 'jtsx-move-jsx-element-forward)
-;;   ;;   (define-key mode-map (kbd "C-c C-<up>") 'jtsx-move-jsx-element-backward)
-;;   ;;   (define-key mode-map (kbd "C-c C-S-<down>") 'jtsx-move-jsx-element-step-in-forward)
-;;   ;;   (define-key mode-map (kbd "C-c C-S-<up>") 'jtsx-move-jsx-element-step-in-backward)
-;;   ;;   (define-key mode-map (kbd "C-c j w") 'jtsx-wrap-in-jsx-element)
-;;   ;;   (define-key mode-map (kbd "C-c j u") 'jtsx-unwrap-jsx)
-;;   ;;   (define-key mode-map (kbd "C-c j d") 'jtsx-delete-jsx-node)
-;;   ;;   (define-key mode-map (kbd "C-c j t") 'jtsx-toggle-jsx-attributes-orientation)
-;;   ;;   (define-key mode-map (kbd "C-c j h") 'jtsx-rearrange-jsx-attributes-horizontally)
-;;   ;;   (define-key mode-map (kbd "C-c j v") 'jtsx-rearrange-jsx-attributes-vertically))
-
-;;   ;; (defun jtsx-bind-keys-to-jtsx-jsx-mode-map ()
-;;   ;;     (jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
-
-;;   ;; (defun jtsx-bind-keys-to-jtsx-tsx-mode-map ()
-;;   ;;     (jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
-
-;;   ;; (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
-;;   ;; (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
-;;   )
 
 (use-package insert-shebang
   :straight t

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: uses
+# key: uses
+# --
+const [${1:name}, set${1:$(capitalize yas-text)}] = useState($0)
