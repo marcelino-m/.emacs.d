@@ -2014,6 +2014,7 @@ which call (newline) command"
   (lsp-enable-symbol-highlighting t)
   (lsp-modeline-diagnostics-enable t)
   (lsp-eldoc-render-all nil)
+  (lsp-apply-edits-after-file-operations nil)
 
   (lsp-headerline-breadcrumb-enable nil)
   )
