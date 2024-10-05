@@ -982,6 +982,8 @@ feedback."
   :commands (yas-expand yas-minor-mode yas-reload-all)
   :functions (yas-guess-snippet-directories yas-table-name)
   :defines (yas-guessed-modes)
+  :custom
+  (yas-triggers-in-field t)
 
   :config
   (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
@@ -2461,16 +2463,19 @@ which call (newline) command"
   (typescript-ts-mode-indent-offset 4)
   (typescript-indent-level 4)
   (js-indent-level 4)
+  :config
+   (defun jtsx-bind-keys-to-mode-map (mode-map)
+    "Bind keys to MODE-MAP."
+    (define-key mode-map (kbd "C--") '(lambda () (interactive) (insert "=>"))))
 
-  ;; Optional customizations
-  ;; (js-indent-level 2)
-  ;; (typescript-ts-mode-indent-offset 2)
-  ;; (jtsx-switch-indent-offset 0)
-  ;; (jtsx-indent-statement-block-regarding-standalone-parent nil)
-  ;; (jtsx-jsx-element-move-allow-step-out t)
-  ;; (jtsx-enable-electric-open-newline-between-jsx-element-tags t)
-  ;; (jtsx-enable-jsx-element-tags-auto-sync nil)
-  ;; (jtsx-enable-all-syntax-highlighting-features t)
+  (defun jtsx-bind-keys-to-jtsx-jsx-mode-map ()
+      (jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
+
+  (defun jtsx-bind-keys-to-jtsx-tsx-mode-map ()
+      (jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
+
+  (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
+  (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
  )
 
 
