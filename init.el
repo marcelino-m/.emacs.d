@@ -1335,10 +1335,10 @@ feedback."
 (use-package company-web
   :straight t)
 
-(use-package company-ycmd
-  :straight t
-  :init
-  (company-ycmd-setup))
+;;(use-package company-ycmd
+;;   :straight t
+;;   :init
+;;   (company-ycmd-setup))
 
 ;; (use-package company-auctex
 ;;   :straight t
@@ -1928,13 +1928,6 @@ which call (newline) command"
   :diminish
   :hook (python-mode . blacken-mode))
 
-(use-package elfeed
-  :straight t
-  :custom
-  (elfeed-db-directory  "~/syncthing/elfeed/elfeed-db")
-  :init
-  (setq shr-width 100))
-
 (use-package shr
   :config
   (setq shr-use-fonts nil)
@@ -1951,23 +1944,6 @@ which call (newline) command"
 (use-package qml-mode
   :straight t
   :mode "\\.qml\\'")
-
-;; (use-package popwin
-;;   :straight t
-;;   :init
-;;   (defun ma/bury-compile-buffer  (buf str)
-;;     (when (null (string-match ".*exited abnormally.*" str))
-;;       ;;no errors, make the compilation window go away in a 1 seconds
-;;       (run-with-timer 1 nil #'popwin:close-popup-window)
-;;       (message "No Compilation Errors!")))
-
-;;   (add-hook 'compilation-finish-functions #'ma/bury-compile-buffer)
-
-;;   :config
-;;   (push '(inferior-python-mode :height 20 :noselect t :tail t :stick t) popwin:special-display-config)
-;;   (push '("*Google Translate*" :noselect t :height 20) popwin:special-display-config)
-;;   (push '("*Projectile Commander Help*"  :height 22) popwin:special-display-config)
-;;   (popwin-mode 1))
 
 (use-package popper
   :straight t
@@ -2488,9 +2464,3 @@ which call (newline) command"
   (tsx-ts-mode . apheleia-mode)
   (typescript-mode . apheleia-mode)
   (typescript-ts-mode . apheleia-mode))
-
-
-
-(use-package insert-shebang
-  :straight t
-  :diminish)
