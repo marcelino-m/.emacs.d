@@ -59,7 +59,6 @@ NAME can be used to set the name of the defined function."
 
 (use-package simple
   :after hydra
-
   :config
   (advice-add 'yank
               :around
@@ -204,7 +203,7 @@ feedback."
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize)
   (add-to-list 'exec-path "~/.local/bin/")
-  (add-to-list 'exec-path "/home/marce/.nvm/versions/node/v22.7.0/bin")
+  (add-to-list 'exec-path "/home/marcelo/.nvm/versions/node/v22.7.0/bin")
   (add-to-list 'exec-path (concat (getenv "PYTHONUSERBASE") "/bin")))
 
 
@@ -701,14 +700,13 @@ feedback."
     (set-face-attribute 'region nil :background "#3d3b40")))
 
 (use-package solarized-theme
-  :disabled
   :straight t
   :custom
   (solarized-use-variable-pitch      nil)
   (solarized-high-contrast-mode-line t)
-  (solarized-use-less-bold           t)
+  (solarized-use-less-bold           nil)
   (solarized-use-more-italic         t)
-  (solarized-emphasize-indicators    nil)
+  (solarized-emphasize-indicators    t)
   (solarized-scale-org-headlines     nil)
   (solarized-height-minus-1          1.0)
   (solarized-height-plus-1           1.0)
@@ -721,22 +719,24 @@ feedback."
   (org-block-begin-line ((t (:underline "#c2bdb2"  :foreground "#c2bdb2"))))
   (org-block-end-line   ((t (:overline nil  :underline nil  :foreground "#c2bdb2"))))
   (org-checkbox         ((t :box nil)))
-  ;; (magit-diff-added     ((t (:background "blue"  :foreground "#106634"))))
+
+  (magit-diff-added     ((t (:background "#f1ead8"  :foreground "#1b5e20"))))
   ;; (magit-diff-changed   ((t (:background "#f1ead8"  :foreground nil))))
-  ;; (magit-diff-removed   ((t (:background "#f1ead8"  :foreground nil))))
+  (magit-diff-removed   ((t (:background "#f1ead8"  :foreground "#b0554c"))))
   ;; (magit-section-highlight ((t (:background nil  :foreground "#f1ead8"))))
-  ;;  (magit-diff-added-highlight    ((t (:background "#f1ead8"  :foreground "#106634"))))
+   (magit-diff-added-highlight    ((t (:background "#efeac7"  :foreground "#1b5e20"))))
   ;; ;; (magit-diff-changed-highlight  ((t (:background "#f1ead8"  :foreground "blue"))))
-  ;; (magit-diff-removed-highlight  ((t (:background "#f1ead8"  :foreground "#b0554c"))))
-  (diff-refine-added   ((t (:background nil  :foreground "#689a01"))))
+  (magit-diff-removed-highlight  ((t (:background "#fedfc5"  :foreground "#8e433d"))))
+  (diff-refine-added   ((t (:background nil  :foreground "#00cd00"))))
   (diff-refine-changed ((t (:background nil  :foreground "#0000ff"))))
-  (diff-refine-removed ((t (:background nil  :foreground "#ff0000"))))
+  (diff-refine-removed ((t (:background nil  :foreground "#ff0009"))))
 
   :config
   (load-theme 'solarized-light t))
 
 
 (use-package zenburn-theme
+  :disabled
   :straight t
   :config
   (setq zenburn-override-colors-alist
@@ -1061,9 +1061,10 @@ feedback."
   ;; (advice-add 'counsel-projectile-switch-project-action :override 'counsel-projectile-switch-project-action-find-file)
   ;; (advice-add 'counsel-projectile-find-file :override '+projectile-find-file)
 
-  (add-to-list 'projectile-other-file-alist '("ts"   . ("css" "html")))
-  (add-to-list 'projectile-other-file-alist '("html" . ("css" "ts")))
-  (add-to-list 'projectile-other-file-alist '("css"  . ("ts" "html")))
+  (add-to-list 'projectile-other-file-alist '("tsx"   . ("sass" "scss" "css")))
+  (add-to-list 'projectile-other-file-alist '("scss"  . ("tsx" "ts")))
+  (add-to-list 'projectile-other-file-alist '("sass"  . ("tsx" "ts")))
+  (add-to-list 'projectile-other-file-alist '("css"  . ("tsx" "ts")))
 
   (projectile-global-mode))
 
@@ -1317,7 +1318,8 @@ feedback."
          (sh-mode            . company-mode)
          (typescript-mode    . company-mode)
          (inferior-ess-mode  . company-mode)
-         (ledger-mode        . company-mode)
+         ;; (ledger-mode        . company-mode)
+         (jtsx-jsx-mode      . company-mode)
          (org-mode           . company-mode))
 
 
@@ -2054,6 +2056,7 @@ which call (newline) command"
   (flycheck-display-errors-function  nil)
   :init
   (add-hook 'python-mode-hook #'(lambda ()
+                                  (setq-local flycheck-disabled-checkers '(python-mypy))
                                   (setq-local flycheck-checker 'python-ruff)))
   (add-hook 'jtsx-jsx-mode-hook #'(lambda ()
                                     (setq-local flycheck-checker 'javascript-eslint)))
@@ -2453,8 +2456,6 @@ which call (newline) command"
   (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
   (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
  )
-
-
 
 
 (use-package apheleia
