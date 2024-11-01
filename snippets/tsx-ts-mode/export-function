@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: export default function
+# key: expf
+# --
+export function ${1:name}(${2:args}) ${3:return-type} {
+    $0
+}
