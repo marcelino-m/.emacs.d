@@ -65,21 +65,6 @@ prefix argument keep point in curretn position"
         (set-visited-file-name new-name)))))
 
 
-
-
-;; start a httpd-server in current directory
-(defun ma/httpd-start-here (directory port)
-  (interactive (list (read-directory-name "Root directory: " default-directory nil t)
-                     (read-number "Port: " 8017)))
-  (setq httpd-root directory)
-  (setq httpd-port port)
-  (httpd-start)
-  (browse-url (concat "http://localhost:" (number-to-string port) "/")))
-
-(defun ma/buffer-to-html (buffer)
-  (with-current-buffer (htmlize-buffer buffer)
-    (buffer-string)))
-
 (defun ma/sudo-edit (&optional arg)
   (interactive "p")
   (if (or (not (eql  arg 1)) (not buffer-file-name))
@@ -190,29 +175,7 @@ feedback."
         (kill-ring-save beg end)))))
 
 
-(defun ma/kill-line-or-region (beg end &optional region)
-  "Kill line if no region is active"
-  (interactive (list (mark) (point)))
-  (if mark-active
-      (kill-region beg end region)
-    (let (beg end empty-line (cc (current-column)))
-      (save-excursion
-        (beginning-of-line)
-        (if (= (progn (skip-chars-forward " \t") (point))
-               (progn (end-of-line) (point)))
-            (setq empty-line t)))
-      (if empty-line
-          (progn
-            (beginning-of-line)
-            (kill-line)
-            (move-to-column cc))
-        (progn
-          (back-to-indentation)
-          (setq beg (point))
-          (end-of-line)
-          (skip-syntax-backward " ")
-          (setq end (point))
-          (kill-region beg end region))))))
+
 
 
 (defun ma/org-toggle-view ()
