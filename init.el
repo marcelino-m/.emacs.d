@@ -17,9 +17,12 @@
   :ensure t)
 
 (setq warning-minimum-level :error)
+(setq-default default-frame-alist
+              '((cursor-color         . "#e52b50")
+                (font                 . "Fira Code Nerd Font-10")))
+
 
 (use-package solarized-theme
-  :disabled
   :ensure t
   :custom
   (solarized-use-variable-pitch      nil)
@@ -55,12 +58,122 @@
   (load-theme 'solarized-light t))
 
 
-(use-package dracula-theme
-  :vc (:url "https://github.com/dracula/emacs"
-            :rev :newest
-            :branch "main")
+(use-package zenburn-theme
+  :disabled
+  :ensure t
   :config
-  (load-theme 'dracula t))
+  (setq zenburn-override-colors-alist
+        '(("zenburn-fg-2"     . "#6D6D6D")
+          ("zenburn-fg-1"     . "#878787")
+          ("zenburn-fg-05"    . "#A2A2A2")
+          ("zenburn-fg"       . "#BDBDBD")
+          ("zenburn-fg+1"     . "#D7D7D7")
+          ("zenburn-fg+2"     . "#F2F2F2")
+          ("zenburn-bg-2"     . "#1f1f1f")
+          ("zenburn-bg-1"     . "#252525")
+          ("zenburn-bg-08"    . "#2b2b2b")
+          ("zenburn-bg-05"    . "#313131")
+          ("zenburn-bg"       . "#383838")
+          ("zenburn-bg+05"    . "#3e3e3e")
+          ("zenburn-bg+1"     . "#414141")
+          ("zenburn-bg+2"     . "#4c4c4c")
+          ("zenburn-bg+3"     . "#575757")
+    ))
+
+  (load-theme 'zenburn t)
+  (let ((custom--inhibit-theme-enable nil))
+    (zenburn-with-color-variables
+      (custom-theme-set-faces
+       'zenburn
+
+       `(cursor ((t (:foreground ,zenburn-fg :background ,zenburn-fg))))
+       `(fringe ((t (:foreground ,zenburn-fg :background ,zenburn-bg))))
+
+       ;; display-line-numbers
+       `(line-number ((t (:foreground ,zenburn-bg+3 :background ,zenburn-bg :bold nil :slant italic :box nil))))
+       `(line-number-current-line ((t (:inherit line-number :foreground ,zenburn-yellow-2 ))))
+
+       ;; magit
+       `(magit-diff-added    ((t (:background unspecified  :foreground ,zenburn-green))))
+       `(magit-diff-changed  ((t (:background unspecified  :foreground ,zenburn-yellow-1))))
+       `(magit-diff-removed  ((t (:background unspecified  :foreground ,zenburn-red-2))))
+       `(magit-diff-added-highlight    ((t (:background ,zenburn-bg+05  :foreground ,zenburn-green))))
+       `(magit-diff-changed-highlight  ((t (:background ,zenburn-bg+05  :foreground ,zenburn-yellow-1))))
+       `(magit-diff-removed-highlight  ((t (:background ,zenburn-bg+05  :foreground ,zenburn-red-2))))
+
+       ;; diff
+       `(diff-refine-added   ((t (:background unspecified  :foreground ,zenburn-green+4))))
+       `(diff-refine-changed ((t (:background unspecified  :foreground ,zenburn-yellow))))
+       `(diff-refine-removed ((t (:background unspecified  :foreground ,zenburn-red+1))))
+
+       ;; ediff
+       `(ediff-current-diff-A ((t (:foreground ,zenburn-red-4  :background ,zenburn-bg+05))))
+       `(ediff-current-diff-Ancestor ((t (:foreground ,zenburn-red-4 :background ,zenburn-bg+05))))
+       `(ediff-current-diff-B ((t (:foreground ,zenburn-green-2 :background ,zenburn-bg+05))))
+       `(ediff-current-diff-C ((t (:foreground ,zenburn-blue-5 :background ,zenburn-bg+05))))
+       `(ediff-even-diff-A ((t (:background ,zenburn-bg-05))))
+       `(ediff-even-diff-Ancestor ((t (:background ,zenburn-bg-05))))
+       `(ediff-even-diff-B ((t (:background ,zenburn-bg-05))))
+       `(ediff-even-diff-C ((t (:background ,zenburn-bg-05))))
+       `(ediff-fine-diff-A ((t (:foreground ,zenburn-red-2 :background nil :weight bold))))
+       `(ediff-fine-diff-Ancestor ((t (:foreground ,zenburn-red-2 :background nil weight bold))))
+       `(ediff-fine-diff-B ((t (:foreground ,zenburn-green :background nil :weight bold))))
+       `(ediff-fine-diff-C ((t (:foreground ,zenburn-blue-3 :background nil :weight bold ))))
+       `(ediff-odd-diff-A ((t (:background ,zenburn-bg-05))))
+       `(ediff-odd-diff-Ancestor ((t (:background ,zenburn-bg-05))))
+       `(ediff-odd-diff-B ((t (:background ,zenburn-bg-05))))
+       `(ediff-odd-diff-C ((t (:background ,zenburn-bg-05))))
+
+
+       `(font-lock-comment-face ((t (:foreground ,zenburn-fg-2))))
+       `(font-lock-comment-delimiter-face ((t (:foreground ,zenburn-fg-2))))
+       `(font-lock-doc-face ((t (:foreground ,zenburn-green-1))))
+
+       `(ledger-font-xact-highlight-face ((t (:background ,zenburn-bg+05))))
+       ;; org mode
+       `(org-checkbox ((t (:foreground ,zenburn-fg+1 :weight bold))))
+       `(org-link ((t (:foreground ,zenburn-yellow-2 :underline nil :bold t))))))))
+
+
+
+(use-package spaceline
+  :ensure t
+  :config
+  (use-package spaceline-config
+    :config
+    (spaceline-define-segment version-control
+      "Show vc-mode in downcase"
+      (when vc-mode
+        (powerline-raw
+         (s-trim (concat (downcase vc-mode)
+                         (when (buffer-file-name)
+                           (pcase (vc-state (buffer-file-name))
+                             (`up-to-date " ")
+                             (`edited  " Mod")
+                             (`added " Add")
+                             (`unregistered " ??")
+                             (`removed " Del")
+                             (`needs-merge " Con")
+                             (`needs-update " Upd")
+                             (`ignored " Ign")
+                             (_ " Unk"))))))))
+
+    (spaceline-define-segment workspace-number
+      "Show windows config number always when use eyebrowse"
+      (when (bound-and-true-p eyebrowse-mode)
+        (let* ((wsc (length (eyebrowse--get 'window-configs)))
+               (num (eyebrowse--get 'current-slot))
+               (tag (when num (nth 2 (assoc num (eyebrowse--get 'window-configs)))))
+               (str (if (and tag (< 0 (length tag)))
+                        (format "%d:%s" num tag)
+                      (when num (int-to-string num)))))
+          (setq str (format "%s/%d" str wsc))
+          (propertize str 'face 'bold))))
+
+
+
+    (spaceline-compile)
+    (spaceline-spacemacs-theme)))
 
 (use-package vertico
   :ensure t
@@ -399,6 +512,7 @@
 
 (use-package smartparens
   :ensure t
+  :diminish smartparens-mode
   :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
   :config
   ;; load default config
@@ -686,6 +800,7 @@
 
 (use-package company-box
   :ensure t
+  :diminish company-box-mode
   :custom
   (company-box-doc-enable  nil)
   :hook (company-mode . company-box-mode))
@@ -1128,6 +1243,7 @@ which call (newline) command"
   :ensure t)
 
 (use-package copilot
+  :diminish copilot-mode
   :vc (:url "https://github.com/copilot-emacs/copilot.el"
             :rev :newest
             :branch "main")
