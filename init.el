@@ -17,12 +17,9 @@
   :ensure t)
 
 (setq warning-minimum-level :error)
-(setq-default default-frame-alist
-              '((cursor-color         . "#e52b50")
-                (font                 . "Fira Code Nerd Font-10")))
-
 
 (use-package solarized-theme
+  :disabled
   :ensure t
   :custom
   (solarized-use-variable-pitch      nil)
@@ -59,7 +56,6 @@
 
 
 (use-package zenburn-theme
-  :disabled
   :ensure t
   :config
   (setq zenburn-override-colors-alist
