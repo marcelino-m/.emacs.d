@@ -14,30 +14,30 @@ Simplified version of `add-to-list'."
    '(default-frame-alist initial-frame-alist))
 
 
+(setq-default tab-width 4
+              ring-bell-function 'ignore
+              truncate-lines t)
+
+
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize t
       frame-title-format '((:eval (if (buffer-file-name)
                                       (abbreviate-file-name (buffer-file-name))
                                     "%b")))
 
-      tab-width 4
-      ring-bell-function 'ignore
       use-dialog-box t ; only for mouse events, which I seldom use
       use-file-dialog nil
       use-short-answers t
       inhibit-splash-screen t
       inhibit-startup-screen t
-      tab-width 4
       column-number-mode t
-      truncate-lines t
+
       truncate-partial-width-windows  t
       scroll-preserve-screen-position nil
       mouse-wheel-scroll-amount '(2 ((shift) . 1) ((control) . nil))
       mouse-wheel-progressive-speed nil
       scroll-step 1
-      hscroll-step 1
-
-      )
+      hscroll-step 1)
 
 
 ;; I do not use those graphical elements by default, but I do enable
