@@ -530,9 +530,8 @@
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
-  :commands (yas-expand yas-minor-mode yas-reload-all)
-  :functions (yas-guess-snippet-directories yas-table-name)
-  :defines (yas-guessed-modes)
+  :hook
+  ((tsx-ts-mode go-mode python-mode emacs-lisp-mode web-mode) . yas-minor-mode)
   :custom
   (yas-triggers-in-field t)
 
@@ -540,11 +539,12 @@
  :config
   (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
   (yas-reload-all)
-  (add-hook 'go-mode-hook 'yas-minor-mode)
-  (add-hook 'python-mode-hook 'yas-minor-mode)
-  (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
-  (add-hook 'tsx-ts-mode-hook 'yas-minor-mode)
-  (add-hook 'web-mode-hook 'yas-minor-mode))
+  ;; (add-hook 'go-mode-hook 'yas-minor-mode)
+  ;; (add-hook 'python-mode-hook 'yas-minor-mode)
+  ;; (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
+  ;; (add-hook 'tsx-ts-mode-hook 'yas-minor-mode)
+  ;; (add-hook 'web-mode-hook 'yas-minor-mode)
+  )
 
 
 (use-package saveplace
