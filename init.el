@@ -1134,12 +1134,11 @@ which call (newline) command"
 (use-package selected
   :ensure t
   :diminish selected-minor-mode
+  :hook
+  ((prog-mode tsx-ts-mode-hook json-mode javascript-mode org-mode) . selected-minor-mode)
   :init
-  (add-hook 'prog-mode-hook (lambda ()
-                              (selected-minor-mode 1)))
 
   (setq selected-org-mode-map (make-sparse-keymap))
-
 
   :bind (:map selected-keymap
               ("q" . selected-off)
