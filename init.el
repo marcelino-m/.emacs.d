@@ -799,6 +799,7 @@
   :diminish company-box-mode
   :custom
   (company-box-doc-enable  nil)
+  (company-box-doc-delay   0)
   :hook (company-mode . company-box-mode))
 
 (use-package autorevert
@@ -1135,7 +1136,7 @@ which call (newline) command"
   :ensure t
   :diminish selected-minor-mode
   :hook
-  ((prog-mode tsx-ts-mode-hook json-mode javascript-mode org-mode) . selected-minor-mode)
+  ((prog-mode tsx-ts-mode-hook json-mode javascript-mode org-mode git-commit-mode) . selected-minor-mode)
   :init
 
   (setq selected-org-mode-map (make-sparse-keymap))
@@ -1261,6 +1262,15 @@ which call (newline) command"
 (use-package crux
   :ensure t
   :bind ([remap move-beginning-of-line] . #'crux-move-beginning-of-line))
+
+
+
+(use-package lsp-tailwindcss
+  :ensure t
+  :diminish
+  :after lsp-mode
+  :init
+  (setq lsp-tailwindcss-add-on-mode t))
 
 
 (setq treesit-language-source-alist
