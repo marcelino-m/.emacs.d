@@ -1155,7 +1155,7 @@ which call (newline) command"
   :ensure t
   :diminish selected-minor-mode
   :hook
-  ((prog-mode tsx-ts-mode-hook json-mode javascript-mode org-mode git-commit-mode) . selected-minor-mode)
+  ((prog-mode tsx-ts-mode-hook json-mode javascript-mode org-mode git-commit-mode yaml-mode yaml-ts-mode) . selected-minor-mode)
   :init
 
   (setq selected-org-mode-map (make-sparse-keymap))
