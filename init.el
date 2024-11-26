@@ -1326,3 +1326,6 @@ which call (newline) command"
 
 (use-package copilot-chat
   :ensure t)
+
+(use-package hs-minor-mode
+  :bind ("<backtab>" . hs-toggle-hiding))
