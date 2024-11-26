@@ -37,7 +37,8 @@ Simplified version of `add-to-list'."
       mouse-wheel-scroll-amount '(2 ((shift) . 1) ((control) . nil))
       mouse-wheel-progressive-speed nil
       scroll-step 1
-      hscroll-step 1)
+      hscroll-step 1
+      auto-hscroll-mode 'current-line)
 
 
 ;; I do not use those graphical elements by default, but I do enable

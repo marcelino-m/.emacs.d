@@ -55,6 +55,23 @@
   (load-theme 'solarized-light t))
 
 
+(setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+     (prisma "https://github.com/victorhqc/tree-sitter-prisma")))
+
 (use-package zenburn-theme
   :ensure t
   :config
@@ -457,7 +474,7 @@
 (use-package exec-path-from-shell
   :ensure t
   :config
-  (dolist (var '("GOPATH" "PYTHONUSERBASE"))
+  (dolist (var '("GOPATH" "PYTHONUSERBASE" "NVM_DIR"))
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize)
   (add-to-list 'exec-path "~/.local/bin/")
@@ -620,6 +637,8 @@
   (add-hook 'prog-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'yaml-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'python-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
+  (add-hook 'jtsx-tsx-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
+  (add-hook 'jtsx-jsx-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   )
 
 (use-package flyspell-correct
@@ -1188,13 +1207,13 @@ which call (newline) command"
          ("\\.ts\\'" . jtsx-tsx-mode))
   :commands jtsx-install-treesit-language
   :hook
-  (jtsx-jsx-mode . hs-minor-mode)
-  (jtsx-tsx-mode . hs-minor-mode)
-  (jtsx-typescript-mode . hs-minor-mode)
+  (jtsx-tsx-mode        . hs-minor-mode)
   (jtsx-tsx-mode        . flycheck-mode)
   (jtsx-tsx-mode        . lsp-deferred)
+  (jtsx-jsx-mode        . hs-minor-mode)
   (jtsx-jsx-mode        . flycheck-mode)
   (jtsx-jsx-mode        . lsp-deferred)
+  (jtsx-typescript-mode . hs-minor-mode)
   (jtsx-typescript-mode . flycheck-mode)
   (jtsx-typescript-mode . lsp-deferred)
 
@@ -1247,23 +1266,28 @@ which call (newline) command"
          :map copilot-completion-map
          ("C-a" . copilot-accept-completion)
          ("C-n" . copilot-next-completion)
-         ("C-w" . copilot-accept-completion-by-word)
+         ("C-f" . copilot-accept-completion-by-word)
          ("C-l" . copilot-accept-completion-by-line)
          ("C-b" . copilot-previous-completion))
   :hook ((web-mode           . copilot-mode)
          (css-mode           . copilot-mode)
          (sh-mode            . copilot-mode)
          (typescript-mode    . copilot-mode)
+         (jtsx-tsx-mode      . copilot-mode)
          (jtsx-jsx-mode      . copilot-mode)
          (python-mode        . copilot-mode)
-         (org-mode           . copilot-mode)))
-
+         (org-mode           . copilot-mode))
+  :config
+  (set-face-attribute 'copilot-overlay-face nil :inherit 'font-lock-comment-face))
 
 (use-package crux
   :ensure t
   :bind ([remap move-beginning-of-line] . #'crux-move-beginning-of-line))
 
 
+(use-package prisma-ts-mode
+  :ensure t
+  :diminish)
 
 (use-package lsp-tailwindcss
   :ensure t
@@ -1273,18 +1297,32 @@ which call (newline) command"
   (setq lsp-tailwindcss-add-on-mode t))
 
 
-(setq treesit-language-source-alist
-   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     (css "https://github.com/tree-sitter/tree-sitter-css")
-     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-     (html "https://github.com/tree-sitter/tree-sitter-html")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-     (json "https://github.com/tree-sitter/tree-sitter-json")
-     (make "https://github.com/alemuller/tree-sitter-make")
-     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
-     (toml "https://github.com/tree-sitter/tree-sitter-toml")
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+(use-package eyebrowse
+  :ensure t
+  :custom
+  (eyebrowse-new-workspace  t)
+  (eyebrowse-wrap-around    t)
+  (eyebrowse-default-workspace-slot 1)
+
+  :config
+  (eyebrowse-mode 1)
+  (defhydra hydra-eye (eyebrowse-mode-map "s-a")
+    "eyebrowse"
+    ("a"  eyebrowse-switch-to-window-config-1)
+    ("s"  eyebrowse-switch-to-window-config-2)
+    ("d"  eyebrowse-switch-to-window-config-3)
+    ("f"  eyebrowse-switch-to-window-config-4)
+    ("p"  projectile-switch-project)
+    ("<left>"  eyebrowse-prev-window-config)
+    ("<right>" eyebrowse-next-window-config))
+  (hydra-set-property 'hydra-eye :verbosity 0))
+
+(use-package org
+  :bind (:map org-mode-map
+         ("C-," . nil))
+  :init
+  (setq org-startup-indented t))
+
+
+(use-package copilot-chat
+  :ensure t)
