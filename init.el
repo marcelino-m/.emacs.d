@@ -1276,7 +1276,8 @@ which call (newline) command"
          (jtsx-tsx-mode      . copilot-mode)
          (jtsx-jsx-mode      . copilot-mode)
          (python-mode        . copilot-mode)
-         (org-mode           . copilot-mode))
+         (org-mode           . copilot-mode)
+         (go-mode            . copilot-mode))
   :config
   (set-face-attribute 'copilot-overlay-face nil :inherit 'font-lock-comment-face))
 
@@ -1284,10 +1285,6 @@ which call (newline) command"
   :ensure t
   :bind ([remap move-beginning-of-line] . #'crux-move-beginning-of-line))
 
-
-(use-package prisma-ts-mode
-  :ensure t
-  :diminish)
 
 (use-package lsp-tailwindcss
   :ensure t
@@ -1319,9 +1316,25 @@ which call (newline) command"
 
 (use-package org
   :bind (:map org-mode-map
-         ("C-," . nil))
+              ("C-," . nil)
+              )
   :init
-  (setq org-startup-indented t))
+  (setq org-startup-indented t)
+  (setq org-emphasis-alist '(("*" (:inherit bold :bold t :foreground "#df6967"))
+                             ("/" italic)
+                             ("_" underline)
+                             ("=" (:inherit org-verbatim :foreground "#8D8D8D"))
+                             ("~" (:inherit org-code :foreground "#8D8D8D"))
+                             ("+"
+                              (:strike-through t))))
+
+  (setq org-todo-keywords
+        '((sequence
+           "TODO(t)" "DOING(d)" "|" )
+          (sequence
+           "WAITING(w)" "|" )
+          (type
+           "|" "CANCELED(c)"  "DONE(e)"))))
 
 
 (use-package copilot-chat
