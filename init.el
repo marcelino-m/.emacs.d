@@ -1314,8 +1314,16 @@ which call (newline) command"
     ("<right>" eyebrowse-next-window-config))
   (hydra-set-property 'hydra-eye :verbosity 0))
 
+
+(use-package copilot-chat
+  :ensure t)
+
+(use-package hs-minor-mode
+  :bind ("<backtab>" . hs-toggle-hiding))
+
 (use-package org
-  :bind (:map org-mode-map
+  :bind (("C-c l" . org-store-link)
+         :map org-mode-map
               ("C-," . nil)
               )
   :init
@@ -1336,9 +1344,123 @@ which call (newline) command"
           (type
            "|" "CANCELED(c)"  "DONE(e)"))))
 
+(use-package org-capture
+  :bind ("C-c x" . org-capture)
+  :config
+  (setq org-capture-templates
+        '(("t" "Task"
+           entry (file "~/syncthing/org/capture/task.org")
+           "* TODO %? \n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
-(use-package copilot-chat
-  :ensure t)
+          ("h" "Home and domestic related task"
+           entry (file "~/syncthing/org/capture/home-task.org")
+           "* TODO %? :home:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
-(use-package hs-minor-mode
-  :bind ("<backtab>" . hs-toggle-hiding))
+          ("w" "work related captures")
+          ("wt" "Task"
+           entry (file "~/syncthing/org/capture/work/task.org")
+           "* TODO %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+
+          ("ww" "Feature"
+           entry (file "~/syncthing/org/capture/work/features.org")
+           "* TODO %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+
+          ("wf" "Feedback"
+           entry (file "~/syncthing/org/capture/work/feedback.org")
+           "* TODO %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+
+          ("wj" "Journal"
+           item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
+           "%?" :tree-type week)
+
+          ("wJ" "Journal team"
+           item (file+olp+datetree "~/syncthing/org/capture/work/journal-team.org")
+           "%?" :tree-type week)))
+
+
+(use-package org-agenda
+  :bind ("C-c a" . org-agenda)
+  :config
+  (add-hook 'org-agenda-mode-hook #'hl-line-mode)
+
+  ;; tags are bad aligned when display-line-numbers mode is enabled or
+  ;; when   fringe  are   disabled,   the   former  happened   because
+  ;; window-text-width  function  no  subtract the  columns  used  for
+  ;; display-line-numbers and the latest are because the latest column
+  ;; is not used for display text, in both cases tags appear truncated
+  ;; at end of line in agenda views
+  (advice-add 'org-agenda-align-tags
+              :around
+              (lambda (origfn &rest args)
+                (if (fboundp 'line-number-display-width)
+                    (cl-letf* ((winw (window-text-width))
+                               (dlnw (line-number-display-width 'columns))
+                               (lf (car (window-fringes)))
+                               (rf (cadr (window-fringes)))
+                               (maybe1 (if (or (zerop lf) (zerop rf))
+                                           1
+                                         0))
+                               ((symbol-function 'window-text-width) (lambda (&optional _ _) (round (- winw dlnw maybe1)))))
+                      (apply origfn args))
+                  (apply origfn args))))
+
+
+  ;; narrow item when go to it
+  (advice-add 'org-agenda-goto :after
+              (lambda (&rest args)
+                (org-narrow-to-subtree)))
+
+  (setq org-agenda-tags-column         82
+        org-tags-column                82
+        org-agenda-todo-list-sublevels nil
+        org-agenda-block-separator (make-string org-tags-column ?=))
+
+
+  (setq org-agenda-files
+      (mapcar 'abbreviate-file-name
+              (split-string
+               (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n" t)))
+
+  (setq org-agenda-sorting-strategy
+        '((agenda habit-down time-up priority-down category-keep)
+          (todo priority-down category-down todo-state-up)
+          (tags priority-down category-keep)
+          (search category-keep)))
+
+  (setq org-agenda-custom-commands
+        '(("w" . "Work related comand")
+          ("wa" "Agenda for current day or week"
+           ((agenda "")
+            (tags "+pined"
+                  ((org-use-tag-inheritance nil)
+                   (org-agenda-sorting-strategy '(todo-state-down priority-down))))
+            ;; (tags-todo "+iteracion")
+            ;; (tags-todo "+standup")
+            ;; (tags-todo "+office-pined")
+            )
+           ((org-agenda-tag-filter-preset '("+work"))))
+
+          ("wt" "All Task!" tags-todo "+work"
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
+
+          ("wc" "Coded related todos"
+           ((tags-todo "+next")
+            (tags-todo "+bug")
+            (tags-todo "+fix")
+            (tags-todo "+feat")
+            (tags-todo "+refactor")
+            (tags-todo "+check")
+            (tags-todo "+@code-bug-fix-feat-chore-refactor-check-next"))
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
+            (org-agenda-tag-filter-preset '("+work"))))
+
+          ("wj" "Journal personal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
+           ((org-agenda-sorting-strategy '(alpha-down))
+            (org-use-tag-inheritance nil)
+            (org-agenda-files '("~/syncthing/org/capture/work/journal.org"))))
+
+          ("wJ" "Journal team" tags "+work"
+           ((org-agenda-max-entries 20)
+            (org-use-tag-inheritance nil)
+            (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))))
+  )
