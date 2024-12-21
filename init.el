@@ -1069,7 +1069,9 @@ which call (newline) command"
   :custom
   (lsp-warn-no-matched-clients nil)
   (lsp-diagnostics-provider :flycheck)
-  (lsp-diagnostics-disabled-modes '(python-mode))
+  (lsp-diagnostics-disabled-modes '(python-mode
+                                    ;;jtsx-tsx-mode jtsx-jsx-mode
+                                    ))
   (lsp-signature-auto-activate nil)
   (lsp-enable-symbol-highlighting t)
   (lsp-modeline-diagnostics-enable t)
@@ -1136,10 +1138,10 @@ which call (newline) command"
   (add-hook 'python-mode-hook #'(lambda ()
                                   (setq-local flycheck-disabled-checkers '(python-mypy))
                                   (setq-local flycheck-checker 'python-ruff)))
-  (add-hook 'jtsx-jsx-mode-hook #'(lambda ()
-                                    (setq-local flycheck-checker 'javascript-eslint)))
-  (add-hook 'jtsx-tsx-mode-hook #'(lambda ()
-                                  (setq-local flycheck-checker 'javascript-eslint)))
+
+  :config
+  (flycheck-add-mode 'javascript-eslint 'jtsx-jsx-mode)
+  (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
   )
 
 (use-package posframe ;; for lsp-ui-peek
@@ -1324,8 +1326,7 @@ which call (newline) command"
 (use-package org
   :bind (("C-c l" . org-store-link)
          :map org-mode-map
-              ("C-," . nil)
-              )
+              ("C-," . nil))
   :init
   (setq org-startup-indented t)
   (setq org-emphasis-alist '(("*" (:inherit bold :bold t :foreground "#df6967"))
@@ -1342,7 +1343,18 @@ which call (newline) command"
           (sequence
            "WAITING(w)" "|" )
           (type
-           "|" "CANCELED(c)"  "DONE(e)"))))
+           "|" "CANCELED(c)"  "DONE(e)")))
+  (setq org-todo-keyword-faces
+        '(("WANT"   . "gray")
+          ("WAIT"   . "Yellow")
+          ("TODO"   . "OrangeRed")
+          ("DOING"  . "Orange")
+          ("STOPPED" . "Yellow")
+          ("DONE"    . "SpringGreen")
+          ("DELEGATED" . "SpringGreen")
+          ("CANCELED"  . "SpringGreen")))
+
+  (setq org-enforce-todo-dependencies t)
 
 (use-package org-capture
   :bind ("C-c x" . org-capture)
