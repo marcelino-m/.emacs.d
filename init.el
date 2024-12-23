@@ -1359,6 +1359,24 @@ which call (newline) command"
 (use-package org-capture
   :bind ("C-c x" . org-capture)
   :config
+
+  (defun ma/org-ask-location ()
+    (interactive)
+    (let* ((org-refile-targets '((nil :maxlevel . 9)))
+           (hd (condition-case nil
+                   (car (org-refile-get-location "Headline" nil t))
+                 (error (car org-refile-history)))))
+      (goto-char (point-min))
+      (outline-next-heading)
+      (if (re-search-forward
+           (format org-complex-heading-regexp-format (regexp-quote hd))
+           nil t)
+          (goto-char (point-at-bol))
+        (goto-char (point-max))
+        (or (bolp) (insert "\n"))
+        (insert "* " hd "\n")))
+    (end-of-line))
+
   (setq org-capture-templates
         '(("t" "Task"
            entry (file "~/syncthing/org/capture/task.org")
@@ -1381,13 +1399,18 @@ which call (newline) command"
            entry (file "~/syncthing/org/capture/work/feedback.org")
            "* TODO %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
 
+          ("wn" "Notes!"
+           item
+           (file+function "~/syncthing/org/capture/work/notes.org" ma/org-ask-location)
+           "- %?")
+
           ("wj" "Journal"
            item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
            "%?" :tree-type week)
 
           ("wJ" "Journal team"
            item (file+olp+datetree "~/syncthing/org/capture/work/journal-team.org")
-           "%?" :tree-type week)))
+           "%?" :tree-type week))))
 
 
 (use-package org-agenda
