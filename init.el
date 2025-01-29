@@ -1499,3 +1499,44 @@ which call (newline) command"
             (org-use-tag-inheritance nil)
             (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))))
   )
+
+
+
+(use-package avy
+  :ensure t
+  :bind (("C-M-s-e" . avy-goto-line)
+         ("C-M-s-r" . avy-goto-end-of-line)
+         ("C-M-s-f" . avy-goto-subword-1)
+         ("C-M-s-v" . avy-goto-char-timer)
+         ("C-M-s-g" . avy-goto-char-in-line))
+
+  :custom-face
+  (avy-goto-char-timer-face ((t (:inherit isearch))))
+
+  :custom
+  (avy-timeout-seconds 10.0) ;; confirm with RET
+  (avy-indent-line-overlay t)
+
+  :config
+  ;; filter blank lines when use avy-goto-char
+  (advice-add 'avy--line-cands
+              :filter-return
+              (lambda (lines)
+                (save-excursion
+                  (let (filtered)
+                    (dolist (l lines filtered)
+                      (let ((buffer (window-buffer (cdr l))))
+                        (set-buffer buffer)
+                        (goto-char (car l))
+                        (unless  (string-blank-p (thing-at-point 'line))
+                          (add-to-list 'filtered l))))))))
+
+  ;; put overlays at end of line when using avy-goto-end-of-line
+  (advice-add 'avy-goto-end-of-line
+              :around
+              (lambda (origfn &rest args)
+                (let ((avy-style 'post))
+                  (apply origfn args))))
+
+  :init
+  (global-set-key (kbd "C-z") nil))
