@@ -224,7 +224,6 @@
   :ensure t
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
-         ("C-s" . consult-line)
          ("C-x 4 b" . consult-buffer-other-window)
          ("C-y" . yank)
          ("M-y" . consult-yank-from-kill-ring)
@@ -336,6 +335,17 @@
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function
         (lambda (_) (projectile-project-root))))
+
+
+
+(use-package swiper
+  :ensure t
+  :bind (("C-s" . swiper)
+         (("C-S-s" . (lambda (&optional initial-input)
+                       (interactive)
+                       (let ((search-invisible nil))
+                         (swiper initial-input)))))))
+
 
 ;; Disable the damn thing by making it disposable.
 (setq custom-file "~/.emacs.d/custom.el")
@@ -586,7 +596,7 @@
   :bind-keymap ("C-,"   . projectile-command-map)
   :bind (
          :map projectile-command-map
-              ;; ("s a" . counsel-projectile-ag)
+              ("s a" . consult-ripgrep)
               (","   . projectile-switch-project))
 
 
@@ -1172,11 +1182,15 @@ which call (newline) command"
               ("g" . google-this-region)
               (";" . comment-dwim)
               ("i" . ispell-region)
+              ;; ("s" . (lambda (beg end)
+              ;;          (interactive "r")
+              ;;          (setq mark-active nil)
+              ;;          (consult-line (buffer-substring beg end))
+              ;;          (selected-off)))
               ("s" . (lambda (beg end)
                        (interactive "r")
                        (setq mark-active nil)
-                       (consult-line (buffer-substring beg end))
-                       (selected-off)))
+                       (swiper (buffer-substring beg end))))
 
               :map selected-org-mode-map
               ("*" . (lambda () (interactive) (org-emphasize ?*)))
@@ -1344,6 +1358,7 @@ which call (newline) command"
            "WAITING(w)" "|" )
           (type
            "|" "CANCELED(c)"  "DONE(e)")))
+
   (setq org-todo-keyword-faces
         '(("WANT"   . "gray")
           ("WAIT"   . "Yellow")
@@ -1354,7 +1369,7 @@ which call (newline) command"
           ("DELEGATED" . "SpringGreen")
           ("CANCELED"  . "SpringGreen")))
 
-  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-dependencies t))
 
 (use-package org-capture
   :bind ("C-c x" . org-capture)
@@ -1466,7 +1481,7 @@ which call (newline) command"
         '(("w" . "Work related comand")
           ("wa" "Agenda for current day or week"
            ((agenda "")
-            (tags "+pined"
+            (tags "+pin"
                   ((org-use-tag-inheritance nil)
                    (org-agenda-sorting-strategy '(todo-state-down priority-down))))
             ;; (tags-todo "+iteracion")

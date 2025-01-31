@@ -16,7 +16,10 @@ Simplified version of `add-to-list'."
 
 (setq-default tab-width 4
               ring-bell-function 'ignore
-              truncate-lines t)
+              truncate-lines t
+              ediff-window-setup-function 'ediff-setup-windows-plain
+              ediff-split-window-function 'split-window-horizontally
+              )
 
 
 (setq frame-resize-pixelwise t
