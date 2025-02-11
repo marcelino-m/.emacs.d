@@ -233,6 +233,10 @@
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flycheck)               ;; Alternative: consult-flycheck
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g i" . consult-imenu)
 
          )
   ;;        ("C-c M-x" . consult-mode-command)
@@ -256,14 +260,10 @@
   ;;        ;; Other custom bindings
   ;;        ("M-y" . consult-yank-pop)                ;; orig. yank-pop
   ;;        ;; M-g bindings in `goto-map'
-  ;;        ("M-g e" . consult-compile-error)
-  ;;        ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
   ;;        ("M-g g" . consult-goto-line)             ;; orig. goto-line
   ;;        ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-  ;;        ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
   ;;        ("M-g m" . consult-mark)
   ;;        ("M-g k" . consult-global-mark)
-  ;;        ("M-g i" . consult-imenu)
   ;;        ("M-g I" . consult-imenu-multi)
   ;;        ;; M-s bindings in `search-map'
   ;;        ("M-s d" . consult-find)                  ;; Alternative: consult-fd
@@ -1167,7 +1167,16 @@ which call (newline) command"
   :ensure t
   :diminish selected-minor-mode
   :hook
-  ((prog-mode tsx-ts-mode-hook json-mode javascript-mode org-mode git-commit-mode yaml-mode yaml-ts-mode) . selected-minor-mode)
+  ((eshell-prompt-mode
+    markdown-mode
+    prog-mode
+    tsx-ts-mode-hook
+    json-mode
+    javascript-mode
+    org-mode
+    git-commit-mode
+    yaml-mode
+    yaml-ts-mode) . selected-minor-mode)
   :init
 
   (setq selected-org-mode-map (make-sparse-keymap))
