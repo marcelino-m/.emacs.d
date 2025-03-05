@@ -562,7 +562,7 @@
   :ensure t
   :diminish yas-minor-mode
   :hook
-  ((tsx-ts-mode go-mode python-mode emacs-lisp-mode web-mode) . yas-minor-mode)
+  ((tsx-ts-mode go-mode python-mode emacs-lisp-mode web-mode c-mode) . yas-minor-mode)
   :custom
   (yas-triggers-in-field t)
 
@@ -804,6 +804,7 @@
   :hook ((emacs-lisp-mode    . company-mode)
          (web-mode           . company-mode)
          (css-mode           . company-mode)
+         (c-mode             . company-mode)
          (c++-mode           . company-mode)
          (cider-repl-mode    . company-mode)
          (cider-mode         . company-mode)
