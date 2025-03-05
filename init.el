@@ -342,6 +342,8 @@
 
 (use-package swiper
   :ensure t
+  :config
+  (setq ivy-re-builders-alist '((t  . ivy--regex-ignore-order)))
   :bind (("C-s" . swiper)
          (("C-S-s" . (lambda (&optional initial-input)
                        (interactive)
