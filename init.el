@@ -191,9 +191,11 @@
 (use-package vertico
   :ensure t
   :custom
-  (setq vertico-count 10)
+  (vertico-count 10)
   (vertico-resize nil)
   (vertico-cycle nil) ;; Enable cycling for `vertico-next/previous'
+  :bind (:map vertico-map
+              ("TAB" . minibuffer-complete))
   :init
   (vertico-mode))
 
