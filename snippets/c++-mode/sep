@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: sep
-# key: sep
-# --
-<< ${1:string} $0

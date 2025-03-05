@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: dox
-# key: dox
-# --
-/*!
- * @brief ${1:TODO}
- */$0
