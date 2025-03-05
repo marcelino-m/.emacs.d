@@ -931,7 +931,7 @@
 
 (use-package google-translate
   :ensure t
-  :bind ("C-c t" . google-translate-smooth-translate)
+  :bind ("C-c v" . google-translate-smooth-translate)
   :init
   (use-package google-translate-smooth-ui)
   (setq google-translate-translation-directions-alist '(("en" . "es") ("es" . "en")))
@@ -1288,13 +1288,11 @@ which call (newline) command"
   :ensure t)
 
 (use-package copilot
+  :ensure t
   :diminish copilot-mode
-  :vc (:url "https://github.com/copilot-emacs/copilot.el"
-            :rev :newest
-            :branch "main")
   :bind (("C-M-s-v" . copilot-complete)
          :map copilot-completion-map
-         ("C-a" . copilot-accept-completion)
+         ("C-j" . copilot-accept-completion)
          ("C-n" . copilot-next-completion)
          ("C-f" . copilot-accept-completion-by-word)
          ("C-l" . copilot-accept-completion-by-line)
@@ -1346,7 +1344,9 @@ which call (newline) command"
 
 
 (use-package copilot-chat
-  :ensure t)
+  :ensure t
+  :bind
+  ("C-c t"   . copilot-chat-transient)
 
 (use-package hs-minor-mode
   :bind ("<backtab>" . hs-toggle-hiding))
@@ -1569,3 +1569,63 @@ which call (newline) command"
 
   :init
   (global-set-key (kbd "C-z") nil))
+
+
+(use-package cc-mode
+  :mode ("\\.c\\'" . c-mode)
+  :config
+  (setq c-default-style "k&r"
+        c-basic-offset 4)
+  (add-hook 'c-mode-hook (lambda ()
+                            (setq indent-tabs-mode nil)
+                            (setq tab-width 4)
+                            (c-set-offset 'substatement-open 0))))
+
+(use-package clang-format
+  :ensure t
+  :diminish
+  :config
+  (add-hook 'c-mode-common-hook
+          (function (lambda ()
+                      (add-hook 'before-save-hook
+                              'clang-format-buffer nil 'local)))))
+
+
+(use-package cmake-mode
+  :ensure t
+  :diminish)
+
+
+(use-package winner
+  :after hydra
+  :custom
+  (winner-dont-bind-my-keys t)
+
+  :config
+  (setq winner-boring-buffers
+        '("*Completions*"
+          "*Compile-Log*"
+          "*inferior-lisp*"
+          "*Fuzzy Completions*"
+          "*Apropos*"
+          "*dvc-error*"
+          "*Help*"
+          "*cvs*"
+          "*Buffer List*"
+          "*Ibuffer*"
+          "*helm projectile*"
+          "*helm Swoop*"
+          "*helm grep*"
+          "*helm imenu*"
+          "*helm etags*"
+          "*helm-mt*"
+          "\\*magit*"))
+  (winner-mode 1)
+
+  (defhydra hydra-winner (global-map "C-c")
+    "Winner"
+    ("p" (progn
+           (winner-undo)
+           (setq this-command 'winner-undo))
+     "back")
+    ("o" winner-redo "forward" :exit t :bind nil))
