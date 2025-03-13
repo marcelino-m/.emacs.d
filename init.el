@@ -218,9 +218,7 @@
 (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+  (completion-styles '(orderless partial-completion basic)))
 
 (use-package consult
   :ensure t
@@ -1069,8 +1067,10 @@ which call (newline) command"
           compilation-mode
           flycheck-error-list-mode
           ))
+
   (setq popper-reference-buffers
         (append popper-reference-buffers
+                '("^\\*vterm.*\\*$" vterm-mode)
                 '("^\\*eshell.*\\*$" eshell-mode)))
   (popper-mode +1)
   (popper-echo-mode +1))
@@ -1171,18 +1171,12 @@ which call (newline) command"
 (use-package selected
   :ensure t
   :diminish selected-minor-mode
-  :hook
-  ((eshell-prompt-mode
-    markdown-mode
-    prog-mode
-    tsx-ts-mode-hook
-    json-mode
-    javascript-mode
-    org-mode
-    git-commit-mode
-    yaml-mode
-    yaml-ts-mode) . selected-minor-mode)
-  :init
+   :init
+
+  (selected-global-mode 1)
+  (add-hook 'magit-mode
+            (lambda () (selected-global-mode -1)))
+
 
   (setq selected-org-mode-map (make-sparse-keymap))
 
@@ -1613,12 +1607,6 @@ which call (newline) command"
           "*cvs*"
           "*Buffer List*"
           "*Ibuffer*"
-          "*helm projectile*"
-          "*helm Swoop*"
-          "*helm grep*"
-          "*helm imenu*"
-          "*helm etags*"
-          "*helm-mt*"
           "\\*magit*"))
   (winner-mode 1)
 
@@ -1628,4 +1616,4 @@ which call (newline) command"
            (winner-undo)
            (setq this-command 'winner-undo))
      "back")
-    ("o" winner-redo "forward" :exit t :bind nil))
+    ("o" winner-redo "forward" :exit t :bind nil)))
