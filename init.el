@@ -1340,7 +1340,7 @@ which call (newline) command"
 (use-package copilot-chat
   :ensure t
   :bind
-  ("C-c t"   . copilot-chat-transient)
+  ("C-c t"   . copilot-chat-transient))
 
 (use-package hs-minor-mode
   :bind ("<backtab>" . hs-toggle-hiding))
