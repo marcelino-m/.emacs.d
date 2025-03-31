@@ -18,6 +18,24 @@
 
 (setq warning-minimum-level :error)
 
+(setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+     (prisma "https://github.com/victorhqc/tree-sitter-prisma")
+     (c "https://github.com/tree-sitter/tree-sitter-c")))
+
 (use-package solarized-theme
   :disabled
   :ensure t
@@ -54,23 +72,6 @@
   :config
   (load-theme 'solarized-light t))
 
-
-(setq treesit-language-source-alist
-   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     (css "https://github.com/tree-sitter/tree-sitter-css")
-     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-     (html "https://github.com/tree-sitter/tree-sitter-html")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-     (json "https://github.com/tree-sitter/tree-sitter-json")
-     (make "https://github.com/alemuller/tree-sitter-make")
-     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
-     (toml "https://github.com/tree-sitter/tree-sitter-toml")
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-     (prisma "https://github.com/victorhqc/tree-sitter-prisma")))
 
 (use-package zenburn-theme
   :ensure t
@@ -560,7 +561,7 @@
   :ensure t
   :diminish yas-minor-mode
   :hook
-  ((tsx-ts-mode go-mode python-mode emacs-lisp-mode web-mode c-mode) . yas-minor-mode)
+  ((tsx-ts-mode go-ts-mode python-mode emacs-lisp-mode web-mode c-mode) . yas-minor-mode)
   :custom
   (yas-triggers-in-field t)
 
@@ -956,16 +957,28 @@
   :diminish
   :hook ((prog-mode) .  subword-mode))
 
-(use-package go-mode
-  :ensure t
-  :bind (:map go-mode-map
+;; (use-package go-mode
+;;   :ensure t
+;;   :bind (:map go-mode-map
+;;               ("C-=" . (lambda () (interactive) (insert ":="))))
+;;   :init
+;;   (setq gofmt-command "goimports")
+;;   (add-hook 'go-mode-hook
+;;             (lambda ()
+;;               (add-hook 'before-save-hook 'gofmt-before-save))))
+
+(use-package reformatter
+  :ensure t)
+
+
+(use-package go-ts-mode
+  :bind (:map go-ts-mode-map
               ("C-=" . (lambda () (interactive) (insert ":="))))
   :init
-  (setq gofmt-command "goimports")
-  (add-hook 'go-mode-hook
+  (setq go-ts-mode-indent-offset 4)
+  (add-hook 'go-ts-mode-hook
             (lambda ()
-              (add-hook 'before-save-hook 'gofmt-before-save))))
-
+              (add-hook 'before-save-hook 'lsp-format-buffer))))
 
 (use-package pyvenv
   :ensure t
@@ -1079,7 +1092,7 @@ which call (newline) command"
 (use-package lsp-mode
   :ensure t
   :diminish
-  :hook ((go-mode python-mode c-mode c++-mode ess-r-mode) . lsp-deferred)
+  :hook ((go-ts-mode python-mode c-mode c++-mode ess-r-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-warn-no-matched-clients nil)
@@ -1092,7 +1105,8 @@ which call (newline) command"
   (lsp-modeline-diagnostics-enable t)
   (lsp-eldoc-render-all nil)
   (lsp-apply-edits-after-file-operations nil)
-  (lsp-headerline-breadcrumb-enable nil))
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-clangd-binary-path "~/.src/LLVM-20.1.0-rc1-Linux-X64/bin/clangd"))
 
 (use-package lsp-lens
   :after lsp-lens
@@ -1299,7 +1313,8 @@ which call (newline) command"
          (jtsx-jsx-mode      . copilot-mode)
          (python-mode        . copilot-mode)
          (org-mode           . copilot-mode)
-         (go-mode            . copilot-mode))
+         (go-ts-mode            . copilot-mode)
+         (c-ts-mode             . copilot-mode))
   :config
   (set-face-attribute 'copilot-overlay-face nil :inherit 'font-lock-comment-face))
 
@@ -1530,7 +1545,6 @@ which call (newline) command"
   :bind (("C-M-s-e" . avy-goto-line)
          ("C-M-s-r" . avy-goto-end-of-line)
          ("C-M-s-f" . avy-goto-subword-1)
-         ("C-M-s-v" . avy-goto-char-timer)
          ("C-M-s-g" . avy-goto-char-in-line))
 
   :custom-face
@@ -1565,25 +1579,20 @@ which call (newline) command"
   (global-set-key (kbd "C-z") nil))
 
 
-(use-package cc-mode
-  :mode ("\\.c\\'" . c-mode)
+(use-package c-ts-mode
+  :mode ("\\.c\\'" . c-ts-mode)
   :config
-  (setq c-default-style "k&r"
-        c-basic-offset 4)
-  (add-hook 'c-mode-hook (lambda ()
-                            (setq indent-tabs-mode nil)
-                            (setq tab-width 4)
-                            (c-set-offset 'substatement-open 0))))
-
+  (setq c-ts-mode-indent-style  'k&r
+        c-ts-mode-indent-offset 4)
+)
 (use-package clang-format
   :ensure t
   :diminish
   :config
-  (add-hook 'c-mode-common-hook
+  (add-hook 'c-ts-mode-hook
           (function (lambda ()
                       (add-hook 'before-save-hook
                               'clang-format-buffer nil 'local)))))
-
 
 (use-package cmake-mode
   :ensure t
@@ -1617,3 +1626,8 @@ which call (newline) command"
            (setq this-command 'winner-undo))
      "back")
     ("o" winner-redo "forward" :exit t :bind nil)))
+
+
+;; (use-package ollama-buddy
+;;   :ensure t
+;;   :bind ("C-c o" . ollama-buddy-menu))
