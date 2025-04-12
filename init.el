@@ -997,13 +997,13 @@
   (pyvenv-mode 1))
 
 (use-package python
-  :bind (:map python-mode-map
-              ("<backtab>" . nil)
+  :mode ("\\.py\\'" . python-ts-mode)
+  :bind (:map python-ts-mode-map
               ("C-c C-n"   . ma/python-eval-current-line))
 
   :custom
   (python-eldoc-get-doc nil)
-  (python-indent-offset 4)
+  (python-ts-indent-offset 4)
   (python-shell-interpreter "ipython")
   ;; (python-shell-interpreter-args "--simple-prompt -i")
 
@@ -1041,7 +1041,7 @@ which call (newline) command"
   ;; advising newline behavior in python mode
   (let ((nline-fn #'newline))
     (add-function :around nline-fn  #'ma/python-newline-advice)
-    (define-key python-mode-map (kbd "RET")  nline-fn))
+    (define-key python-ts-mode-map (kbd "RET")  nline-fn))
 
   ;; advising if ipython not found then use  python3
   (advice-add 'python-shell-calculate-command :around #'ma/python-shell-calculate-command-advice))
