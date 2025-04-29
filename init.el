@@ -1364,8 +1364,12 @@ which call (newline) command"
   :bind (("C-c l" . org-store-link)
          :map org-mode-map
               ("C-," . nil))
-  :init
+  :config
   (setq org-startup-indented t)
+  (setq org-log-into-drawer t)
+  (setq org-special-ctrl-a/e t)
+  (setq org-special-ctrl-k t)
+
   (setq org-emphasis-alist '(("*" (:inherit bold :bold t :foreground "#df6967"))
                              ("/" italic)
                              ("_" underline)
@@ -1538,7 +1542,10 @@ which call (newline) command"
             (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))))
   )
 
-
+(use-package org-download
+  :ensure t
+  :init
+  (setq org-download-method  'directory)) 
 
 (use-package avy
   :ensure t
