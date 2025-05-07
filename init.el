@@ -1422,24 +1422,24 @@ which call (newline) command"
   (setq org-capture-templates
         '(("t" "Task"
            entry (file "~/syncthing/org/capture/task.org")
-           "* TODO %? \n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %?" :empty-lines-before 2)
 
           ("h" "Home and domestic related task"
            entry (file "~/syncthing/org/capture/home-task.org")
-           "* TODO %? :home:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %? :home:" :empty-lines-before 2)
 
           ("w" "work related captures")
           ("wt" "Task"
            entry (file "~/syncthing/org/capture/work/task.org")
-           "* TODO %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %? :work:" :empty-lines-before 2)
 
           ("ww" "Feature"
            entry (file "~/syncthing/org/capture/work/features.org")
-           "* TODO %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %? :work:" :empty-lines-before 2)
 
           ("wf" "Feedback"
            entry (file "~/syncthing/org/capture/work/feedback.org")
-           "* TODO %? :work:\n:LOGBOOK:\n:CREATED: %U \n:END:" :empty-lines-before 2)
+           "* TODO %? :work:" :empty-lines-before 2)
 
           ("wn" "Notes!"
            item
