@@ -12,6 +12,30 @@
 (eval-when-compile
   (require 'use-package))
 
+;; Disable the damn thing by making it disposable.
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+(setq  default-input-method  "latin-prefix")
+(setq vc-follow-symlinks t)
+
+
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
+(use-package emacs
+  :custom
+  ;; Enable context menu. `vertico-multiform-mode' adds a menu in the minibuffer
+  ;; to switch display modes.
+  (context-menu-mode t)
+  ;; Support opening new minibuffers from inside existing minibuffers.
+  (enable-recursive-minibuffers t)
+  ;; Hide commands in M-x which do not work in the current mode.  Vertico
+  ;; commands are hidden in normal buffers. This setting is useful beyond
+  ;; Vertico.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;; Do not allow the cursor in the minibuffer prompt
+  (minibuffer-prompt-properties
+   '(read-only t cursor-intangible t face minibuffer-prompt)))
 
 (use-package diminish
   :ensure t)
@@ -196,7 +220,7 @@
   (vertico-resize nil)
   (vertico-cycle nil) ;; Enable cycling for `vertico-next/previous'
   :bind (:map vertico-map
-              ("TAB" . minibuffer-complete))
+              ("C-<tab>" . minibuffer-complete))
   :init
   (vertico-mode))
 
@@ -240,53 +264,6 @@
          ("M-g i" . consult-imenu)
 
          )
-  ;;        ("C-c M-x" . consult-mode-command)
-  ;;        ("C-c h" . consult-history)
-  ;;        ("C-c k" . consult-kmacro)
-  ;;        ("C-c m" . consult-man)
-  ;;        ("C-c i" . consult-info)
-  ;;        ([remap Info-search] . consult-info)
-  ;;        ;; C-x bindings in `ctl-x-map'
-  ;;        ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-  ;;        ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-  ;;        ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-  ;;        ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-  ;;        ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
-  ;;        ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-  ;;        ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-  ;;        ;; Custom M-# bindings for fast register access
-  ;;        ("M-#" . consult-register-load)
-  ;;        ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-  ;;        ("C-M-#" . consult-register)
-  ;;        ;; Other custom bindings
-  ;;        ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-  ;;        ;; M-g bindings in `goto-map'
-  ;;        ("M-g g" . consult-goto-line)             ;; orig. goto-line
-  ;;        ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-  ;;        ("M-g m" . consult-mark)
-  ;;        ("M-g k" . consult-global-mark)
-  ;;        ("M-g I" . consult-imenu-multi)
-  ;;        ;; M-s bindings in `search-map'
-  ;;        ("M-s d" . consult-find)                  ;; Alternative: consult-fd
-  ;;        ("M-s c" . consult-locate)
-  ;;        ("M-s g" . consult-grep)
-  ;;        ("M-s G" . consult-git-grep)
-  ;;        ("M-s r" . consult-ripgrep)
-  ;;        ("M-s l" . consult-line)
-  ;;        ("M-s L" . consult-line-multi)
-  ;;        ("M-s k" . consult-keep-lines)
-  ;;        ("M-s u" . consult-focus-lines)
-  ;;        ;; Isearch integration
-  ;;        ("M-s e" . consult-isearch-history)
-  ;;        :map isearch-mode-map
-  ;;        ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-  ;;        ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-  ;;        ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-  ;;        ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-  ;;        ;; Minibuffer history
-  ;;        :map minibuffer-local-map
-  ;;        ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-  ;;        ("M-r" . consult-history))                ;; orig. previous-matching-history-element
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
@@ -350,11 +327,6 @@
                          (swiper initial-input)))))))
 
 
-;; Disable the damn thing by making it disposable.
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
-(setq  default-input-method  "latin-prefix")
-(setq vc-follow-symlinks t)
 
 
 ;; If there enough blanks before/after  the point then treat
@@ -1547,6 +1519,12 @@ which call (newline) command"
   :init
   (setq org-download-method  'directory)) 
 
+
+(use-package orgit
+  :ensure t
+  :custom
+  (orgit-log-save-arguments  t))
+
 (use-package avy
   :ensure t
   :bind (("C-M-s-e" . avy-goto-line)
@@ -1635,6 +1613,27 @@ which call (newline) command"
     ("o" winner-redo "forward" :exit t :bind nil)))
 
 
+
+
+(use-package treesit-fold
+  :load-path "treesit-fold"
+  :hook (go-ts-mode . treesit-fold-mode)
+  :bind (:map go-ts-mode-map
+              ("C-<tab>" . treesit-fold-toggle)
+              ;; ("C-" . ts-fold-toggle-all)
+              ))
+
+(use-package transpose-frame
+  :ensure t
+  :commands hydra-transpose-frame/body
+  :after (hydra windmove)
+  :init
+
+  (defhydra hydra-transpose-frame (global-map "C-c f")
+    "Frame comands"
+    ("t" transpose-frame)
+    ("v" flop-frame)
+    ("-" flip-frame)))
 ;; (use-package ollama-buddy
 ;;   :ensure t
 ;;   :bind ("C-c o" . ollama-buddy-menu))
