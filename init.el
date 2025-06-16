@@ -533,7 +533,7 @@
   :ensure t
   :diminish yas-minor-mode
   :hook
-  ((tsx-ts-mode go-ts-mode python-mode emacs-lisp-mode web-mode c-mode) . yas-minor-mode)
+  ((tsx-ts-mode go-ts-mode python-ts-mode emacs-lisp-mode web-mode c-mode) . yas-minor-mode)
   :custom
   (yas-triggers-in-field t)
 
@@ -621,7 +621,7 @@
   :config
   (add-hook 'prog-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'yaml-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
-  (add-hook 'python-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
+  (add-hook 'python-ts-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'jtsx-tsx-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'jtsx-jsx-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   )
@@ -783,7 +783,9 @@
          (typescript-mode    . company-mode)
          (inferior-ess-mode  . company-mode)
          (jtsx-jsx-mode      . company-mode)
-         (org-mode           . company-mode))
+         (org-mode           . company-mode)
+         (python-ts-mode     . company-mode)
+         )
 
 
   :custom
@@ -832,7 +834,7 @@
   (wdired-allow-to-change-permissions      t)
   (dired-listing-switches             "-AGFlhv --group-directories-first --time-style=long-iso")
 
-
+  :hook (dired-mode . dired-hide-details-mode)
   :init
   (defun ma/dired-kill-or-up-subdir ()
     "Kill  current  subtree  but  if   it's  top  level  so  call
@@ -849,7 +851,8 @@
             (call-interactively 'dired-prev-subdir)
             (setq dir (dired-get-subdir)))
           (dired-do-kill-lines '(4))
-          (dired-goto-file dir))))))
+          (dired-goto-file dir)))))
+  )
 
 (use-package dired-narrow
   :ensure t
@@ -939,9 +942,16 @@
 ;;             (lambda ()
 ;;               (add-hook 'before-save-hook 'gofmt-before-save))))
 
-(use-package reformatter
-  :ensure t)
 
+(use-package reformatter
+  :ensure t
+  :hook
+  (python-mode . ruff-format-on-save-mode)
+  (python-ts-mode . ruff-format-on-save-mode)
+  :config
+  (reformatter-define ruff-format
+    :program "ruff"
+    :args `("format" "--stdin-filename" ,buffer-file-name "-")))
 
 (use-package go-ts-mode
   :bind (:map go-ts-mode-map
@@ -1020,15 +1030,12 @@ which call (newline) command"
 
 (use-package py-isort
   :ensure t
-  :hook (python-mode . ma/enable-py-isort)
+  :hook (python-ts-mode . ma/py-isort-buffer)
   :preface
-  (defun ma/enable-py-isort()
-    (add-hook 'before-save-hook 'py-isort-before-save nil t)))
+  (defun ma/py-isort-buffer ()
+    (add-hook 'before-save-hook
+              'py-isort-buffer nil 'local)))
 
-(use-package blacken
-  :ensure t
-  :diminish
-  :hook (python-mode . blacken-mode))
 
 (use-package popper
   :ensure t
@@ -1064,12 +1071,12 @@ which call (newline) command"
 (use-package lsp-mode
   :ensure t
   :diminish
-  :hook ((go-ts-mode python-mode c-mode c++-mode ess-r-mode) . lsp-deferred)
+  :hook ((go-ts-mode python-ts-mode c-mode c++-mode ess-r-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-warn-no-matched-clients nil)
   (lsp-diagnostics-provider :flycheck)
-  (lsp-diagnostics-disabled-modes '(python-mode
+  (lsp-diagnostics-disabled-modes '(python-ts-mode
                                     ;;jtsx-tsx-mode jtsx-jsx-mode
                                     ))
   (lsp-signature-auto-activate nil)
@@ -1132,11 +1139,11 @@ which call (newline) command"
 
 (use-package flycheck
   :ensure t
-  :hook ((python-mode) . flycheck-mode)
+  :hook ((python-ts-mode) . flycheck-mode)
   :custom
   (flycheck-display-errors-function  nil)
   :init
-  (add-hook 'python-mode-hook #'(lambda ()
+  (add-hook 'python-ts-mode-hook #'(lambda ()
                                   (setq-local flycheck-disabled-checkers '(python-mypy))
                                   (setq-local flycheck-checker 'python-ruff)))
 
@@ -1283,7 +1290,7 @@ which call (newline) command"
          (typescript-mode    . copilot-mode)
          (jtsx-tsx-mode      . copilot-mode)
          (jtsx-jsx-mode      . copilot-mode)
-         (python-mode        . copilot-mode)
+         (python-ts-mode        . copilot-mode)
          (org-mode           . copilot-mode)
          (go-ts-mode            . copilot-mode)
          (c-ts-mode             . copilot-mode))
@@ -1327,7 +1334,9 @@ which call (newline) command"
 (use-package copilot-chat
   :ensure t
   :bind
-  ("C-c t"   . copilot-chat-transient))
+  ("C-c t"   . copilot-chat-transient)
+  :custom
+  (copilot-chat-frontend 'shell-maker))
 
 (use-package hs-minor-mode
   :bind ("<backtab>" . hs-toggle-hiding))
@@ -1477,7 +1486,27 @@ which call (newline) command"
           (search category-keep)))
 
   (setq org-agenda-custom-commands
-        '(("w" . "Work related comand")
+        '(
+          ("h" . "Personal agennda")
+          ("ha" "Agenda for current day or week"
+           ((agenda "")
+            (tags "+pin"
+                  ((org-use-tag-inheritance nil)
+                   (org-agenda-sorting-strategy '(todo-state-down priority-down))))
+            )
+           ((org-agenda-tag-filter-preset '("-work"))))
+
+          ("ht" "All Task!" tags-todo "-work"
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
+
+
+          ("hj" "Journal personal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
+           ((org-agenda-sorting-strategy '(alpha-down))
+            (org-use-tag-inheritance nil)
+            (org-agenda-files '("~/syncthing/org/capture/work/journal.org"))))
+
+          ;;;;;;;;;;;;;;;
+          ("w" . "Work related comand")
           ("wa" "Agenda for current day or week"
            ((agenda "")
             (tags "+pin"
@@ -1612,6 +1641,9 @@ which call (newline) command"
      "back")
     ("o" winner-redo "forward" :exit t :bind nil)))
 
+(use-package eldoc
+  :init
+  (setq eldoc-echo-area-use-multiline-p nil))
 
 
 
@@ -1637,3 +1669,9 @@ which call (newline) command"
 ;; (use-package ollama-buddy
 ;;   :ensure t
 ;;   :bind ("C-c o" . ollama-buddy-menu))
+
+(use-package treesit-fold
+  :load-path "~/.emacs.d/treesit-fold/"
+  :bind ("C-<tab>" . treesit-fold-toggle)
+  :hook
+  ((python-ts-mode        . treesit-fold-mode)))
