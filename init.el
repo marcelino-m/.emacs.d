@@ -1164,11 +1164,11 @@ which call (newline) command"
 (use-package selected
   :ensure t
   :diminish selected-minor-mode
-   :init
+  :init
 
   (selected-global-mode 1)
-  (add-hook 'magit-mode
-            (lambda () (selected-global-mode -1)))
+  (add-hook 'magit-mode-hook
+            (lambda () (selected-minor-mode -1)))
 
 
   (setq selected-org-mode-map (make-sparse-keymap))
@@ -1350,6 +1350,7 @@ which call (newline) command"
   (setq org-log-into-drawer t)
   (setq org-special-ctrl-a/e t)
   (setq org-special-ctrl-k t)
+  (setq org-log-into-drawer nil)
 
   (setq org-emphasis-alist '(("*" (:inherit bold :bold t :foreground "#df6967"))
                              ("/" italic)
@@ -1546,7 +1547,7 @@ which call (newline) command"
 (use-package org-download
   :ensure t
   :init
-  (setq org-download-method  'directory)) 
+  (setq org-download-method  'directory))
 
 
 (use-package orgit
