@@ -693,7 +693,9 @@
   (defhydra hydra-window (global-map "C-x")
     "Some hydra for windows related command"
     ("<left>"  previous-buffer)
-    ("<right>" next-buffer))
+    ("<right>" next-buffer)
+    ("^"       enlarge-window)
+    ("}"       enlarge-window-horizontally))
 
   :config
   :bind (("s-x" . delete-window)
@@ -1071,7 +1073,7 @@ which call (newline) command"
 (use-package lsp-mode
   :ensure t
   :diminish
-  :hook ((go-ts-mode python-ts-mode c-mode c++-mode ess-r-mode) . lsp-deferred)
+  :hook ((go-ts-mode python-ts-mode c-mode c++-mode ess-r-mode rust-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-warn-no-matched-clients nil)
@@ -1667,6 +1669,13 @@ which call (newline) command"
     ("t" transpose-frame)
     ("v" flop-frame)
     ("-" flip-frame)))
+
+(use-package rust-mode
+  :ensure t
+  :custom
+  (rust-format-on-save t))
+
+
 ;; (use-package ollama-buddy
 ;;   :ensure t
 ;;   :bind ("C-c o" . ollama-buddy-menu))
