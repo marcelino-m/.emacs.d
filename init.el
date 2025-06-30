@@ -580,9 +580,8 @@
 
 
   :custom
-  ;; (projectile-completion-system      'ivy)
   (projectile-indexing-method        'alien)
-  (projectile-sort-order             'modification-time)
+  (projectile-sort-order             'recently-active)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
   ;; (projectile-mode-line-function     (lambda ()  (format "proj: %s" (projectile-project-name))))
   (projectile-project-search-path    '("~/lab"))
@@ -644,6 +643,7 @@
 
 (use-package magit
   :ensure t
+  :defer t
   :bind (("C-c g" . magit-status)
          ("C-c d" . ma/magit-diff-buffer-file))
   :custom
@@ -972,7 +972,8 @@
   (setq go-ts-mode-indent-offset 4)
   (add-hook 'go-ts-mode-hook
             (lambda ()
-              (add-hook 'before-save-hook 'lsp-format-buffer))))
+              (add-hook 'before-save-hook 'lsp-format-buffer nil t)
+              (add-hook 'before-save-hook 'lsp-organize-imports nil t))))
 
 (use-package pyvenv
   :ensure t
