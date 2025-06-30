@@ -5,6 +5,13 @@
   (end-of-line 0)
   (indent-for-tab-command))
 
+(defun ma/open-line-new-line-and-indent ()
+  (interactive)
+  (newline-and-indent)
+  (newline-and-indent)
+  (indent-for-tab-command)
+  (end-of-line 0)
+  (indent-for-tab-command))
 
 (defun ma/open-line-below (&optional keep)
   "Open line below current line, whithout breack current line, if given

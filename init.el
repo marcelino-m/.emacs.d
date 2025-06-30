@@ -18,9 +18,12 @@
 (setq  default-input-method  "latin-prefix")
 (setq vc-follow-symlinks t)
 
-
+;; disable some warning
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+
+;; make pointer invisible when writing
+(setq make-pointer-invisible t)
 
 (use-package emacs
   :custom
@@ -403,7 +406,8 @@
 (use-package misc-defuns
   :load-path "./defuns/"
   :init
-  (global-set-key (kbd "C-o")           #'ma/open-line-and-indent)
+  (global-set-key (kbd "M-o")           #'ma/open-line-and-indent)
+  (global-set-key (kbd "C-o")           #'ma/open-line-new-line-and-indent)
   (global-set-key (kbd "<C-return>")    #'ma/open-line-below)
   (global-set-key (kbd "<C-S-return>")  #'ma/open-line-above)
   (global-set-key (kbd "<M-backspace>") #'ma/kill-line)
@@ -511,7 +515,7 @@
 (use-package smartparens
   :ensure t
   :diminish smartparens-mode
-  :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
+  :hook (prog-mode text-mode markdown-mode rust-ts-mode) ;; add `smartparens-mode` to these hooks
   :config
   ;; load default config
   (require 'smartparens-config))
@@ -533,7 +537,7 @@
   :ensure t
   :diminish yas-minor-mode
   :hook
-  ((tsx-ts-mode go-ts-mode python-ts-mode emacs-lisp-mode web-mode c-mode) . yas-minor-mode)
+  ((tsx-ts-mode go-ts-mode python-ts-mode emacs-lisp-mode web-mode c-mode rust-ts-mode) . yas-minor-mode)
   :custom
   (yas-triggers-in-field t)
 
@@ -568,16 +572,16 @@
 
 (use-package projectile
   :ensure t
-  :bind-keymap ("C-,"   . projectile-command-map)
-  :bind (
-         :map projectile-command-map
+  :bind-keymap ("C-;"   . projectile-command-map)
+  :bind (:map projectile-command-map
+              (";"    . projectile-switch-project)
               ("s a" . consult-ripgrep)
               (","   . projectile-switch-project))
 
 
   :custom
   ;; (projectile-completion-system      'ivy)
-  (projectile-indexing-method        'hybrid)
+  (projectile-indexing-method        'alien)
   (projectile-sort-order             'modification-time)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
   ;; (projectile-mode-line-function     (lambda ()  (format "proj: %s" (projectile-project-name))))
@@ -588,8 +592,8 @@
 
   ;; projectile slows down tramp-mode
   ;; https://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
-  (defadvice projectile-project-root (around ignore-remote first activate)
-    (unless (file-remote-p default-directory) ad-do-it))
+  ;; (defadvice projectile-project-root (around ignore-remote first activate)
+  ;;   (unless (file-remote-p default-directory) ad-do-it))
 
   (add-to-list 'projectile-other-file-alist '("tsx"   . ("sass" "scss" "css")))
   (add-to-list 'projectile-other-file-alist '("scss"  . ("tsx" "ts")))
@@ -611,12 +615,14 @@
   :bind (:map flyspell-mode-map
               ("C-,"   . nil)
               ("C-."   . nil)
-              ("C-c $" . nil))
+              ("C-c $" . nil)
+              ("C-;"   . nil))
   :hook
   (org-mode      . flyspell-mode)
   (markdown-mode . flyspell-mode)
   (prog-mode     . flyspell-prog-mode)
   (yaml-mode     . flyspell-prog-mode)
+  (pest-mode     . flyspell-prog-mode)
 
   :config
   (add-hook 'prog-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
@@ -624,6 +630,7 @@
   (add-hook 'python-ts-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'jtsx-tsx-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'jtsx-jsx-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
+  (add-hook 'pest-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   )
 
 (use-package flyspell-correct
@@ -950,10 +957,13 @@
   :hook
   (python-mode . ruff-format-on-save-mode)
   (python-ts-mode . ruff-format-on-save-mode)
+  (rust-ts-mode  . rust-ts-format-on-save-mode)
   :config
   (reformatter-define ruff-format
     :program "ruff"
-    :args `("format" "--stdin-filename" ,buffer-file-name "-")))
+    :args `("format" "--stdin-filename" ,buffer-file-name "-"))
+  (reformatter-define rust-ts-format
+    :program "rustfmt"))
 
 (use-package go-ts-mode
   :bind (:map go-ts-mode-map
@@ -1070,10 +1080,17 @@ which call (newline) command"
   (popper-echo-mode +1))
 
 
+
+(use-package xref
+  :bind (("C-." . xref-find-definitions)
+         ("M-." . xref-find-definitions-other-window)
+         ("C-," . xref-go-back)))
+
+
 (use-package lsp-mode
   :ensure t
   :diminish
-  :hook ((go-ts-mode python-ts-mode c-mode c++-mode ess-r-mode rust-mode) . lsp-deferred)
+  :hook ((go-ts-mode python-ts-mode c-mode c++-mode ess-r-mode rust-ts-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-warn-no-matched-clients nil)
@@ -1382,6 +1399,20 @@ which call (newline) command"
 
   (setq org-enforce-todo-dependencies t))
 
+(use-package org-modern
+  :ensure t
+  :after org
+  :defer t
+  ;; :custom (org-modern-table nil)
+  :hook (org-mode . org-modern-mode)
+  :hook (org-agenda-finalize . org-modern-agenda))
+
+(use-package org-modern-indent
+  :vc (:url "https://github.com/jdtsmith/org-modern-indent"
+            :branch "main")
+  :config
+  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+
 (use-package org-capture
   :bind ("C-c x" . org-capture)
   :config
@@ -1670,18 +1701,18 @@ which call (newline) command"
     ("v" flop-frame)
     ("-" flip-frame)))
 
-(use-package rust-mode
+(use-package rust-ts-mode
   :ensure t
-  :custom
-  (rust-format-on-save t))
+  :bind (:map rust-ts-mode-map
+              ("C-=" . (lambda () (interactive) (insert "=>"))))
+  :config
+  (add-hook 'rust-ts-mode-hook #'rust-ts-format-on-save-mode))
 
+
+(use-package pest-mode
+  :ensure t
+  :mode ("\\.pest\\'" . pest-mode))
 
 ;; (use-package ollama-buddy
 ;;   :ensure t
 ;;   :bind ("C-c o" . ollama-buddy-menu))
-
-(use-package treesit-fold
-  :load-path "~/.emacs.d/treesit-fold/"
-  :bind ("C-<tab>" . treesit-fold-toggle)
-  :hook
-  ((python-ts-mode        . treesit-fold-mode)))
