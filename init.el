@@ -512,13 +512,9 @@
 (use-package hydra
   :ensure t)
 
-(use-package smartparens
-  :ensure t
-  :diminish smartparens-mode
-  :hook (prog-mode text-mode markdown-mode rust-ts-mode) ;; add `smartparens-mode` to these hooks
-  :config
-  ;; load default config
-  (require 'smartparens-config))
+(use-package electric-pair-mode
+  :diminish
+  :hook (prog-mode text-mode markdown-mode rust-ts-mode))
 
 (use-package smooth-scroll
   :ensure t
