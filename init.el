@@ -649,11 +649,11 @@
   (magit-diff-adjust-tab-width            tab-width)
   (magit-diff-refine-hunk                 'all)
   (magit-copy-revision-abbreviated        t)
-  (magit-section-initial-visibility-alist '((untracked . hide)
+  (magit-section-initial-visibility-alist '((untracked . show)
                                             (unstaged  . show)
                                             (staged    . show)
-                                            (stashes   . hide)
-                                            (recent    . show)))
+                                            (pullreqs   . show)
+                                            (unpushed    . show)))
 
   :hook
   (git-commit-mode . git-commit-turn-on-flyspell)
@@ -1385,14 +1385,14 @@ which call (newline) command"
            "|" "CANCELED(c)"  "DONE(e)")))
 
   (setq org-todo-keyword-faces
-        '(("WANT"   . "gray")
-          ("WAIT"   . "Yellow")
-          ("TODO"   . "OrangeRed")
-          ("DOING"  . "Orange")
-          ("STOPPED" . "Yellow")
-          ("DONE"    . "SpringGreen")
-          ("DELEGATED" . "SpringGreen")
-          ("CANCELED"  . "SpringGreen")))
+        '(("WANT"      :background "#5f5f5f" :foreground "#dcdccc" :weight bold)
+          ("WAIT"      :background "#d0bf8f" :foreground "#3f3f3f" :weight bold)
+          ("TODO"      :background "#cc9393" :foreground "#3f3f3f" :weight bold)
+          ("DOING"     :background "#dfaf8f" :foreground "#3f3f3f" :weight bold)
+          ("STOPPED"   :background "#d0bf8f" :foreground "#3f3f3f" :weight bold)
+          ("DONE"      :background "#7f9f7f" :foreground "#3f3f3f" :weight bold)
+          ("DELEGATED" :background "#7f9f7f" :foreground "#3f3f3f" :weight bold)
+          ("CANCELED"  :background "#5f7f5f" :foreground "#dcdccc" :weight bold)))
 
   (setq org-enforce-todo-dependencies t))
 
@@ -1400,13 +1400,21 @@ which call (newline) command"
   :ensure t
   :after org
   :defer t
-  ;; :custom (org-modern-table nil)
-  :hook (org-mode . org-modern-mode)
-  :hook (org-agenda-finalize . org-modern-agenda))
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
+  :custom
+  (org-modern-todo-faces '(("WANT"      :background "#5f5f5f" :foreground "#dcdccc" :weight bold)
+                           ("WAIT"      :background "#d0bf8f" :foreground "#3f3f3f" :weight bold)
+                           ("TODO"      :background "#cc9393" :foreground "#3f3f3f" :weight bold)
+                           ("DOING"     :background "#dfaf8f" :foreground "#3f3f3f" :weight bold)
+                           ("STOPPED"   :background "#d0bf8f" :foreground "#3f3f3f" :weight bold)
+                           ("DONE"      :background "#7f9f7f" :foreground "#3f3f3f" :weight bold)
+                           ("DELEGATED" :background "#7f9f7f" :foreground "#3f3f3f" :weight bold)
+                           ("CANCELED"  :background "#5f7f5f" :foreground "#dcdccc" :weight bold))))
 
 (use-package org-modern-indent
   :vc (:url "https://github.com/jdtsmith/org-modern-indent"
-            :branch "main")
+            :branch :newest)
   :config
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 
