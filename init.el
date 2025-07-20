@@ -22,6 +22,23 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
+(define-advice keyboard-quit
+    (:around (quit) quit-current-context)
+  "Quit the current context.
+
+When there is an active minibuffer and we are not inside it close
+it.  When we are inside the minibuffer use the regular
+`minibuffer-keyboard-quit' which quits any active region before
+exiting.  When there is no minibuffer `keyboard-quit' unless we
+are defining or executing a macro.
+taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smarter/"
+  (if (active-minibuffer-window)
+      (if (minibufferp)
+          (minibuffer-keyboard-quit)
+        (abort-recursive-edit))
+    (unless (or defining-kbd-macro
+                executing-kbd-macro)
+      (funcall-interactively quit))))
 ;; make pointer invisible when writing
 (setq make-pointer-invisible t)
 
@@ -350,6 +367,10 @@
         (replace-match "" nil nil)
       (delete-region (point) (progn (forward-word args) (point))))))
 
+(use-package bookmark
+  :defer t
+  :custom
+  (bookmark-set-fringe-mark nil))
 
 (use-package move-text
   :ensure t
@@ -406,8 +427,7 @@
 (use-package misc-defuns
   :load-path "./defuns/"
   :init
-  (global-set-key (kbd "M-o")           #'ma/open-line-and-indent)
-  (global-set-key (kbd "C-o")           #'ma/open-line-new-line-and-indent)
+  (global-set-key (kbd "C-o")           #'ma/open-line-and-indent)
   (global-set-key (kbd "<C-return>")    #'ma/open-line-below)
   (global-set-key (kbd "<C-S-return>")  #'ma/open-line-above)
   (global-set-key (kbd "<M-backspace>") #'ma/kill-line)
@@ -1120,6 +1140,7 @@ which call (newline) command"
   (lsp-ui-doc-enable      nil)
   (lsp-ui-doc-position   'top)
   (lsp-ui-peek-list-width 80)
+  (lsp-ui-peek-peek-height 40)
 
   :custom-face
   (lsp-ui-peek-peek    ((t :background "#494949")))
@@ -1306,10 +1327,10 @@ which call (newline) command"
          (typescript-mode    . copilot-mode)
          (jtsx-tsx-mode      . copilot-mode)
          (jtsx-jsx-mode      . copilot-mode)
-         (python-ts-mode        . copilot-mode)
+         (python-ts-mode     . copilot-mode)
          (org-mode           . copilot-mode)
-         (go-ts-mode            . copilot-mode)
-         (c-ts-mode             . copilot-mode))
+         (go-ts-mode         . copilot-mode)
+         (c-ts-mode          . copilot-mode))
   :config
   (set-face-attribute 'copilot-overlay-face nil :inherit 'font-lock-comment-face))
 
@@ -1353,9 +1374,6 @@ which call (newline) command"
   ("C-c t"   . copilot-chat-transient)
   :custom
   (copilot-chat-frontend 'shell-maker))
-
-(use-package hs-minor-mode
-  :bind ("<backtab>" . hs-toggle-hiding))
 
 (use-package org
   :bind (("C-c l" . org-store-link)
@@ -1688,11 +1706,13 @@ which call (newline) command"
 
 (use-package treesit-fold
   :load-path "treesit-fold"
-  :hook (go-ts-mode . treesit-fold-mode)
-  :bind (:map go-ts-mode-map
-              ("C-<tab>" . treesit-fold-toggle)
-              ;; ("C-" . ts-fold-toggle-all)
-              ))
+  :hook ((go-ts-mode python-ts-mode rust-mode) . treesit-fold-mode)
+  :bind ("C-<tab>" . treesit-fold-toggle)
+  :config
+  (defun truncate-string-ellipsis ()
+    "Some doc"
+    "...")
+  )
 
 (use-package transpose-frame
   :ensure t
