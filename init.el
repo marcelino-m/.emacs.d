@@ -52,7 +52,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   ;; Hide commands in M-x which do not work in the current mode.  Vertico
   ;; commands are hidden in normal buffers. This setting is useful beyond
   ;; Vertico.
-  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;; (read-extended-command-predicate #'command-completion-default-include-p)
   ;; Do not allow the cursor in the minibuffer prompt
   (minibuffer-prompt-properties
    '(read-only t cursor-intangible t face minibuffer-prompt)))
@@ -113,6 +113,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (diff-refine-changed ((t (:background nil  :foreground "#0000ff"))))
   (diff-refine-removed ((t (:background nil  :foreground "#ff0009"))))
 
+  (lsp-face-highlight-textual ((t (:background "#000000"))))
+
   :config
   (load-theme 'solarized-light t))
 
@@ -143,6 +145,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
     (zenburn-with-color-variables
       (custom-theme-set-faces
        'zenburn
+
+       `(highlight ((t (:background "#292929"))))
 
        `(cursor ((t (:foreground ,zenburn-fg :background ,zenburn-fg))))
        `(fringe ((t (:foreground ,zenburn-fg :background ,zenburn-bg))))
@@ -534,7 +538,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
 (use-package electric-pair-mode
   :diminish
-  :hook (prog-mode text-mode markdown-mode rust-ts-mode))
+  :hook (prog-mode text-mode markdown-mode rust-mode)
+  )
 
 (use-package smooth-scroll
   :ensure t
@@ -553,7 +558,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :ensure t
   :diminish yas-minor-mode
   :hook
-  ((tsx-ts-mode go-ts-mode python-ts-mode emacs-lisp-mode web-mode c-mode rust-ts-mode) . yas-minor-mode)
+  ((tsx-ts-mode go-ts-mode python-ts-mode emacs-lisp-mode web-mode c-mode rust-mode) . yas-minor-mode)
   :custom
   (yas-triggers-in-field t)
 
@@ -973,13 +978,14 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :hook
   (python-mode . ruff-format-on-save-mode)
   (python-ts-mode . ruff-format-on-save-mode)
-  (rust-ts-mode  . rust-ts-format-on-save-mode)
+  ;; (rust-ts-mode  . rust-ts-format-on-save-mode)
   :config
   (reformatter-define ruff-format
     :program "ruff"
     :args `("format" "--stdin-filename" ,buffer-file-name "-"))
-  (reformatter-define rust-ts-format
-    :program "rustfmt"))
+  ;; (reformatter-define rust-ts-format
+  ;;   :program "rustfmt")
+  )
 
 (use-package go-ts-mode
   :bind (:map go-ts-mode-map
@@ -1107,7 +1113,7 @@ which call (newline) command"
 (use-package lsp-mode
   :ensure t
   :diminish
-  :hook ((go-ts-mode python-ts-mode c-mode c++-mode ess-r-mode rust-ts-mode) . lsp-deferred)
+  :hook ((go-ts-mode python-ts-mode c-mode c++-mode ess-r-mode rust-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-warn-no-matched-clients nil)
@@ -1140,7 +1146,7 @@ which call (newline) command"
   (lsp-ui-doc-enable      nil)
   (lsp-ui-doc-position   'top)
   (lsp-ui-peek-list-width 80)
-  (lsp-ui-peek-peek-height 40)
+  (lsp-ui-peek-peek-height 30)
 
   :custom-face
   (lsp-ui-peek-peek    ((t :background "#494949")))
@@ -1328,7 +1334,6 @@ which call (newline) command"
          (jtsx-tsx-mode      . copilot-mode)
          (jtsx-jsx-mode      . copilot-mode)
          (python-ts-mode     . copilot-mode)
-         (org-mode           . copilot-mode)
          (go-ts-mode         . copilot-mode)
          (c-ts-mode          . copilot-mode))
   :config
@@ -1413,6 +1418,25 @@ which call (newline) command"
           ("CANCELED"  :background "#5f7f5f" :foreground "#dcdccc" :weight bold)))
 
   (setq org-enforce-todo-dependencies t))
+
+
+(use-package org-contrib
+  :ensure
+  :after org
+  :diminish
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell   . t)
+     (js      . t)
+     (R       . t)
+     (sql     . t)
+     (sqlite  . t)
+     (python  . t)
+     (ditaa   . t)
+     (calc    . t)
+     (ledger  . t))))
+
 
 (use-package org-modern
   :ensure t
@@ -1600,16 +1624,20 @@ which call (newline) command"
             (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))))
   )
 
+(use-package org-src
+  :custom
+  (org-src-preserve-indentation t))
+
 (use-package org-download
   :ensure t
   :init
   (setq org-download-method  'directory))
 
-
 (use-package orgit
   :ensure t
   :custom
   (orgit-log-save-arguments  t))
+
 
 (use-package avy
   :ensure t
@@ -1726,17 +1754,30 @@ which call (newline) command"
     ("v" flop-frame)
     ("-" flip-frame)))
 
-(use-package rust-ts-mode
-  :ensure t
-  :bind (:map rust-ts-mode-map
-              ("C-=" . (lambda () (interactive) (insert "=>"))))
-  :config
-  (add-hook 'rust-ts-mode-hook #'rust-ts-format-on-save-mode))
+;; (use-package rust-ts-mode
+;;   :ensure t
+;;   :bind (:map rust-ts-mode-map
+;;               ("C-=" . (lambda () (interactive) (insert "=>"))))
+;;   :config
+;;   (add-hook 'rust-ts-mode-hook #'rust-ts-format-on-save-mode))
 
+(use-package rust-mode
+  :ensure t
+  :bind (:map rust-mode-map
+              ("C-=" . (lambda () (interactive) (insert "=>"))))
+  :custom
+  (rust-format-on-save  t)
+
+  :init
+  (setq rust-mode-treesitter-derive nil))
 
 (use-package pest-mode
   :ensure t
   :mode ("\\.pest\\'" . pest-mode))
+
+(use-package ledger-mode
+  :ensure t
+  :mode ("\\.journal\\'"))
 
 ;; (use-package ollama-buddy
 ;;   :ensure t
