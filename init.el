@@ -558,20 +558,19 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :ensure t
   :diminish yas-minor-mode
   :hook
-  ((tsx-ts-mode go-ts-mode python-ts-mode emacs-lisp-mode web-mode c-mode rust-mode) . yas-minor-mode)
+  (tsx-ts-mode  . yas-minor-mode)
+  (go-ts-mode   . yas-minor-mode)
+  (python-ts-mode  . yas-minor-mode)
+  (rust-mode . yas-minor-mode)
+  (emacs-lisp-mode-hook . yas-minor-mode)
+  (web-mode-hook . yas-minor-mode)
+
   :custom
   (yas-triggers-in-field t)
 
-
- :config
+  :config
   (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
-  (yas-reload-all)
-  ;; (add-hook 'go-mode-hook 'yas-minor-mode)
-  ;; (add-hook 'python-mode-hook 'yas-minor-mode)
-  ;; (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
-  ;; (add-hook 'tsx-ts-mode-hook 'yas-minor-mode)
-  ;; (add-hook 'web-mode-hook 'yas-minor-mode)
-  )
+  (yas-reload-all))
 
 
 (use-package saveplace
@@ -1769,7 +1768,7 @@ which call (newline) command"
   (rust-format-on-save  t)
 
   :init
-  (setq rust-mode-treesitter-derive nil))
+  (setq rust-mode-treesitter-derive t))
 
 (use-package pest-mode
   :ensure t
