@@ -1778,6 +1778,15 @@ which call (newline) command"
   :ensure t
   :mode ("\\.journal\\'"))
 
+(use-package which-key
+  :custom
+  (which-key-show-early-on-C-h t)
+  (which-key-idle-delay 10000)
+  (which-key-idle-secondary-delay 0.05)
+
+  :config
+  (which-key-mode))
+
 ;; (use-package ollama-buddy
 ;;   :ensure t
 ;;   :bind ("C-c o" . ollama-buddy-menu))
