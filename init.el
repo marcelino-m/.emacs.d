@@ -1790,3 +1790,15 @@ which call (newline) command"
 ;; (use-package ollama-buddy
 ;;   :ensure t
 ;;   :bind ("C-c o" . ollama-buddy-menu))
+(use-package sqlite-mode
+  :config
+  (defun ma/sqlite-view-file-magically ()
+    "Runs `sqlite-mode-open-file' on the file name visited by the
+current buffer, killing it.
+taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqlite-files-automatically/"
+    (require 'sqlite-mode)
+    (let ((file-name buffer-file-name))
+      (kill-current-buffer)
+      (sqlite-mode-open-file file-name)))
+
+  (add-to-list 'magic-mode-alist '("SQLite format 3\x00" . ma/sqlite-view-file-magically)))
