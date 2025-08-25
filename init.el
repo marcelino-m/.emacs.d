@@ -1796,7 +1796,6 @@ which call (newline) command"
     "Runs `sqlite-mode-open-file' on the file name visited by the
 current buffer, killing it.
 taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqlite-files-automatically/"
-    (require 'sqlite-mode)
     (let ((file-name buffer-file-name))
       (kill-current-buffer)
       (sqlite-mode-open-file file-name)))
