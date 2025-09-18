@@ -42,6 +42,11 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 ;; make pointer invisible when writing
 (setq make-pointer-invisible t)
 
+
+(use-package avoid
+  :config
+  (mouse-avoidance-mode 'banish))
+
 (use-package emacs
   :custom
   ;; Enable context menu. `vertico-multiform-mode' adds a menu in the minibuffer
@@ -78,7 +83,10 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
      (toml "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
      (prisma "https://github.com/victorhqc/tree-sitter-prisma")
-     (c "https://github.com/tree-sitter/tree-sitter-c")))
+     (c "https://github.com/tree-sitter/tree-sitter-c")
+     (rust "https://github.com/tree-sitter/tree-sitter-rust")
+     )
+   )
 
 (use-package solarized-theme
   :disabled
@@ -147,6 +155,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
        'zenburn
 
        `(highlight ((t (:background "#292929"))))
+       `(region    ((t (:background "#404040"))))
 
        `(cursor ((t (:foreground ,zenburn-fg :background ,zenburn-fg))))
        `(fringe ((t (:foreground ,zenburn-fg :background ,zenburn-bg))))
@@ -338,7 +347,9 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (setq consult-project-function
         (lambda (_) (projectile-project-root))))
 
-
+(use-package consult-flycheck
+  :ensure t
+  :diminish)
 
 (use-package swiper
   :ensure t
@@ -539,7 +550,9 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 (use-package electric-pair-mode
   :diminish
   :hook (prog-mode text-mode markdown-mode rust-mode)
-  )
+  :custom
+  (electric-pair-pairs   '((?\" . ?\") (?\‘ . ?\’) (?\“ . ?\”) (?\` . ?\`))))
+
 
 (use-package smooth-scroll
   :ensure t
@@ -600,7 +613,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
 
   :custom
-  (projectile-indexing-method        'alien)
+  (projectile-indexing-method        'hybrid)
   (projectile-sort-order             'recently-active)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
   ;; (projectile-mode-line-function     (lambda ()  (format "proj: %s" (projectile-project-name))))
@@ -661,12 +674,28 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :custom
   (flyspell-correct-interface #'flyspell-correct-popup))
 
+(use-package autorevert
+  ;; :hook ((dired-mode) . auto-revert-mode)
+  :diminish auto-revert-mode
+  :custom
+  (auto-revert-verbose  nil)
+  (auto-revert-avoid-polling t)
+  (global-auto-revert-non-file-buffers t)
+  (auto-revert-interval  0.5)
+
+  :config
+  (global-auto-revert-mode 1))
+
+
 (use-package magit
   :ensure t
   :defer t
   :bind (("C-c g" . magit-status)
          ("C-c d" . ma/magit-diff-buffer-file))
   :custom
+  ;; (magit-auto-revert-mode nil)
+  ;; (global-auto-revert-mode nil)
+  (magit-auto-revert-immediately t)
   (magit-save-repository-buffers          'dontask)
   (magit-display-buffer-function          'magit-display-buffer-same-window-except-diff-v1)
   (magit-section-visibility-indicator     nil)
@@ -703,6 +732,13 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
                           'magit-insert-recent-commits
                           'magit-insert-unpushed-to-upstream
                           'append))
+
+(use-package magit-todos
+  :ensure t
+  :after magit
+  :custom
+  (magit-todos-exclude-globs '(".git" "project.org"))
+  :config (magit-todos-mode 1))
 
 (use-package forge
   :ensure t
@@ -790,59 +826,57 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
          ("\\.json\\'"    . json-mode)))
 
 
-(use-package company
-  ;; TODO: try corfu
+(use-package corfu
   :ensure t
-  ;; :after lsp-mode
-  :diminish company-mode
-  :bind (:map company-mode-map
-         ("C-M-s-c" . company-complete)
-         :map company-active-map
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous))
+  ;; :custom
+  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
 
-  :hook ((emacs-lisp-mode    . company-mode)
-         (web-mode           . company-mode)
-         (css-mode           . company-mode)
-         (c-mode             . company-mode)
-         (c++-mode           . company-mode)
-         (cider-repl-mode    . company-mode)
-         (cider-mode         . company-mode)
-         (sh-mode            . company-mode)
-         (typescript-mode    . company-mode)
-         (inferior-ess-mode  . company-mode)
-         (jtsx-jsx-mode      . company-mode)
-         (org-mode           . company-mode)
-         (python-ts-mode     . company-mode)
-         )
+  ;; Enable Corfu only for certain modes. See also `global-corfu-modes'.
+  :bind (:map corfu-mode-map
+              ("C-M-s-c" . completion-at-point))
 
+  :hook ((prog-mode      . corfu-mode)
+         (shell-mode     . corfu-mode)
+         (eshell-mode    . corfu-mode)
+         (rust-mode      . corfu-mode)
+         (python-ts-mode . corfu-mode))
 
-  :custom
-  (company-idle-delay            nil)
-  (company-tooltip-idle-delay    0)
-  (company-minimum-prefix-length 3)
-  (company-show-numbers          'left)
-  (company-dabbrev-downcase      nil)
-  (company-selection-wrap-around t)
+  :init
 
-  :config
-  (setq company-backends '(company-capf))
-  ;; (add-to-list 'company-backend 'company-ispell)
+  ;; Recommended: Enable Corfu globally.  Recommended since many modes provide
+  ;; Capfs and Dabbrev can be used globally (M-/).  See also the customization
+  ;; variable `global-corfu-modes' to exclude certain modes.
+  (global-corfu-mode)
+
+  ;; Enable optional extension modes:
+  ;; (corfu-history-mode)
+  ;; (corfu-popupinfo-mode)
   )
 
-(use-package company-box
-  :ensure t
-  :diminish company-box-mode
-  :custom
-  (company-box-doc-enable  nil)
-  (company-box-doc-delay   0)
-  :hook (company-mode . company-box-mode))
+;; ;; A few more useful configurations...
+;; (use-package emacs
+;;   :custom
+;;   ;; TAB cycle if there are only few candidates
+;;   ;; (completion-cycle-threshold 3)
 
-(use-package autorevert
-  :delight auto-revert-mode
-  :hook ((dired-mode) . auto-revert-mode)
-  :custom
-  (auto-revert-verbose  nil))
+;;   ;; Enable indentation+completion using the TAB key.
+;;   ;; `completion-at-point' is often bound to M-TAB.
+;;   (tab-always-indent 'complete)
+
+;;   ;; Emacs 30 and newer: Disable Ispell completion function.
+;;   ;; Try `cape-dict' as an alternative.
+;;   (text-mode-ispell-word-completion nil)
+
+;;   ;; Hide commands in M-x which do not apply to the current mode.  Corfu
+;;   ;; commands are hidden, since they are not used via M-x. This setting is
+;;   ;; useful beyond Corfu.
+;;   (read-extended-command-predicate #'command-completion-default-include-p))
+
 
 (use-package dired-x
   :custom
@@ -977,14 +1011,11 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :hook
   (python-mode . ruff-format-on-save-mode)
   (python-ts-mode . ruff-format-on-save-mode)
-  ;; (rust-ts-mode  . rust-ts-format-on-save-mode)
+
   :config
   (reformatter-define ruff-format
     :program "ruff"
-    :args `("format" "--stdin-filename" ,buffer-file-name "-"))
-  ;; (reformatter-define rust-ts-format
-  ;;   :program "rustfmt")
-  )
+    :args `("format" "--stdin-filename" ,buffer-file-name "-")))
 
 (use-package go-ts-mode
   :bind (:map go-ts-mode-map
@@ -1073,15 +1104,13 @@ which call (newline) command"
 
 (use-package popper
   :ensure t
-  :bind (("C-`"   . popper-toggle-latest)
+  :bind (("C-`"   . popper-toggle)
          ("M-`"   . popper-cycle)
          ("C-M-`" . popper-toggle-type))
+
   :custom
-  (popper-window-height (lambda ()
-                          (fit-window-to-buffer
-                           win
-                           (floor (frame-height) 2)
-                           (floor (frame-height) 3))))
+  (popper-window-height 0.7)
+
   :init
   (setq popper-reference-buffers
         '("\\*Messages\\*"
@@ -1098,6 +1127,8 @@ which call (newline) command"
         (append popper-reference-buffers
                 '("^\\*vterm.*\\*$" vterm-mode)
                 '("^\\*eshell.*\\*$" eshell-mode)))
+
+
   (popper-mode +1)
   (popper-echo-mode +1))
 
@@ -1112,9 +1143,16 @@ which call (newline) command"
 (use-package lsp-mode
   :ensure t
   :diminish
-  :hook ((go-ts-mode python-ts-mode c-mode c++-mode ess-r-mode rust-mode) . lsp-deferred)
+  :hook
+  (go-ts-mode . lsp-deferred)
+  (python-ts-mode . lsp-deferred)
+  (c-mode . lsp-deferred)
+  (c++-mode . lsp-deferred)
+  (ess-r-mode . lsp-deferred)
+  (rust-mode . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
+  (lsp-completion-provider :none) ;; we use Corfu!
   (lsp-warn-no-matched-clients nil)
   (lsp-diagnostics-provider :flycheck)
   (lsp-diagnostics-disabled-modes '(python-ts-mode
@@ -1126,7 +1164,20 @@ which call (newline) command"
   (lsp-eldoc-render-all nil)
   (lsp-apply-edits-after-file-operations nil)
   (lsp-headerline-breadcrumb-enable nil)
-  (lsp-clangd-binary-path "~/.src/LLVM-20.1.0-rc1-Linux-X64/bin/clangd"))
+  (lsp-enable-imenu nil)
+  (lsp-clangd-binary-path "~/.src/LLVM-20.1.0-rc1-Linux-X64/bin/clangd")
+  :init
+
+  (add-hook 'lsp-completion-mode-hook
+            (lambda ()
+              (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+                    '(flex)))))
+
+(use-package cape
+  :ensure t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-capf-buster))
+
 
 (use-package lsp-lens
   :after lsp-lens
@@ -1144,6 +1195,7 @@ which call (newline) command"
   (lsp-ui-sideline-enable nil)
   (lsp-ui-doc-enable      nil)
   (lsp-ui-doc-position   'top)
+  (lsp-ui-doc-max-height  39)
   (lsp-ui-peek-list-width 80)
   (lsp-ui-peek-peek-height 30)
 
@@ -1197,10 +1249,20 @@ which call (newline) command"
 (use-package posframe ;; for lsp-ui-peek
   :ensure t)
 
+(use-package xterm-color
+  :ensure t
+  :diminish)
+
+
 (use-package compile
   :custom
   (compilation-ask-about-save   nil)
-  (compilation-scroll-output   'first-error))
+  (compilation-scroll-output   'first-error)
+  (compilation-environment  '("TERM=xterm-256color"))
+  :config
+  (defun ma/advice-compilation-filter (f proc string)
+    (funcall f proc (xterm-color-filter string)))
+  (advice-add 'compilation-filter :around #'ma/advice-compilation-filter))
 
 
 (use-package selected
@@ -1334,7 +1396,8 @@ which call (newline) command"
          (jtsx-jsx-mode      . copilot-mode)
          (python-ts-mode     . copilot-mode)
          (go-ts-mode         . copilot-mode)
-         (c-ts-mode          . copilot-mode))
+         (c-ts-mode          . copilot-mode)
+         (rust-mode          . copilot-mode))
   :config
   (set-face-attribute 'copilot-overlay-face nil :inherit 'font-lock-comment-face))
 
@@ -1395,8 +1458,7 @@ which call (newline) command"
                              ("_" underline)
                              ("=" (:inherit org-verbatim :foreground "#8D8D8D"))
                              ("~" (:inherit org-code :foreground "#8D8D8D"))
-                             ("+"
-                              (:strike-through t))))
+                             ("+" (:strike-through t))))
 
   (setq org-todo-keywords
         '((sequence
@@ -1454,8 +1516,8 @@ which call (newline) command"
                            ("CANCELED"  :background "#5f7f5f" :foreground "#dcdccc" :weight bold))))
 
 (use-package org-modern-indent
-  :vc (:url "https://github.com/jdtsmith/org-modern-indent"
-            :branch :newest)
+  :vc (:url "https://github.com/jdtsmith/org-modern-indent.git"
+            :branch "main")
   :config
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 
@@ -1637,6 +1699,20 @@ which call (newline) command"
   :custom
   (orgit-log-save-arguments  t))
 
+(use-package orglink
+  :ensure t
+  :diminish
+  :custom
+  (orglink-highlight-links '(bracket angle))
+  :hook
+  (ledger-mode . orglink-mode)
+  (prog-mode   . orglink-mode)
+  (rust-mode   . orglink-mode))
+
+(use-package ob-async
+  :ensure t
+  :diminish )
+
 
 (use-package avy
   :ensure t
@@ -1732,6 +1808,7 @@ which call (newline) command"
 
 
 (use-package treesit-fold
+  :diminish
   :load-path "treesit-fold"
   :hook ((go-ts-mode python-ts-mode rust-mode) . treesit-fold-mode)
   :bind ("C-<tab>" . treesit-fold-toggle)
@@ -1753,13 +1830,6 @@ which call (newline) command"
     ("v" flop-frame)
     ("-" flip-frame)))
 
-;; (use-package rust-ts-mode
-;;   :ensure t
-;;   :bind (:map rust-ts-mode-map
-;;               ("C-=" . (lambda () (interactive) (insert "=>"))))
-;;   :config
-;;   (add-hook 'rust-ts-mode-hook #'rust-ts-format-on-save-mode))
-
 (use-package rust-mode
   :ensure t
   :bind (:map rust-mode-map
@@ -1779,6 +1849,7 @@ which call (newline) command"
   :mode ("\\.journal\\'"))
 
 (use-package which-key
+  :diminish
   :custom
   (which-key-show-early-on-C-h t)
   (which-key-idle-delay 10000)
@@ -1801,3 +1872,10 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
       (sqlite-mode-open-file file-name)))
 
   (add-to-list 'magic-mode-alist '("SQLite format 3\x00" . ma/sqlite-view-file-magically)))
+
+
+(use-package vterm
+  :ensure t
+  :bind (:map vterm-mode-map
+              ("C-y" . #'vterm--self-insert)
+              ("C-S-v" . #'vterm-yank)))
