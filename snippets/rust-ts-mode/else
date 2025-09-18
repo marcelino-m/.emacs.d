@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: else
+# key: else
+# --
+let Some($1) = $2 else {
+    $0
+}

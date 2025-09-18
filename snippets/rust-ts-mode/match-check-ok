@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: match result
+# key: chk
+# --
+match ${1:func_call} {
+    Ok(${2:ok}) => ${3:expr1},
+    Err(${4:err}) => ${5:expr2},
+}

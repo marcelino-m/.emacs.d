@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: if let
+# key: iflet
+# --
+if let ${1:Some(val)} = ${2:expr} {
+    $0
+}
