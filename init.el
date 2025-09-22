@@ -457,9 +457,9 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
 (use-package hl-todo
   :ensure t
-  :init (global-hl-todo-mode)
-  :config
-  (setq hl-todo-activate-in-modes '(prog-mode)))
+  :hook
+  (prog-mode . hl-todo-mode)
+  (rust-mode . hl-todo-mode))
 
 ;; notify when emacs is ready
 ;; I run emacs in server mode set a systemd units
@@ -621,6 +621,14 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (projectile-find-dir-includes-top-level t)
 
   :config
+  (advice-add 'projectile-run-vterm
+              :override
+              (lambda (&optional arg)
+                (interactive "P")
+                (let ((project (projectile-acquire-root)))
+                  (projectile-with-default-dir project
+                    (let ((vterm-buffer-name (projectile-generate-process-name "vterm" arg project)))
+                      (vterm))))))
 
   ;; projectile slows down tramp-mode
   ;; https://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
@@ -1124,9 +1132,12 @@ which call (newline) command"
           ))
 
   (setq popper-reference-buffers
-        (append popper-reference-buffers
-                '("^\\*vterm.*\\*$" vterm-mode)
-                '("^\\*eshell.*\\*$" eshell-mode)))
+      (append popper-reference-buffers
+              '("^\\*vterm.*\\*$"  vterm-mode
+                "^\\*eshell.*\\*$" eshell-mode
+                "^\\*shell.*\\*$"  shell-mode
+                "^\\*term.*\\*$"   term-mode
+                )))
 
 
   (popper-mode +1)
@@ -1685,6 +1696,7 @@ which call (newline) command"
             (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))))
   )
 
+
 (use-package org-src
   :custom
   (org-src-preserve-indentation t))
@@ -1878,4 +1890,5 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
   :ensure t
   :bind (:map vterm-mode-map
               ("C-y" . #'vterm--self-insert)
+              ("C-u" . #'vterm--self-insert)
               ("C-S-v" . #'vterm-yank)))
