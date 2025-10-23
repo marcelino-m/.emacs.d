@@ -1556,10 +1556,6 @@ which call (newline) command"
            entry (file "~/syncthing/org/capture/task.org")
            "* TODO %?" :empty-lines-before 2)
 
-          ("h" "Home and domestic related task"
-           entry (file "~/syncthing/org/capture/home-task.org")
-           "* TODO %? :home:" :empty-lines-before 2)
-
           ("w" "work related captures")
           ("wt" "Task"
            entry (file "~/syncthing/org/capture/work/task.org")
