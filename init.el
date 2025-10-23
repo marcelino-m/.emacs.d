@@ -39,13 +39,9 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
     (unless (or defining-kbd-macro
                 executing-kbd-macro)
       (funcall-interactively quit))))
+
 ;; make pointer invisible when writing
 (setq make-pointer-invisible t)
-
-
-(use-package avoid
-  :config
-  (mouse-avoidance-mode 'banish))
 
 (use-package emacs
   :custom
@@ -860,11 +856,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   ;; Capfs and Dabbrev can be used globally (M-/).  See also the customization
   ;; variable `global-corfu-modes' to exclude certain modes.
   (global-corfu-mode)
-
-  ;; Enable optional extension modes:
-  ;; (corfu-history-mode)
-  ;; (corfu-popupinfo-mode)
-  )
+  (corfu-indexed-mode)
+  (corfu-popupinfo-mode))
 
 ;; ;; A few more useful configurations...
 ;; (use-package emacs
@@ -1410,7 +1403,11 @@ which call (newline) command"
          (c-ts-mode          . copilot-mode)
          (rust-mode          . copilot-mode))
   :config
-  (set-face-attribute 'copilot-overlay-face nil :inherit 'font-lock-comment-face))
+  (setq copilot-idle-delay  0)
+  (set-face-attribute 'copilot-overlay-face nil
+                      :inherit 'font-lock-comment-face
+                      :family "DejaVu Sans Mono"
+                      :slant 'italic))
 
 (use-package crux
   :ensure t
@@ -1473,7 +1470,7 @@ which call (newline) command"
 
   (setq org-todo-keywords
         '((sequence
-           "TODO(t)" "DOING(d)" "|" )
+           "TODO(t)" "DOING(d)" "STOPED(s)" "|" )
           (sequence
            "WAITING(w)" "|" )
           (type
@@ -1517,14 +1514,15 @@ which call (newline) command"
   :hook ((org-mode . org-modern-mode)
          (org-agenda-finalize . org-modern-agenda))
   :custom
-  (org-modern-todo-faces '(("WANT"      :background "#5f5f5f" :foreground "#dcdccc" :weight bold)
-                           ("WAIT"      :background "#d0bf8f" :foreground "#3f3f3f" :weight bold)
-                           ("TODO"      :background "#cc9393" :foreground "#3f3f3f" :weight bold)
-                           ("DOING"     :background "#dfaf8f" :foreground "#3f3f3f" :weight bold)
-                           ("STOPPED"   :background "#d0bf8f" :foreground "#3f3f3f" :weight bold)
-                           ("DONE"      :background "#7f9f7f" :foreground "#3f3f3f" :weight bold)
-                           ("DELEGATED" :background "#7f9f7f" :foreground "#3f3f3f" :weight bold)
-                           ("CANCELED"  :background "#5f7f5f" :foreground "#dcdccc" :weight bold))))
+  (org-modern-todo-faces
+        '(
+          ("TODO"      :background "#df6967" :foreground "#3f3f3f" :weight bold)
+          ("WAIT"      :background "#e6b84e" :foreground "#3f3f3f" :weight bold)
+          ("DOING"     :background "#ef9c58" :foreground "#3f3f3f" :weight bold)
+          ("STOPPED"   :background "#e6b84e" :foreground "#3f3f3f" :weight bold)
+          ("DONE"      :background "#8ccf8a" :foreground "#3f3f3f" :weight bold)
+          ("DELEGATED" :background "#8ccf8a" :foreground "#3f3f3f" :weight bold)
+          ("CANCELED"  :background "#7fbf7f" :foreground "#dcdccc" :weight bold))))
 
 (use-package org-modern-indent
   :vc (:url "https://github.com/jdtsmith/org-modern-indent.git"
