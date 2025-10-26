@@ -1886,3 +1886,8 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
               ("C-y" . #'vterm--self-insert)
               ("C-u" . #'vterm--self-insert)
               ("C-S-v" . #'vterm-yank)))
+
+(use-package kkp
+  :ensure t
+  :config
+  (global-kkp-mode +1))
