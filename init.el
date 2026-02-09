@@ -202,8 +202,39 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
        `(org-link ((t (:foreground ,zenburn-yellow-2 :underline nil :bold t))))))))
 
 
+  (load-theme 'doom-one t)
+
+  (custom-set-faces
+   ;; magit
+   `(magit-diff-added-highlight    ((t (:background "#333a38"  :foreground "#7a9d4d" :extend t))))
+   `(magit-diff-removed-highlight  ((t (:background "#392d34"  :foreground "#bc4d44" :extend t))))
+
+   `(magit-diff-context-highlight  ((t (:background unspecified  :foreground "#bbc2cf"))))
+   `(magit-diff-section-highlight  ((t (:background unspecified  :foreground unspecified))))
+   ;; diff
+   `(diff-added    ((t (:background "#333a38"  :foreground "#7a9d4d" :extend t :inherit nil))))
+   `(diff-removed  ((t (:background "#392d34"  :foreground "#bc4d44" :extend t :inherit nil))))
+   `(diff-refine-added   ((t ( :foreground "#b8de85" :inverse-video nil))))
+   `(diff-refine-removed ((t ( :foreground "#ff8e8d" :inverse-video nil))))
+
+   )
+
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (nerd-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
 
 (use-package spaceline
+  :disabled
   :ensure t
   :config
   (use-package spaceline-config
@@ -553,8 +584,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 (use-package smooth-scroll
   :ensure t
   :diminish smooth-scroll-mode
-  :bind (("M-p"   . scroll-down-1)
-         ("M-n"   . scroll-up-1)))
+  :bind (("M-<up>"   . scroll-down-1)
+         ("M-<down>"   . scroll-up-1)))
 
 (use-package uniquify
   :custom
@@ -601,6 +632,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
 (use-package projectile
   :ensure t
+  :diminish
   :bind-keymap ("C-;"   . projectile-command-map)
   :bind (:map projectile-command-map
               (";"    . projectile-switch-project)
@@ -613,7 +645,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (projectile-sort-order             'recently-active)
   (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
   ;; (projectile-mode-line-function     (lambda ()  (format "proj: %s" (projectile-project-name))))
-  (projectile-project-search-path    '("~/lab"))
+  (projectile-project-search-path    '(("~/lab" . 2)))
   (projectile-find-dir-includes-top-level t)
 
   :config
@@ -707,7 +739,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (magit-auto-revert-immediately t)
   (magit-save-repository-buffers          'dontask)
   (magit-display-buffer-function          'magit-display-buffer-same-window-except-diff-v1)
-  (magit-section-visibility-indicator     nil)
+  (magit-section-visibility-indicators     nil)
   (magit-diff-adjust-tab-width            tab-width)
   (magit-diff-refine-hunk                 'all)
   (magit-copy-revision-abbreviated        t)
@@ -753,7 +785,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :ensure t
   :after magit
   :custom-face
-  (forge-pullreq-draft ((t (:inherit default :background nil :foreground "gray63" :bold t)))))
+  (forge-pullreq-draft ((t (:inherit default :background unspecified :foreground "gray63" :bold t)))))
 
 (use-package git-modes
   :ensure t)
@@ -1210,6 +1242,7 @@ which call (newline) command"
   (lsp-warn-no-matched-clients nil)
   (lsp-diagnostics-provider :flycheck)
   (lsp-diagnostics-disabled-modes '(python-ts-mode
+                                    rust-mode
                                     ;;jtsx-tsx-mode jtsx-jsx-mode
                                     ))
   (lsp-signature-auto-activate nil)
@@ -1287,13 +1320,16 @@ which call (newline) command"
 
 (use-package flycheck
   :ensure t
-  :hook ((python-ts-mode) . flycheck-mode)
+  :diminish
+  :hook ((python-ts-mode rust-mode) . flycheck-mode)
   :custom
   (flycheck-display-errors-function  nil)
   :init
   (add-hook 'python-ts-mode-hook #'(lambda ()
                                   (setq-local flycheck-disabled-checkers '(python-mypy))
                                   (setq-local flycheck-checker 'python-ruff)))
+  (add-hook 'rust-ts-mode-hook #'(lambda ()
+                                     (setq-local flycheck-checker 'rust-clippy)))
 
   :config
   (flycheck-add-mode 'javascript-eslint 'jtsx-jsx-mode)
@@ -1369,7 +1405,9 @@ which call (newline) command"
   :init
   (global-undo-tree-mode)
   :custom
-  (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
+  (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+  (undo-tree-auto-save-history nil))
+
 
 (use-package dotenv-mode
   :ensure t
@@ -1674,7 +1712,7 @@ which call (newline) command"
   (setq org-agenda-files
       (mapcar 'abbreviate-file-name
               (split-string
-               (shell-command-to-string "find ~/syncthing/org/ -type f -name \"*.org\"") "\n" t)))
+               (shell-command-to-string "find ~/syncthing/org/capture/ -type f -name \"*.org\"") "\n" t)))
 
   (setq org-agenda-sorting-strategy
         '((agenda habit-down time-up priority-down category-keep)
@@ -1859,6 +1897,7 @@ which call (newline) command"
 
 (use-package eldoc
   :init
+  :diminish
   (setq eldoc-echo-area-use-multiline-p nil))
 
 
@@ -1932,6 +1971,7 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
 
 (use-package vterm
   :ensure t
+  :diminish
   :bind (:map vterm-mode-map
               ("C-y" . #'vterm--self-insert)
               ("C-u" . #'vterm--self-insert)
@@ -1939,5 +1979,12 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
 
 (use-package kkp
   :ensure t
+  :diminish
   :config
   (global-kkp-mode +1))
+
+(use-package volatile-highlights
+  :ensure t
+  :diminish
+  :config
+  (volatile-highlights-mode 1))
