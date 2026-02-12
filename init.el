@@ -137,7 +137,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
           ("zenburn-bg-1"     . "#252525")
           ("zenburn-bg-08"    . "#2b2b2b")
           ("zenburn-bg-05"    . "#313131")
-          ("zenburn-bg"       . "#383838")
+          ("zenburn-bg"       . "#313131")
           ("zenburn-bg+05"    . "#3e3e3e")
           ("zenburn-bg+1"     . "#414141")
           ("zenburn-bg+2"     . "#4c4c4c")
