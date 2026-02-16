@@ -203,32 +203,6 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
        `(org-link ((t (:foreground ,zenburn-yellow-2 :underline nil :bold t))))))))
 
 
-  (load-theme 'doom-one t)
-
-  (custom-set-faces
-   ;; magit
-   `(magit-diff-added-highlight    ((t (:background "#333a38"  :foreground "#7a9d4d" :extend t))))
-   `(magit-diff-removed-highlight  ((t (:background "#392d34"  :foreground "#bc4d44" :extend t))))
-
-   `(magit-diff-context-highlight  ((t (:background unspecified  :foreground "#bbc2cf"))))
-   `(magit-diff-section-highlight  ((t (:background unspecified  :foreground unspecified))))
-   ;; diff
-   `(diff-added    ((t (:background "#333a38"  :foreground "#7a9d4d" :extend t :inherit nil))))
-   `(diff-removed  ((t (:background "#392d34"  :foreground "#bc4d44" :extend t :inherit nil))))
-   `(diff-refine-added   ((t ( :foreground "#b8de85" :inverse-video nil))))
-   `(diff-refine-removed ((t ( :foreground "#ff8e8d" :inverse-video nil))))
-
-   )
-
-
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Enable custom neotree theme (nerd-icons must be installed!)
-  (doom-themes-neotree-config)
-  ;; or for treemacs users
-  (doom-themes-treemacs-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
 
 (use-package doom-modeline
   :ensure t
