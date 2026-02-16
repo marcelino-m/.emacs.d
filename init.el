@@ -976,63 +976,53 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
               (diminish 'dired-omit-mode))))
 
 (use-package dired
-  :bind (:map dired-mode-map
-              ("k"    . ma/dired-kill-or-up-subdir))
-
-  :custom
-  (dired-dwim-target                       t)
-  (wdired-allow-to-change-permissions      t)
-  (dired-listing-switches             "-AGFlhv --group-directories-first --time-style=long-iso")
-
-  :hook (dired-mode . dired-hide-details-mode)
-  :init
-  (defun ma/dired-kill-or-up-subdir ()
-    "Kill  current  subtree  but  if   it's  top  level  so  call
-`dired-up-directory'"
-
-    (interactive)
-    (let ((in-header (dired-get-subdir))
-          (cur-dir   (dired-current-directory)))
-
-      (if (equal cur-dir (expand-file-name default-directory))
-          (dired-up-directory)
-        (progn
-          (when (not in-header)
-            (call-interactively 'dired-prev-subdir)
-            (setq dir (dired-get-subdir)))
-          (dired-do-kill-lines '(4))
-          (dired-goto-file dir)))))
-  )
-
-(use-package dired-narrow
-  :ensure t
-  :bind (:map dired-mode-map
-              ("/" . dired-narrow)))
-
-(use-package all-the-icons
-  ;; after install run the command (all-the-icons-install-fonts)
-  :ensure t
-  :defer t
-  :diminish)
-
-(use-package all-the-icons-dired
-  :ensure t
-  :diminish
-  :custom
-  (all-the-icons-dired-monochrome  nil)
-
-  :hook
-  (dired-mode . all-the-icons-dired-mode)
-
-  :init
-  (defface all-the-icons-dired-dir-face
-    '((((background dark)) :foreground "#BDBDBD"))
-    "Face for the directory icon"
-    :group 'all-the-icons-faces)
-
   :config
-  (add-to-list 'all-the-icons-extension-icon-alist
-               '("go" all-the-icons-alltheicon "go" :height 1.0  :face all-the-icons-blue)))
+  (setq dired-listing-switches
+        "-l --almost-all --human-readable --group-directories-first --no-group")
+  ;; this command is useful when you want to close the window of `dirvish-side'
+  ;; automatically when opening a file
+  (put 'dired-find-alternate-file 'disabled nil))
+
+(use-package dirvish
+  :ensure t
+  :init
+  (dirvish-override-dired-mode)
+  :custom
+  (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
+   '(("h" "~/"                    "Home")
+     ("d" "~/Downloads/"          "Downloads")
+     ("l" "~/lab/"                "Lab")))
+  ;; :bind ("C-c f" . dirvish)
+  :bind (:map dirvish-mode-map                ; Dirvish inherits `dired-mode-map'
+              ("k"   . dired-up-directory)        ; So you can adjust `dired' bindings here
+              ("?"   . dirvish-dispatch)          ; [?] a helpful cheatsheet
+              ("a"   . dirvish-setup-menu)        ; [a]ttributes settings:`t' toggles mtime, `f' toggles fullframe, etc.
+              ("f"   . dirvish-file-info-menu)    ; [f]ile info
+              ("o"   . dirvish-quick-access)      ; [o]pen `dirvish-quick-access-entries'
+              ("s"   . dirvish-quicksort)         ; [s]ort flie list
+              ("r"   . dirvish-history-jump)      ; [r]ecent visited
+              ("l"   . dirvish-ls-switches-menu)  ; [l]s command flags
+              ("v"   . dirvish-vc-menu)           ; [v]ersion control commands
+              ("*"   . dirvish-mark-menu)
+              ("y"   . dirvish-yank-menu)
+              ("/"   . dirvish-narrow)
+              ("^"   . dirvish-history-last)
+              ("TAB" . dirvish-subtree-toggle)
+              ("M-f" . dirvish-history-go-forward)
+              ("M-b" . dirvish-history-go-backward)
+              ("M-e" . dirvish-emerge-menu))
+  :config
+  (global-set-key (kbd "C-c f") 'dirvish)
+  ;; (dirvish-peek-mode)             ; Preview files in minibuffer
+  ;; (dirvish-side-follow-mode)      ; similar to `treemacs-follow-mode'
+  (setq dirvish-mode-line-format
+        '(:left (sort symlink) :right (omit yank index)))
+  (setq dirvish-attributes           ; The order *MATTERS* for some attributes
+        '(vc-state subtree-state nerd-icons collapse git-msg file-time file-size)
+        dirvish-side-attributes
+        '(vc-state nerd-icons collapse file-size))
+  ;; open large directory (over 20000 files) asynchronously with `fd' command
+  (setq dirvish-large-directory-threshold 20000))
 
 
 (use-package deft
