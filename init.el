@@ -150,6 +150,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
       (custom-theme-set-faces
        'zenburn
 
+       `(hl-line   ((t (:background "#222222" :extend t))))
        `(highlight ((t (:background "#292929"))))
        `(region    ((t (:background "#404040"))))
 
