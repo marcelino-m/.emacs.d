@@ -1584,12 +1584,6 @@ which call (newline) command"
           ("DELEGATED" :background "#8ccf8a" :foreground "#3f3f3f" :weight bold)
           ("CANCELED"  :background "#7fbf7f" :foreground "#dcdccc" :weight bold))))
 
-(use-package org-modern-indent
-  :vc (:url "https://github.com/jdtsmith/org-modern-indent.git"
-            :branch "main")
-  :config
-  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
-
 (use-package org-capture
   :bind ("C-c x" . org-capture)
   :config
