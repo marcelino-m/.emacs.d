@@ -640,8 +640,10 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
   ;; projectile slows down tramp-mode
   ;; https://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
-  ;; (defadvice projectile-project-root (around ignore-remote first activate)
-  ;;   (unless (file-remote-p default-directory) ad-do-it))
+  (define-advice projectile-project-root (:around (orig-fn &rest args) ignore-remote)
+    "Ignore remote directories when finding project root."
+    (unless (file-remote-p default-directory)
+      (apply orig-fn args)))
 
   (add-to-list 'projectile-other-file-alist '("tsx"   . ("sass" "scss" "css")))
   (add-to-list 'projectile-other-file-alist '("scss"  . ("tsx" "ts")))
