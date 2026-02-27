@@ -1141,9 +1141,9 @@ which call (newline) command"
         (apply orig-fun args))))
 
   ;; advising newline behavior in python mode
-  (let ((nline-fn #'newline))
-    (add-function :around nline-fn  #'ma/python-newline-advice)
-    (define-key python-ts-mode-map (kbd "RET")  nline-fn))
+  (defvar nline-fn #'newline)
+  (add-function :around nline-fn  #'ma/python-newline-advice)
+  (define-key python-ts-mode-map (kbd "RET")  nline-fn)
 
   ;; advising if ipython not found then use  python3
   (advice-add 'python-shell-calculate-command :around #'ma/python-shell-calculate-command-advice))
