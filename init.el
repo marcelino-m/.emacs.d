@@ -961,6 +961,16 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   ;; automatically when opening a file
   (put 'dired-find-alternate-file 'disabled nil))
 
+(use-package wdired
+  :after dired
+  :bind (:map wdired-mode-map
+              ;; if not, in kitty C-c + C-c don't work
+              ("C-c C-[" . nil)
+              ("C-c '" . wdired-change-to-wdired-mode)))
+
+
+
+
 (use-package dirvish
   :ensure t
   :init
