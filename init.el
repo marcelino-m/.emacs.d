@@ -1121,7 +1121,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (python-eldoc-get-doc nil)
   (python-ts-indent-offset 4)
   (python-shell-interpreter "ipython")
-  ;; (python-shell-interpreter-args "--simple-prompt -i")
+  (python-shell-interpreter-args "--simple-prompt -i")
 
   :config
   (defun ma/python-eval-current-line (&optional keep)
