@@ -1992,3 +1992,10 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
                               ":?" ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__" "???"
                               "<:<" ";;;"))
   (global-ligature-mode t))
+(use-package claude-code-ide
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind (("C-c cm" . claude-code-ide-menu)
+         ("C-c ct" . claude-code-ide-toggle)
+         ("C-c ci" . claude-code-ide-insert-at-mentioned)) ; Set your favorite keybinding
+  :config
+  (claude-code-ide-emacs-tools-setup))
