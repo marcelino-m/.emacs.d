@@ -891,6 +891,11 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
+  (setq embark-indicators
+        '(embark-minimal-indicator
+          embark-highlight-indicator))
+
+  (setq embark-prompter 'embark-completing-read-prompter)
 
   ;; Show the Embark target at point via Eldoc. You may adjust the
   ;; Eldoc strategy, if you want to see the documentation from
