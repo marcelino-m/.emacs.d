@@ -1338,7 +1338,13 @@ which call (newline) command"
   :config
   (defun ma/advice-compilation-filter (f proc string)
     (funcall f proc (xterm-color-filter string)))
-  (advice-add 'compilation-filter :around #'ma/advice-compilation-filter))
+  (advice-add 'compilation-filter :around #'ma/advice-compilation-filter)
+  (add-to-list
+   'compilation-error-regexp-alist-alist
+   '(rust-panic
+     "panicked at \\([^:\n]+\\):\\([0-9]+\\):\\([0-9]+\\)"
+     1 2 3))
+  (add-to-list 'compilation-error-regexp-alist 'rust-panic))
 
 
 (use-package selected
