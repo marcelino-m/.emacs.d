@@ -690,7 +690,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
 (use-package flyspell-correct
   :ensure t
-  :bind (:map flyspell-mode-map ("C-c c" . flyspell-correct-wrapper)))
+  :bind (:map flyspell-mode-map ("C-c W" . flyspell-correct-wrapper)))
 
 (use-package flyspell-correct-popup
   :ensure t
@@ -853,7 +853,6 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
 (use-package corfu
   :ensure t
-  ;; :custom
   ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
@@ -986,7 +985,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
               ("?"   . dirvish-dispatch)          ; [?] a helpful cheatsheet
               ("a"   . dirvish-setup-menu)        ; [a]ttributes settings:`t' toggles mtime, `f' toggles fullframe, etc.
               ("f"   . dirvish-file-info-menu)    ; [f]ile info
-              ("o"   . dirvish-quick-access)      ; [o]pen `dirvish-quick-access-entries'
+              ("J"   . dirvish-quick-access)      ; [o]pen `dirvish-quick-access-entries'
               ("s"   . dirvish-quicksort)         ; [s]ort flie list
               ("r"   . dirvish-history-jump)      ; [r]ecent visited
               ("l"   . dirvish-ls-switches-menu)  ; [l]s command flags
@@ -1895,7 +1894,7 @@ which call (newline) command"
   :after (hydra windmove)
   :init
 
-  (defhydra hydra-transpose-frame (global-map "C-c f")
+  (defhydra hydra-transpose-frame (global-map "C-c o")
     "Frame comands"
     ("t" transpose-frame)
     ("v" flop-frame)
