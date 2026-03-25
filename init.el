@@ -86,6 +86,27 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
      )
    )
 
+(use-package calendar
+  :ensure nil
+  :config
+  (defun calendar-copy-as-kill ()
+    (interactive)
+    (if (use-region-p)
+        (call-interactively #'kill-ring-save)
+      (let ((date (calendar-cursor-to-date)))
+        (when date
+          (setq date (encode-time 0 0 0
+                                  (nth 1 date)
+                                  (nth 0 date)
+                                  (nth 2 date)))
+          (kill-new
+           (format-time-string "%Y-%m-%d" date))))))
+
+  :hook
+  (calendar-mode . (lambda ()
+                     (local-set-key [remap kill-ring-save] #'calendar-copy-as-kill))))
+
+
 (use-package solarized-theme
   :disabled
   :ensure t
