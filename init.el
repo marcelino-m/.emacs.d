@@ -456,7 +456,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (global-set-key (kbd "C-c e")         #'ma/eval-and-replace)
   (global-set-key (kbd "C-c j")         #'ma/join-line)
   (global-set-key (kbd "C-c J")         (lambda () (interactive) (ma/join-line t)))
-  (global-set-key (kbd "M-w")           #'ma/kill-ring-save-line-or-region)
+  (global-set-key [remap kill-ring-save]  #'ma/kill-ring-save-line-or-region)
   (global-set-key (kbd "C-c C-SPC")     #'ma/jump-to-mark-skip-same-line))
 
 (use-package flash-region
