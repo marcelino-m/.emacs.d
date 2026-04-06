@@ -1943,7 +1943,8 @@ which call (newline) command"
 (use-package eldoc
   :init
   :diminish
-  (setq eldoc-echo-area-use-multiline-p nil))
+  :custom
+  (eldoc-echo-area-use-multiline-p nil))
 
 
 
