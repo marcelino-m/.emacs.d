@@ -2050,3 +2050,17 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
          ("C-c ci" . claude-code-ide-insert-at-mentioned)) ; Set your favorite keybinding
   :config
   (claude-code-ide-emacs-tools-setup))
+(use-package agent-shell
+  :ensure t
+  :config
+  (require 'acp)
+  (require 'agent-shell)
+  (setq agent-shell-anthropic-authentication
+        (agent-shell-anthropic-make-authentication :login t))
+
+  :bind (("C-c ct" . agent-shell-toggle)
+         ("C-c cs" . agent-shell-send-dwim)
+         :map agent-shell-mode-map
+              ("RET" . newline)
+              ("C-c C-c" . shell-maker-submit)
+              ("C-c C-k" . agent-shell-interrupt)))
