@@ -19,6 +19,30 @@
 (load custom-file 'noerror)
 (setq  default-input-method  "latin-prefix")
 (setq vc-follow-symlinks t)
+;; make pointer invisible when writing
+(setq make-pointer-invisible t)
+(setq warning-minimum-level :error)
+(setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+     (prisma "https://github.com/victorhqc/tree-sitter-prisma")
+     (c "https://github.com/tree-sitter/tree-sitter-c")
+     (rust "https://github.com/tree-sitter/tree-sitter-rust")
+     )
+   )
+
 
 ;; disable some warning
 (put 'upcase-region 'disabled nil)
@@ -42,8 +66,6 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
                 executing-kbd-macro)
       (funcall-interactively quit))))
 
-;; make pointer invisible when writing
-(setq make-pointer-invisible t)
 
 (use-package emacs
   :custom
@@ -62,29 +84,6 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
 (use-package diminish
   :ensure t)
-
-(setq warning-minimum-level :error)
-
-(setq treesit-language-source-alist
-   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     (css "https://github.com/tree-sitter/tree-sitter-css")
-     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-     (html "https://github.com/tree-sitter/tree-sitter-html")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-     (json "https://github.com/tree-sitter/tree-sitter-json")
-     (make "https://github.com/alemuller/tree-sitter-make")
-     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
-     (toml "https://github.com/tree-sitter/tree-sitter-toml")
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-     (prisma "https://github.com/victorhqc/tree-sitter-prisma")
-     (c "https://github.com/tree-sitter/tree-sitter-c")
-     (rust "https://github.com/tree-sitter/tree-sitter-rust")
-     )
-   )
 
 (use-package calendar
   :ensure nil
