@@ -1619,8 +1619,14 @@ which call (newline) command"
           ("DELEGATED" :background "#7f9f7f" :foreground "#3f3f3f" :weight bold)
           ("CANCELED"  :background "#5f7f5f" :foreground "#dcdccc" :weight bold)))
 
-  (setq org-enforce-todo-dependencies t))
-
+  (setq org-enforce-todo-dependencies t)
+  ;; Source - https://stackoverflow.com/a/78985108
+  (defun ma/org-babel-detangle-no-buffer-pop-up (orig-fun &rest args)
+    (save-excursion
+      (let ((display-buffer-alist
+             '((".*" (display-buffer-no-window) (allow-no-window . t)))))
+        (apply orig-fun args))))
+  (advice-add 'org-babel-detangle :around #'ma/org-babel-detangle-no-buffer-pop-up))
 
 (use-package org-contrib
   :ensure
