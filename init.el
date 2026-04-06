@@ -148,6 +148,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
 (use-package zenburn-theme
   :ensure t
+  :disabled
   :config
   (setq zenburn-override-colors-alist
         '(("zenburn-fg-2"     . "#6D6D6D")
@@ -225,6 +226,35 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
        `(org-checkbox ((t (:foreground ,zenburn-fg+1 :weight bold))))
        `(org-link ((t (:foreground ,zenburn-yellow-2 :underline nil :bold t))))))))
 
+(use-package doom-themes
+  :ensure t
+  :custom
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t)
+  (doom-themes-padded-modeline t)
+  :config
+  (load-theme 'doom-one t)
+  (custom-set-faces
+   `(forge-pullreq-draft        ((t (:foreground "#7f7f7f" :bold t))))
+   `(forge-pullreq-open         ((t (:foreground "#7cb87c" :bold t))))
+   `(forge-pullreq-merged       ((t (:foreground "#9b88c9" :bold t))))
+   `(forge-pullreq-rejected     ((t (:foreground "#cc9393" :bold t))))
+
+   ;; magit
+   `(magit-section-highlight       ((t (:inherit nil))))
+   `(magit-diff-added              ((t (:background unspecified :foreground "#7a9d4d" :extend t :bold nil))))
+   `(magit-diff-added-highlight    ((t (:background "#3A3F4B" :foreground "#7a9d4d" :extend t :bold nil))))
+   `(magit-diff-removed            ((t (:background unspecified :foreground "#bc4d44" :extend t :bold nil ))))
+   `(magit-diff-removed-highlight  ((t (:background "#3A3F4B" :foreground "#bc4d44" :extend t :bold nil ))))
+   `(magit-diff-context            ((t (:background unspecified  :foreground unspecified))))
+   `(magit-diff-context-highlight  ((t (:background "#3A3F4B"  :foreground "#bbc2cf")))) ;; este !!
+   ;; diff
+   `(diff-added    ((t (:background unspecified :foreground "#7a9d4d" :extend t :inherit nil :bold nil))))
+   `(diff-removed  ((t (:background unspecified :foreground "#bc4d44" :extend t :inherit nil :bold nil))))
+   `(diff-refine-added   ((t ( :foreground "#a0c66d"  :inverse-video nil :bold nil))))
+   `(diff-refine-removed ((t ( :foreground "#e67e7d" :inverse-video nil :bold nil)))))
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
 
 
 (use-package doom-modeline
