@@ -1947,18 +1947,6 @@ which call (newline) command"
   (eldoc-echo-area-use-multiline-p nil))
 
 
-
-(use-package treesit-fold
-  :diminish
-  :load-path "treesit-fold"
-  :hook ((go-ts-mode python-ts-mode rust-mode) . treesit-fold-mode)
-  :bind ("C-<tab>" . treesit-fold-toggle)
-  :config
-  (defun truncate-string-ellipsis ()
-    "Some doc"
-    "...")
-  )
-
 (use-package transpose-frame
   :ensure t
   :commands hydra-transpose-frame/body
