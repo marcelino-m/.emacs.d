@@ -1008,6 +1008,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
               (diminish 'dired-omit-mode))))
 
 (use-package dired
+  :custom
+  (dired-dwim-target t)
   :config
   (setq dired-listing-switches
         "-l --almost-all --human-readable --group-directories-first --no-group")
@@ -1032,7 +1034,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :custom
   (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
    '(("h" "~/"                    "Home")
-     ("d" "~/Downloads/"          "Downloads")
+     ("D" "~/downloads/"          "Downloads")
+     ("d" "~/documents/"          "Documents")
      ("l" "~/lab/"                "Lab")))
   ;; :bind ("C-c f" . dirvish)
   :bind (:map dirvish-mode-map                ; Dirvish inherits `dired-mode-map'
