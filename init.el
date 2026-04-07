@@ -1521,7 +1521,7 @@ which call (newline) command"
   :ensure t)
 
 (use-package copilot
-  :ensure t
+  :disabled
   :diminish copilot-mode
   :bind (("C-M-s-v" . copilot-complete)
          :map copilot-completion-map
@@ -1580,13 +1580,6 @@ which call (newline) command"
     ("<right>" eyebrowse-next-window-config))
   (hydra-set-property 'hydra-eye :verbosity 0))
 
-
-(use-package copilot-chat
-  :ensure t
-  :bind
-  ("C-c t"   . copilot-chat-transient)
-  :custom
-  (copilot-chat-frontend 'shell-maker))
 
 (use-package org
   :bind (("C-c l" . org-store-link)
@@ -2004,6 +1997,7 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
                               ":?" ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__" "???"
                               "<:<" ";;;"))
   (global-ligature-mode t))
+
 (use-package claude-code-ide
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind (("C-c cm" . claude-code-ide-menu)
