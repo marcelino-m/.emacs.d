@@ -14,6 +14,11 @@
 (eval-when-compile
   (require 'use-package))
 
+(setq ma/capture-dir
+      (if (string= (system-name) "suma")
+          "~/syncthing/org-capture/work"
+        "~/syncthing/org-capture/personal"))
+
 ;; Disable the damn thing by making it disposable.
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
@@ -1685,35 +1690,26 @@ which call (newline) command"
     (end-of-line))
 
   (setq org-capture-templates
-        '(("t" "Task"
-           entry (file "~/syncthing/org/capture/task.org")
+        `(("t" "Task"
+           entry (file ,(concat ma/capture-dir "/task.org"))
            "* TODO %?" :empty-lines-before 2)
 
-          ("w" "work related captures")
-          ("wt" "Task"
-           entry (file "~/syncthing/org/capture/work/task.org")
+          ("f" "Feature"
+           entry (file ,(concat ma/capture-dir "/features.org"))
            "* TODO %? :work:" :empty-lines-before 2)
 
-          ("ww" "Feature"
-           entry (file "~/syncthing/org/capture/work/features.org")
+          ("F" "Feedback"
+           entry (file ,(concat ma/capture-dir "/feedback.org"))
            "* TODO %? :work:" :empty-lines-before 2)
 
-          ("wf" "Feedback"
-           entry (file "~/syncthing/org/capture/work/feedback.org")
-           "* TODO %? :work:" :empty-lines-before 2)
-
-          ("wn" "Notes!"
+          ("n" "Notes!"
            item
-           (file+function "~/syncthing/org/capture/work/notes.org" ma/org-ask-location)
+           (file+function ,(concat ma/capture-dir "/notes.org") ma/org-ask-location)
            "- %?")
 
-          ("wj" "Journal"
-           item (file+olp+datetree "~/syncthing/org/capture/work/journal.org")
-           "%?" :tree-type week)
-
-          ("wJ" "Journal team"
-           item (file+olp+datetree "~/syncthing/org/capture/work/journal-team.org")
-           "%?" :tree-type week))))
+          ("j" "Journal"
+           item (file+olp+datetree ,(concat ma/capture-dir "/journal.org"))
+           "%?" :tree-type day))))
 
 
 (use-package org-agenda
@@ -1755,9 +1751,9 @@ which call (newline) command"
 
 
   (setq org-agenda-files
-      (mapcar 'abbreviate-file-name
-              (split-string
-               (shell-command-to-string "find ~/syncthing/org/capture/ -type f -name \"*.org\"") "\n" t)))
+        (mapcar 'abbreviate-file-name
+                (split-string
+                 (shell-command-to-string (concat "find " ma/capture-dir " -type f -name \"*.org\"")) "\n" t)))
 
   (setq org-agenda-sorting-strategy
         '((agenda habit-down time-up priority-down category-keep)
@@ -1766,42 +1762,22 @@ which call (newline) command"
           (search category-keep)))
 
   (setq org-agenda-custom-commands
-        '(
-          ("h" . "Personal agennda")
-          ("ha" "Agenda for current day or week"
+        '(("a" "Agenda for current day or week"
            ((agenda "")
             (tags "+pin"
                   ((org-use-tag-inheritance nil)
                    (org-agenda-sorting-strategy '(todo-state-down priority-down))))
-            )
-           ((org-agenda-tag-filter-preset '("-work"))))
+            ))
 
-          ("ht" "All Task!" tags-todo "-work"
+          ("t" "All Task!" tags-todo "-work"
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
-
-          ("hj" "Journal personal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
+          ("j" "Journal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
            ((org-agenda-sorting-strategy '(alpha-down))
             (org-use-tag-inheritance nil)
-            (org-agenda-files '("~/syncthing/org/capture/work/journal.org"))))
+            (org-agenda-files (list (concat ma/capture-dir "/journal.org")))))
 
-          ;;;;;;;;;;;;;;;
-          ("w" . "Work related comand")
-          ("wa" "Agenda for current day or week"
-           ((agenda "")
-            (tags "+pin"
-                  ((org-use-tag-inheritance nil)
-                   (org-agenda-sorting-strategy '(todo-state-down priority-down))))
-            ;; (tags-todo "+iteracion")
-            ;; (tags-todo "+standup")
-            ;; (tags-todo "+office-pined")
-            )
-           ((org-agenda-tag-filter-preset '("+work"))))
-
-          ("wt" "All Task!" tags-todo "+work"
-           ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
-
-          ("wc" "Coded related todos"
+          ("c" "Coded related todos"
            ((tags-todo "+next")
             (tags-todo "+bug")
             (tags-todo "+fix")
@@ -1809,19 +1785,7 @@ which call (newline) command"
             (tags-todo "+refactor")
             (tags-todo "+check")
             (tags-todo "+@code-bug-fix-feat-chore-refactor-check-next"))
-           ((org-agenda-sorting-strategy '(todo-state-down priority-down))
-            (org-agenda-tag-filter-preset '("+work"))))
-
-          ("wj" "Journal personal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
-           ((org-agenda-sorting-strategy '(alpha-down))
-            (org-use-tag-inheritance nil)
-            (org-agenda-files '("~/syncthing/org/capture/work/journal.org"))))
-
-          ("wJ" "Journal team" tags "+work"
-           ((org-agenda-max-entries 20)
-            (org-use-tag-inheritance nil)
-            (org-agenda-files '("~/syncthing/org/capture/work/journal-team.org"))))))
-  )
+           ((org-agenda-sorting-strategy '(todo-state-down priority-down)))))))
 
 
 (use-package org-src
