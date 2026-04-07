@@ -1755,7 +1755,7 @@ which call (newline) command"
           (search category-keep)))
 
   (setq org-agenda-custom-commands
-        '(("a" "Agenda for current day or week"
+        `(("a" "Agenda for current day or week"
            ((agenda "")
             (tags "+pin"
                   ((org-use-tag-inheritance nil)
@@ -1768,7 +1768,11 @@ which call (newline) command"
           ("j" "Journal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
            ((org-agenda-sorting-strategy '(alpha-down))
             (org-use-tag-inheritance nil)
-            (org-agenda-files (list (concat ma/capture-dir "/journal.org")))))
+            (org-agenda-files (list ,(concat ma/capture-dir "/journal.org")))))
+
+          ("n" "Browse Notes" ,(lambda (&rest _)
+             (find-file (concat ma/capture-dir "/notes.org"))
+             (consult-org-heading)))
 
           ("c" "Coded related todos"
            ((tags-todo "+next")
