@@ -1789,8 +1789,11 @@ which call (newline) command"
 
 (use-package org-download
   :ensure t
-  :init
-  (setq org-download-method  'directory))
+  :custom
+  (org-download-method  'directory)
+  (org-download-screenshot-method   "spectacle -br -o %s"))
+
+
 
 (use-package orgit
   :ensure t
