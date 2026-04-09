@@ -1762,7 +1762,7 @@ which call (newline) command"
                    (org-agenda-sorting-strategy '(todo-state-down priority-down))))
             ))
 
-          ("t" "All Task!" tags-todo "-work"
+          ("t" "All Task!" todo ""
            ((org-agenda-sorting-strategy '(todo-state-down priority-down))))
 
           ("j" "Journal" search "{[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-}"
