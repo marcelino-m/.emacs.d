@@ -2006,12 +2006,36 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
   (global-ligature-mode t))
 
 (use-package claude-code-ide
-  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :branch "main")
   :bind (("C-c cm" . claude-code-ide-menu)
          ("C-c ct" . claude-code-ide-toggle)
-         ("C-c ci" . claude-code-ide-insert-at-mentioned)) ; Set your favorite keybinding
+         ("C-c ci" . claude-code-ide-insert-at-mentioned))
   :config
   (claude-code-ide-emacs-tools-setup))
+
+(use-package systemd
+  :ensure t
+  :diminish)
+
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory "~/syncthing/org-roam2")
+  (org-roam-completion-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n t" . org-roam-tag-add)
+
+         :map org-roam-dailies-map
+         ("Y" . org-roam-dailies-capture-yesterday)
+         ("T" . org-roam-dailies-capture-tomorrow))
+  :bind-keymap
+  ("C-c n d" . org-roam-dailies-map)
+  :config
+  (require 'org-roam-dailies) ;; Ensure the keymap is available
+  (org-roam-db-autosync-mode))
+
 (use-package agent-shell
   :ensure t
   :config
