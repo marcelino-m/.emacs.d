@@ -259,9 +259,24 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
    `(diff-refine-removed ((t ( :foreground "#e67e7d" :inverse-video nil :bold nil))))
    `(org-block ((t (:extend t :background "#2B2F37"))))
    `(org-block-begin-line ((t (:inherit nil :extend t :background "#262A31" :underline "#20232A"))))
-   `(org-block-end-line ((t (:inherit nil   :extend t :overline "#20232A")))))
-
-
+   `(org-block-end-line ((t (:inherit nil   :extend t :overline "#20232A"))))
+   ;; ediff
+   `(ediff-current-diff-A        ((t (:background "#3A3F4B" :foreground "#bc4d44" :extend t))))
+   `(ediff-current-diff-B        ((t (:background "#3A3F4B" :foreground "#7a9d4d" :extend t))))
+   `(ediff-current-diff-C        ((t (:background "#3A3F4B" :foreground unspecified :extend t))))
+   `(ediff-current-diff-Ancestor ((t (:background "#3A3F4B" :foreground unspecified :extend t))))
+   `(ediff-fine-diff-A           ((t (:background unspecified :foreground "#e67e7d" :inverse-video nil :bold t))))
+   `(ediff-fine-diff-B           ((t (:background unspecified :foreground "#a0c66d" :inverse-video nil :bold t))))
+   `(ediff-fine-diff-C           ((t (:background unspecified :foreground unspecified :inverse-video nil :bold t))))
+   `(ediff-fine-diff-Ancestor    ((t (:background unspecified :foreground unspecified :inverse-video nil :bold t))))
+   `(ediff-even-diff-A           ((t (:background "#2c2f38" :foreground unspecified :extend t))))
+   `(ediff-even-diff-B           ((t (:background "#2c2f38" :foreground unspecified :extend t))))
+   `(ediff-even-diff-C           ((t (:background "#2c2f38" :foreground unspecified :extend t))))
+   `(ediff-even-diff-Ancestor    ((t (:background "#2c2f38" :foreground unspecified :extend t))))
+   `(ediff-odd-diff-A            ((t (:background "#2c2f38" :foreground unspecified :extend t))))
+   `(ediff-odd-diff-B            ((t (:background "#2c2f38" :foreground unspecified :extend t))))
+   `(ediff-odd-diff-C            ((t (:background "#2c2f38" :foreground unspecified :extend t))))
+   `(ediff-odd-diff-Ancestor     ((t (:background "#2c2f38" :foreground unspecified :extend t)))))
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
@@ -624,8 +639,13 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 (use-package smooth-scroll
   :ensure t
   :diminish smooth-scroll-mode
-  :bind (("M-<up>"   . scroll-down-1)
-         ("M-<down>"   . scroll-up-1)))
+  :bind (("M-<up>"   . good-scroll-down)
+         ("M-<down>"   . good-scroll-up)))
+
+(use-package good-scroll
+  :ensure t
+  :diminish)
+
 
 (use-package uniquify
   :custom
@@ -791,8 +811,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
                                             (pullreqs   . show)
                                             (unpushed    . show)))
 
-  :hook
-  (git-commit-mode . git-commit-turn-on-flyspell)
+  ;; :hook
+  ;; (git-commit-mode . git-commit-turn-on-flyspell)
 
   :preface
   (defun ma/display-buffer-same-windows (buffer)
@@ -1774,8 +1794,32 @@ which call (newline) command"
             (org-agenda-files (list ,(concat ma/capture-dir "/journal.org")))))
 
           ("n" "Browse Notes" ,(lambda (&rest _)
-             (find-file (concat ma/capture-dir "/notes.org"))
-             (consult-org-heading)))
+             (let* ((file (concat ma/capture-dir "/notes.org"))
+                    (buf (find-file-noselect file))
+                    (candidates
+                     (with-current-buffer buf
+                       (org-map-entries
+                        (lambda ()
+                          (let* ((pos (point))
+                                 (heading (org-get-heading t t t t))
+                                 (body (save-excursion
+                                         (end-of-line)
+                                         (buffer-substring-no-properties
+                                          (point)
+                                          (save-excursion (outline-next-heading) (point)))))
+                                 (body-flat (string-trim
+                                             (replace-regexp-in-string "\n" " " body))))
+                            (cons (if (string-empty-p body-flat)
+                                      heading
+                                    (concat heading "  "
+                                            (propertize body-flat 'face 'shadow)))
+                                  pos)))))))
+               (let* ((choice (completing-read "Notes: " (mapcar #'car candidates) nil t))
+                      (pos (cdr (assoc choice candidates))))
+                 (when pos
+                   (switch-to-buffer buf)
+                   (goto-char pos)
+                   (org-show-context))))))
 
           ("c" "Coded related todos"
            ((tags-todo "+next")
