@@ -1931,8 +1931,8 @@ which call (newline) command"
   :bind (:map rust-mode-map
               ("C-=" . (lambda () (interactive) (insert "=>"))))
   :custom
-  (rust-format-on-save  t)
-
+  (rust-format-on-save   t)
+  (rust-rustfmt-switches '("--edition" "2024"))
   :init
   (setq rust-mode-treesitter-derive t))
 
