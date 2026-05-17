@@ -256,7 +256,12 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
    `(diff-added    ((t (:background unspecified :foreground "#7a9d4d" :extend t :inherit nil :bold nil))))
    `(diff-removed  ((t (:background unspecified :foreground "#bc4d44" :extend t :inherit nil :bold nil))))
    `(diff-refine-added   ((t ( :foreground "#a0c66d"  :inverse-video nil :bold nil))))
-   `(diff-refine-removed ((t ( :foreground "#e67e7d" :inverse-video nil :bold nil)))))
+   `(diff-refine-removed ((t ( :foreground "#e67e7d" :inverse-video nil :bold nil))))
+   `(org-block ((t (:extend t :background "#2B2F37"))))
+   `(org-block-begin-line ((t (:inherit nil :extend t :background "#262A31" :underline "#20232A"))))
+   `(org-block-end-line ((t (:inherit nil   :extend t :overline "#20232A")))))
+
+
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
