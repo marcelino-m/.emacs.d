@@ -335,7 +335,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (vertico-resize nil)
   (vertico-cycle nil) ;; Enable cycling for `vertico-next/previous'
   :bind (:map vertico-map
-              ("C-<tab>" . minibuffer-complete))
+              ("C-<tab>" . minibuffer-complete)
+              ("C-g"     . abort-minibuffers))
   :init
   (vertico-mode))
 
@@ -377,8 +378,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
          ("M-g f" . consult-flycheck)               ;; Alternative: consult-flycheck
          ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
          ("M-g i" . consult-imenu)
-
-         )
+         ("M-g I" . consult-imenu-multi))
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
@@ -636,15 +636,13 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (electric-pair-pairs   '((?\" . ?\") (?\‘ . ?\’) (?\“ . ?\”) (?\` . ?\`))))
 
 
-(use-package smooth-scroll
-  :ensure t
-  :diminish smooth-scroll-mode
-  :bind (("M-<up>"   . good-scroll-down)
-         ("M-<down>"   . good-scroll-up)))
-
 (use-package good-scroll
   :ensure t
-  :diminish)
+  :diminish
+  :bind (("M-<up>"   . good-scroll-down)
+         ("M-<down>"   . good-scroll-up))
+  :config
+  (good-scroll-mode 1))
 
 
 (use-package uniquify
@@ -849,11 +847,9 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :custom-face
   (forge-pullreq-draft ((t (:inherit default :background unspecified :foreground "gray63" :bold t)))))
 
-(use-package git-modes
-  :ensure t)
-
-(use-package git-timemachine
-  :ensure t)
+(use-package git-modes :ensure t :diminish)
+(use-package git-timemachine :ensure t :diminish)
+(use-package git-gutter :ensure t :diminish)
 
 (use-package window
   :after hydra
@@ -1575,14 +1571,6 @@ which call (newline) command"
   :bind ([remap move-beginning-of-line] . #'crux-move-beginning-of-line))
 
 
-(use-package lsp-tailwindcss
-  :ensure t
-  :diminish
-  :after lsp-mode
-  :init
-  (setq lsp-tailwindcss-add-on-mode t))
-
-
 (use-package eyebrowse
   :ensure t
   :custom
@@ -1705,6 +1693,30 @@ which call (newline) command"
         (insert "* " hd "\n")))
     (end-of-line))
 
+  (defun ma/git-main-worktree (dir)
+    "Return the main worktree root when DIR is inside a linked git worktree.
+Return nil when DIR is not in a worktree or is itself the main one.
+`magit-list-worktrees' lists the main worktree first, so its first
+entry points at the original checkout."
+    (when (featurep 'magit)
+      (let* ((default-directory dir)
+             (main (caar (magit-list-worktrees)))
+             (current (magit-toplevel)))
+        (when (and main current (not (file-equal-p main current)))
+          (file-name-as-directory main)))))
+
+  (defun ma/project-backlog-file ()
+    "Return the path to backlog.org at the root of the current project.
+When inside a linked git worktree, prefer the backlog.org of the main
+repository (the original checkout) so every worktree shares one backlog.
+Falls back to `ma/capture-dir' when not inside a project."
+    (let* ((root (or (projectile-project-root) ma/capture-dir))
+           (main-root (ma/git-main-worktree root))
+           (main-file (and main-root (expand-file-name "backlog.org" main-root))))
+      (if (and main-file (file-exists-p main-file))
+          main-file
+        (expand-file-name "backlog.org" root))))
+
   (setq org-capture-templates
         `(("t" "Task"
            entry (file ,(concat ma/capture-dir "/task.org"))
@@ -1722,6 +1734,11 @@ which call (newline) command"
            item
            (file+function ,(concat ma/capture-dir "/notes.org") ma/org-ask-location)
            "- %?")
+
+          ("p" "Project")
+          ("pt" "Task"
+           entry (file+headline ma/project-backlog-file "Next tasks")
+           "* TODO %?" :empty-lines-before 2)
 
           ("j" "Journal"
            item (file+olp+datetree ,(concat ma/capture-dir "/journal.org"))
@@ -2041,13 +2058,18 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
                               "#{" "#[" "]#" "#(" "#?" "#_" "#_(" "#:" "#!" "#=" "^=" "<$>" "<$"
                               "$>" "<+>" "<+" "+>" "<*>" "<*" "*>" "</" "</>" "/>" "<!--" "<#--"
                               "-->" "->" "->>" "<<-" "<-" "<=<" "=<<" "<<=" "<==" "<=>" "<==>"
-                              "==>" "=>" "=>>" ">=>" ">>=" ">>-" ">-" "-<" "-<<" ">->" "<-<" "<-|"
+                              "==>" "=>" "=>>" ">=>" ">>=" ">>-"  "-<<" ">->" "<-<" "<-|"
                               "<=|" "|=>" "|->" "<->" "<~~" "<~" "<~>" "~~" "~~>" "~>" "~-" "-~"
                               "~@" "[||]" "|]" "[|" "|}" "{|" "[<" ">]" "|>" "<|" "||>" "<||"
                               "|||>" "<|||" "<|>" "..." ".." ".=" "..<" ".?" "::" ":::" ":=" "::="
                               ":?" ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__" "???"
                               "<:<" ";;;"))
   (global-ligature-mode t))
+
+
+(use-package gptel
+  :ensure t
+  :diminish)
 
 (use-package claude-code-ide
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :branch "main")
