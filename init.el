@@ -787,6 +787,9 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :config
   (global-auto-revert-mode 1))
 
+(use-package vc-git
+  :custom
+  (vc-git-resolve-conflicts nil))
 
 (use-package magit
   :ensure t
