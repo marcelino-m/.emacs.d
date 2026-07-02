@@ -787,6 +787,13 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :config
   (global-auto-revert-mode 1))
 
+(use-package ediff
+  :ensure nil
+  :custom
+  (ediff-show-ancestor nil)
+  (ediff-window-setup-function #'ediff-setup-windows-plain)
+  (ediff-split-window-function #'split-window-horizontally))
+
 (use-package vc-git
   :custom
   (vc-git-resolve-conflicts nil))
