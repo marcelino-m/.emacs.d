@@ -1356,40 +1356,60 @@ which call (newline) command"
   (lsp-ui-doc-enable      nil)
   (lsp-ui-doc-position   'top)
   (lsp-ui-doc-max-height  39)
-  (lsp-ui-peek-list-width 80)
-  (lsp-ui-peek-peek-height 30)
-
   :custom-face
-  (lsp-ui-peek-peek    ((t :background "#494949")))
-  (lsp-ui-peek-list    ((t :background "#494949")))
-  (lsp-ui-peek-header  ((t :background "#5d4d7a" :foreground "white")))
+  ;; Sunken panel: darker than the doom-one buffer bg (#282c34) so the
+  ;; posframe reads as a separate surface, with doom-one blue accents.
+  (lsp-ui-peek-peek        ((t :background "#1B2229")))
+  (lsp-ui-peek-list        ((t :background "#1f252c")))
+  (lsp-ui-peek-header      ((t :background "#2257A0" :foreground "#dfdfdf" :bold t)))
+  (lsp-ui-peek-selection   ((t :background "#2257A0" :foreground "#dfdfdf" :bold t)))
+  (lsp-ui-peek-filename    ((t :foreground "#51afef" :bold t)))
+  (lsp-ui-peek-line-number ((t :foreground "#5B6268")))
+  (lsp-ui-peek-highlight   ((t :background unspecified :foreground "#e52b50"
+                               :bold t :box nil :inherit nil)))
 
   :config
-  (setq lsp-ui-peek--buffer nil)
-  (defun lsp-ui-peek--peek-display (src1 src2)
-    (-let* ((win-width (frame-width))
-            (lsp-ui-peek-list-width (/ (frame-width) 2))
-            (string (-some--> (-zip-fill "" src1 src2)
-                      (--map (lsp-ui-peek--adjust win-width it) it)
-                      (-map-indexed 'lsp-ui-peek--make-line it)
-                      (-concat it (lsp-ui-peek--make-footer)))))
+  ;; Render the peek in a child frame (posframe) centered on the frame,
+  ;; instead of the default inline overlay: it floats above all windows
+  ;; (so a split frame doesn't confine it to one pane) and leaves the
+  ;; buffer, point and scroll completely untouched.  Falls back to the
+  ;; overlay on terminal frames, where child frames don't work.
+  (require 'posframe)
+  (defvar ma/lsp-ui-peek--posframe-buffer " *lsp-ui-peek-posframe*")
 
-      (setq lsp-ui-peek--buffer (get-buffer-create " *lsp-peek--buffer*"))
-      (posframe-show lsp-ui-peek--buffer
-                     :string (mapconcat 'identity string "")
-                     :min-width (frame-width)
-                     :poshandler #'posframe-poshandler-frame-center)))
+  (defun ma/lsp-ui-peek--peek-display (orig src1 src2)
+    (if (posframe-workable-p)
+        (-let* ((win-width (frame-width))
+                ;; ~70/30 split like the stock overlay on a single
+                ;; window: code on the left, file list on the right.
+                (lsp-ui-peek-list-width (/ (* win-width 3) 10))
+                (string (-some--> (-zip-fill "" src1 src2)
+                          (--map (lsp-ui-peek--adjust win-width it) it)
+                          (-map-indexed 'lsp-ui-peek--make-line it)
+                          (-concat it (lsp-ui-peek--make-footer)))))
+          (posframe-show ma/lsp-ui-peek--posframe-buffer
+                         :string (mapconcat 'identity string "")
+                         :min-width win-width
+                         :poshandler #'posframe-poshandler-frame-center))
+      (funcall orig src1 src2)))
+  (advice-add 'lsp-ui-peek--peek-new :around #'ma/lsp-ui-peek--peek-display)
 
-  (defun lsp-ui-peek--peek-destroy ()
-    (when (bufferp lsp-ui-peek--buffer)
-      (posframe-delete lsp-ui-peek--buffer))
-    (setq lsp-ui-peek--buffer nil
-          lsp-ui-peek--last-xref nil)
-    (set-window-start (get-buffer-window) lsp-ui-peek--win-start))
+  (defun ma/lsp-ui-peek--peek-destroy (orig)
+    (if (posframe-workable-p)
+        (progn
+          (posframe-hide ma/lsp-ui-peek--posframe-buffer)
+          (setq lsp-ui-peek--last-xref nil))
+      (funcall orig)))
+  (advice-add 'lsp-ui-peek--peek-hide :around #'ma/lsp-ui-peek--peek-destroy)
 
-  (advice-add #'lsp-ui-peek--peek-new :override #'lsp-ui-peek--peek-display)
-  (advice-add #'lsp-ui-peek--peek-hide :override #'lsp-ui-peek--peek-destroy)
-  )
+  ;; lsp-ui-peek--show scrolls the window when there isn't enough room
+  ;; below point for the inline overlay; the posframe doesn't need that.
+  (defun ma/lsp-ui-peek--no-recenter (f &rest args)
+    (if (posframe-workable-p)
+        (cl-letf (((symbol-function 'recenter) #'ignore))
+          (apply f args))
+      (apply f args)))
+  (advice-add 'lsp-ui-peek--show :around #'ma/lsp-ui-peek--no-recenter))
 
 (use-package flycheck
   :ensure t
