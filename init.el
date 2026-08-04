@@ -2059,6 +2059,10 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
               ("C-u" . #'vterm--self-insert)
               ("C-S-v" . #'vterm-yank)))
 
+(use-package ghostel
+  :ensure t)
+
+
 (use-package vterm-toggle
   :ensure t
   :diminish
@@ -2102,12 +2106,14 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
   :diminish)
 
 (use-package claude-code-ide
-  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :branch "main")
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind (("C-c cm" . claude-code-ide-menu)
          ("C-c ct" . claude-code-ide-toggle)
          ("C-c ci" . claude-code-ide-insert-at-mentioned))
   :config
-  (claude-code-ide-emacs-tools-setup))
+  (claude-code-ide-emacs-tools-setup)
+  (setq claude-code-ide-terminal-backend 'ghostel)
+  (setq claude-code-ide-window-width 75))
 
 (use-package systemd
   :ensure t
