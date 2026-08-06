@@ -2083,8 +2083,9 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
               ("C-S-v" . #'vterm-yank)))
 
 (use-package ghostel
-  :ensure t)
-
+  :ensure t
+  :custom
+  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-<f11>")))
 
 (use-package vterm-toggle
   :ensure t
@@ -2132,6 +2133,7 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind (("C-c cm" . claude-code-ide-menu)
          ("C-c ct" . claude-code-ide-toggle)
+         ("M-<f11>" . claude-code-ide-toggle)
          ("C-c ci" . claude-code-ide-insert-at-mentioned))
   :config
   (claude-code-ide-emacs-tools-setup)
