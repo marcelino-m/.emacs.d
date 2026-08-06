@@ -713,12 +713,18 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :custom
   (projectile-indexing-method        'hybrid)
   (projectile-sort-order             'recently-active)
-  (projectile-switch-project-action  (lambda () (projectile-dired) (projectile-commander)))
-  ;; (projectile-mode-line-function     (lambda ()  (format "proj: %s" (projectile-project-name))))
+  (projectile-switch-project-action  #'me/projectile-switch-project-transient)
   (projectile-project-search-path    '(("~/lab" . 2)))
   (projectile-find-dir-includes-top-level t)
 
   :config
+  (require 'transient)
+  (transient-define-prefix me/projectile-switch-project-transient ()
+    "Action to run after switching Projectile project."
+    [("f" "Find file" projectile-find-file)
+     ("v" "Magit status" magit-status)
+     ("d" "Dired" projectile-dired)])
+
   (advice-add 'projectile-run-vterm
               :override
               (lambda (&optional arg)
@@ -740,7 +746,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (add-to-list 'projectile-other-file-alist '("sass"  . ("tsx" "ts")))
   (add-to-list 'projectile-other-file-alist '("css"  . ("tsx" "ts")))
 
-  (projectile-global-mode))
+  (projectile-mode))
 
 (use-package wgrep
   :ensure t
