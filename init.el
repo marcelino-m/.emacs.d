@@ -2138,7 +2138,14 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
   :config
   (claude-code-ide-emacs-tools-setup)
   (setq claude-code-ide-terminal-backend 'ghostel)
-  (setq claude-code-ide-window-width 75))
+  (setq claude-code-ide-window-width 75)
+
+  (defun ma/claude-code-ide-local ()
+    (interactive)
+    (let ((process-environment (copy-sequence process-environment)))
+      (setenv "ANTHROPIC_BASE_URL" "http://localhost:4000")
+      (setenv "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY" "1")
+      (call-interactively #'claude-code-ide))))
 
 (use-package systemd
   :ensure t
