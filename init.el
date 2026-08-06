@@ -239,6 +239,18 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :config
   (load-theme 'doom-one t)
   (custom-set-faces
+   ;; carbon background
+   `(default    ((t (:background "#282828"))))
+   `(fringe     ((t (:background "#282828"))))
+   `(region     ((t (:background "#333333"))))
+
+   ;; carbon modeline (darker than background, not pure black)
+   ;; :box color must be set explicitly too -- doom-one's padding box
+   ;; keeps its own bluish color otherwise, since we don't override it.
+   `(mode-line          ((t (:background "#1B1B1B" :box (:line-width 4 :color "#1B1B1B")))))
+   `(mode-line-active   ((t (:background "#1B1B1B" :box (:line-width 4 :color "#1B1B1B"))))) ;; Emacs 29+
+   `(mode-line-inactive ((t (:background "#1B1B1B" :box (:line-width 4 :color "#1B1B1B")))))
+
    `(forge-pullreq-draft        ((t (:foreground "#7f7f7f" :bold t))))
    `(forge-pullreq-open         ((t (:foreground "#7cb87c" :bold t))))
    `(forge-pullreq-merged       ((t (:foreground "#9b88c9" :bold t))))
@@ -247,11 +259,11 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
    ;; magit
    `(magit-section-highlight       ((t (:inherit nil))))
    `(magit-diff-added              ((t (:background unspecified :foreground "#7a9d4d" :extend t :bold nil))))
-   `(magit-diff-added-highlight    ((t (:background "#3A3F4B" :foreground "#7a9d4d" :extend t :bold nil))))
+   `(magit-diff-added-highlight    ((t (:background "#303030" :foreground "#7a9d4d" :extend t :bold nil))))
    `(magit-diff-removed            ((t (:background unspecified :foreground "#bc4d44" :extend t :bold nil ))))
-   `(magit-diff-removed-highlight  ((t (:background "#3A3F4B" :foreground "#bc4d44" :extend t :bold nil ))))
+   `(magit-diff-removed-highlight  ((t (:background "#303030" :foreground "#bc4d44" :extend t :bold nil ))))
    `(magit-diff-context            ((t (:background unspecified  :foreground unspecified))))
-   `(magit-diff-context-highlight  ((t (:background "#3A3F4B"  :foreground "#bbc2cf")))) ;; este !!
+   `(magit-diff-context-highlight  ((t (:background "#303030"  :foreground "#bbc2cf")))) ;; este !!
    ;; diff
    `(diff-added    ((t (:background unspecified :foreground "#7a9d4d" :extend t :inherit nil :bold nil))))
    `(diff-removed  ((t (:background unspecified :foreground "#bc4d44" :extend t :inherit nil :bold nil))))
@@ -261,10 +273,10 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
    `(org-block-begin-line ((t (:inherit nil :extend t :background "#262A31" :underline "#20232A"))))
    `(org-block-end-line ((t (:inherit nil   :extend t :overline "#20232A"))))
    ;; ediff
-   `(ediff-current-diff-A        ((t (:background "#3A3F4B" :foreground "#bc4d44" :extend t))))
-   `(ediff-current-diff-B        ((t (:background "#3A3F4B" :foreground "#7a9d4d" :extend t))))
-   `(ediff-current-diff-C        ((t (:background "#3A3F4B" :foreground unspecified :extend t))))
-   `(ediff-current-diff-Ancestor ((t (:background "#3A3F4B" :foreground unspecified :extend t))))
+   `(ediff-current-diff-A        ((t (:background "#303030" :foreground "#bc4d44" :extend t))))
+   `(ediff-current-diff-B        ((t (:background "#303030" :foreground "#7a9d4d" :extend t))))
+   `(ediff-current-diff-C        ((t (:background "#303030" :foreground unspecified :extend t))))
+   `(ediff-current-diff-Ancestor ((t (:background "#303030" :foreground unspecified :extend t))))
    `(ediff-fine-diff-A           ((t (:background unspecified :foreground "#e67e7d" :inverse-video nil :bold t))))
    `(ediff-fine-diff-B           ((t (:background unspecified :foreground "#a0c66d" :inverse-video nil :bold t))))
    `(ediff-fine-diff-C           ((t (:background unspecified :foreground unspecified :inverse-video nil :bold t))))
