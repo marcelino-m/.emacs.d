@@ -1378,6 +1378,7 @@ which call (newline) command"
   (lsp-ui-doc-enable      nil)
   (lsp-ui-doc-position   'top)
   (lsp-ui-doc-max-height  39)
+  (lsp-ui-peek-peek-height 35)
   :custom-face
   ;; Sunken panel: darker than the doom-one buffer bg (#282c34) so the
   ;; posframe reads as a separate surface, with doom-one blue accents.
