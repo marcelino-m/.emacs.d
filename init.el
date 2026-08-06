@@ -1773,15 +1773,15 @@ Falls back to `ma/capture-dir' when not inside a project."
   (setq org-capture-templates
         `(("t" "Task"
            entry (file ,(concat ma/capture-dir "/task.org"))
-           "* TODO %?" :empty-lines-before 2)
+           "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:" :empty-lines-before 2)
 
           ("f" "Feature"
            entry (file ,(concat ma/capture-dir "/features.org"))
-           "* TODO %? :work:" :empty-lines-before 2)
+           "* TODO %? :work:\n:PROPERTIES:\n:CREATED: %U\n:END:" :empty-lines-before 2)
 
           ("F" "Feedback"
            entry (file ,(concat ma/capture-dir "/feedback.org"))
-           "* TODO %? :work:" :empty-lines-before 2)
+           "* TODO %? :work:\n:PROPERTIES:\n:CREATED: %U\n:END:" :empty-lines-before 2)
 
           ("n" "Notes!"
            item
@@ -1791,7 +1791,7 @@ Falls back to `ma/capture-dir' when not inside a project."
           ("p" "Project")
           ("pt" "Task"
            entry (file+headline ma/project-backlog-file "Next tasks")
-           "* TODO %?" :empty-lines-before 2)
+           "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:" :empty-lines-before 2)
 
           ("j" "Journal"
            item (file+olp+datetree ,(concat ma/capture-dir "/journal.org"))
