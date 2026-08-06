@@ -10,8 +10,7 @@ Simplified version of `add-to-list'."
  (lambda (var)
   (prot-emacs-add-to-list var '(width . 0.80))
   (prot-emacs-add-to-list var '(height . 0.65))
-  (prot-emacs-add-to-list var '(cursor-color . "#e52b50"))
-  (prot-emacs-add-to-list var '(font . "JetBrainsMonoNerdFont-9.5"))
+  (prot-emacs-add-to-list var '(font . "IosevkaNerdFontMono-9.5"))
   (prot-emacs-add-to-list var '(vertical-scroll-bars . nil)))
    '(default-frame-alist initial-frame-alist))
 
