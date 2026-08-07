@@ -1294,6 +1294,7 @@ which call (newline) command"
           "Output\\*$"
           "\\*Async Shell Command\\*"
           "\\*Google Translate\\*"
+          "*Agenda Commands*"
           help-mode
           inferior-python-mode
           compilation-mode
