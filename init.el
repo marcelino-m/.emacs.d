@@ -841,8 +841,61 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
     (let ((magit-display-buffer-function  #'ma/display-buffer-same-windows))
       (magit-diff-buffer-file)))
 
+  (defun ma/magit-worktree-delete-with-branch (worktree)
+    "Delete WORKTREE and the local branch it has checked out.
+Delegates to `magit-worktree-delete' and `magit-branch-delete', so it respects
+`magit-delete-by-moving-to-trash', `magit-no-confirm', and the cleanup of
+`pushRemote'/`pullRequestRemote'.  If the branch has a remote branch, offers
+to delete it too.  Interactively uses the worktree under the cursor."
+    (interactive
+     (list (magit-completing-read "Delete worktree and its branch"
+                                  (mapcar #'car (cdr (magit-list-worktrees)))
+                                  nil t nil nil
+                                  (magit-section-value-if 'worktree))))
+    (let* ((worktrees (magit-list-worktrees))
+           (primary   (file-name-as-directory (caar worktrees)))
+           (config    (or (assoc worktree worktrees)
+                          (seq-find (lambda (wt)
+                                      (and (file-exists-p (car wt))
+                                           (file-equal-p (car wt) worktree)))
+                                    worktrees)))
+           (branch    (nth 2 config))
+           (remote    (and branch (magit-get-upstream-remote branch)))
+           (remote-branch
+            (and remote
+                 (let ((merge (magit-get "branch" branch "merge")))
+                   (and merge (string-prefix-p "refs/heads/" merge)
+                        (substring merge 11)))))
+           force)
+      ;; Preguntar por la rama sin mergear ANTES de destruir nada: si el
+      ;; usuario aborta, el worktree sigue intacto.
+      (when (and branch (not (magit-branch-merged-p branch t)))
+        (magit-confirm 'delete-unmerged-branch
+          "Delete unmerged branch %s" nil nil (list branch))
+        (setq force t))
+      (magit-worktree-delete worktree)
+      (if (file-exists-p worktree)
+          (message "Worktree %s todavía existe; no se borró la rama" worktree)
+        (let ((default-directory primary))
+          (cond
+           ((null branch)
+            (message "Worktree borrado; HEAD estaba detached, no hay rama que borrar"))
+           ((not (member branch (magit-list-local-branch-names)))
+            (message "Worktree borrado; la rama %s ya no existe" branch))
+           ((equal branch (magit-get-current-branch))
+            (message "Worktree borrado; %s está checkouteada acá, no se borró" branch))
+           (t
+            (magit-branch-delete (list branch) force)
+            (when (and remote-branch
+                       (magit-confirm 'delete-branch-on-remote
+                         (list "Borrar también %s/%s en el remoto" remote remote-branch)
+                         nil t))
+              (magit-run-git-async "push" "--delete" remote remote-branch))))))))
   :config
   (global-git-commit-mode)
+
+  (transient-append-suffix 'magit-worktree "k"
+    '("K" "Delete worktree and branch" ma/magit-worktree-delete-with-branch))
 
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-unpushed-to-upstream
