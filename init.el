@@ -441,9 +441,6 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (setq consult-project-function
         (lambda (_) (projectile-project-root))))
 
-(use-package consult-flycheck
-  :ensure t
-  :diminish)
 
 (use-package swiper
   :ensure t
@@ -1434,12 +1431,21 @@ which call (newline) command"
       (apply f args)))
   (advice-add 'lsp-ui-peek--show :around #'ma/lsp-ui-peek--no-recenter))
 
+(use-package consult-flycheck
+  :ensure t
+  :diminish)
+
+
 (use-package flycheck
   :ensure t
   :diminish
   :hook ((python-ts-mode rust-mode) . flycheck-mode)
   :custom
   (flycheck-display-errors-function  nil)
+  (flycheck-relevant-error-other-file-minimum-level 'warning)
+  (flycheck-highlighting-mode nil)
+  (flycheck-annotate-current-line-style 'below)
+  (flycheck-annotate-other-lines-style nil)
   :init
   (add-hook 'python-ts-mode-hook #'(lambda ()
                                   (setq-local flycheck-disabled-checkers '(python-mypy))
@@ -1450,7 +1456,15 @@ which call (newline) command"
   :config
   (flycheck-add-mode 'javascript-eslint 'jtsx-jsx-mode)
   (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
-  )
+  ;; cargo clippy reports paths relative to the workspace root, but
+  ;; flycheck-rust-manifest-directory returns the nearest Cargo.toml
+  ;; (the member crate's), so warnings in workspace projects never
+  ;; matched the buffer's file name and were silently dropped.
+  (setf (flycheck-checker-get 'rust-clippy 'working-directory)
+        (lambda (_) (flycheck-rust-cargo-workspace-root)))
+
+  (add-hook 'flycheck-mode-hook #'flycheck-annotate-mode))
+
 
 (use-package posframe ;; for lsp-ui-peek
   :ensure t)
