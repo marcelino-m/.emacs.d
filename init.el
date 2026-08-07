@@ -71,6 +71,9 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
                 executing-kbd-macro)
       (funcall-interactively quit))))
 
+(use-package repeat
+  :init
+  (repeat-mode 1))
 
 (use-package emacs
   :custom
@@ -612,28 +615,20 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (add-hook 'ledger-mode-hook    #'ethan-wspace-mode)
   (add-hook 'yaml-mode-hook      #'ethan-wspace-mode))
 
-(use-package expand-region
+
+(use-package expreg
   :ensure t
-  :after hydra
-  :commands hydra-er/body
+  :bind (("C-*" . expreg-expand)
+         ("C--" . expreg-contract))
+  :config
+  (defvar expreg-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "*" #'expreg-expand)
+      (define-key map "-" #'expreg-contract)
+      map))
 
-  :custom
-  (expand-region-fast-keys-enabled  nil)
-
-  :init
-  (defhydra hydra-er nil
-    "Expand region hydra"
-    ("e" er/expand-region)
-    ("d" er/contract-region     :bind nil))
-  (hydra-set-property 'hydra-er :verbosity 0)
-
-  (defun ma/expand-region ()
-    (interactive)
-    (er/expand-region 1)
-    (hydra-er/body))
-
-  (global-set-key (kbd "C-*") 'ma/expand-region))
-
+  (put 'expreg-expand 'repeat-map 'expreg-repeat-map)
+  (put 'expreg-contract 'repeat-map 'expreg-repeat-map))
 
 (use-package hydra
   :ensure t)
