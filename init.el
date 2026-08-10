@@ -1343,6 +1343,7 @@ which call (newline) command"
           "\\*Async Shell Command\\*"
           "\\*Google Translate\\*"
           "*Agenda Commands*"
+          "*Org Select*"
           help-mode
           inferior-python-mode
           compilation-mode
@@ -1718,7 +1719,7 @@ which call (newline) command"
   (setq org-special-ctrl-a/e t)
   (setq org-special-ctrl-k t)
   (setq org-log-into-drawer nil)
-
+  (setq org-agenda-window-setup 'current-window)
   (setq org-emphasis-alist '(("*" (:inherit bold :bold t :foreground "#df6967"))
                              ("/" italic)
                              ("_" underline)
