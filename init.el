@@ -626,15 +626,16 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :bind (("C-*" . expreg-expand)
          ("C--" . expreg-contract))
   :config
-  (defvar expreg-repeat-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map "*" #'expreg-expand)
-      (define-key map "-" #'expreg-contract)
-      map))
+  (defvar-keymap expreg-repeat-map
+    "e" #'expreg-expand
+    "d" #'expreg-contract)
 
   (put 'expreg-expand 'repeat-map 'expreg-repeat-map)
-  (put 'expreg-contract 'repeat-map 'expreg-repeat-map))
-
+  (put 'expreg-contract 'repeat-map 'expreg-repeat-map)
+  ;; The entry keys (C-* / C--) are not in the repeat map, so `repeat-check-key'
+  ;; would refuse to activate it.
+  (put 'expreg-expand 'repeat-check-key 'no)
+  (put 'expreg-contract 'repeat-check-key 'no))
 (use-package hydra
   :ensure t)
 
