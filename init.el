@@ -247,6 +247,11 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
    `(fringe     ((t (:background "#282828"))))
    `(region     ((t (:background "#333333"))))
 
+   ;; doom-one's font-lock-type-face (struct/class/type names) is a very
+   ;; saturated gold (#ECBE7B) that jumps out too much on the carbon bg;
+   ;; muted down while staying in the same yellow family.
+   `(font-lock-type-face ((t (:foreground "#C9A873" :weight medium))))
+
    ;; carbon modeline (darker than background, not pure black)
    ;; :box color must be set explicitly too -- doom-one's padding box
    ;; keeps its own bluish color otherwise, since we don't override it.
@@ -1427,16 +1432,19 @@ which call (newline) command"
   (lsp-ui-doc-max-height  39)
   (lsp-ui-peek-peek-height 35)
   :custom-face
-  ;; Sunken panel: darker than the doom-one buffer bg (#282c34) so the
-  ;; posframe reads as a separate surface, with doom-one blue accents.
-  (lsp-ui-peek-peek        ((t :background "#1B2229")))
-  (lsp-ui-peek-list        ((t :background "#1f252c")))
-  (lsp-ui-peek-header      ((t :background "#2257A0" :foreground "#dfdfdf" :bold t)))
-  (lsp-ui-peek-selection   ((t :background "#2257A0" :foreground "#dfdfdf" :bold t)))
-  (lsp-ui-peek-filename    ((t :foreground "#51afef" :bold t)))
+  ;; Sunken panel: darker than the carbon buffer bg (#282828, set in the
+  ;; doom-themes :config above) so the posframe reads as a separate
+  ;; surface. Reuses the same carbon/doom-one hexes as the rest of the
+  ;; config (mode-line, org-block, magit/ediff highlight, diff reds)
+  ;; instead of stock doom-one blues, so it matches the rest of the theme.
+  (lsp-ui-peek-peek        ((t :background "#1B1B1B")))              ;; mode-line bg
+  (lsp-ui-peek-list        ((t :background "#202020")))
+  (lsp-ui-peek-header      ((t :background "#262A31" :foreground "#dfdfdf" :bold t))) ;; org-block-begin-line bg
+  (lsp-ui-peek-selection   ((t :background "#303030" :foreground "#dfdfdf" :bold t))) ;; magit/ediff highlight bg
+  (lsp-ui-peek-filename    ((t :foreground "#51afef" :bold t)))      ;; doom-one blue
   (lsp-ui-peek-line-number ((t :foreground "#5B6268")))
-  (lsp-ui-peek-highlight   ((t :background unspecified :foreground "#e52b50"
-                               :bold t :box nil :inherit nil)))
+  (lsp-ui-peek-highlight   ((t :background unspecified :foreground "#e67e7d"
+                               :bold t :box nil :inherit nil)))      ;; diff-refine-removed fg
 
   :config
   ;; Render the peek in a child frame (posframe) centered on the frame,
