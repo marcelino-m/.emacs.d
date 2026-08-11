@@ -914,7 +914,6 @@ to delete it too.  Interactively uses the worktree under the cursor."
                           'append))
 
 (use-package git-commit
-  :ensure t
   :hook (git-commit-mode . git-commit-turn-on-flyspell))
 
 (use-package magit-todos
