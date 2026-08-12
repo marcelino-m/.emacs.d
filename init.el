@@ -1401,11 +1401,15 @@ which call (newline) command"
   (lsp-enable-imenu nil)
   (lsp-clangd-binary-path "~/.src/LLVM-20.1.0-rc1-Linux-X64/bin/clangd")
   :init
-
   (add-hook 'lsp-completion-mode-hook
             (lambda ()
               (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-                    '(flex)))))
+                    '(flex))))
+  :config
+  (dolist (face '(lsp-face-highlight-textual
+                  lsp-face-highlight-read
+                  lsp-face-highlight-write))
+    (set-face-attribute face nil :background 'unspecified :foreground "#da8548" :weight 'ultra-bold)))
 
 (use-package cape
   :ensure t
