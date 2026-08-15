@@ -1388,10 +1388,6 @@ which call (newline) command"
   (lsp-completion-provider :none) ;; we use Corfu!
   (lsp-warn-no-matched-clients nil)
   (lsp-diagnostics-provider :flycheck)
-  (lsp-diagnostics-disabled-modes '(python-ts-mode
-                                    rust-mode
-                                    ;;jtsx-tsx-mode jtsx-jsx-mode
-                                    ))
   (lsp-signature-auto-activate nil)
   (lsp-enable-symbol-highlighting t)
   (lsp-modeline-diagnostics-enable t)
@@ -1400,6 +1396,8 @@ which call (newline) command"
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-enable-imenu nil)
   (lsp-clangd-binary-path "~/.src/LLVM-20.1.0-rc1-Linux-X64/bin/clangd")
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+
   :init
   (add-hook 'lsp-completion-mode-hook
             (lambda ()
@@ -1508,23 +1506,7 @@ which call (newline) command"
   (flycheck-highlighting-mode nil)
   (flycheck-annotate-current-line-style 'below)
   (flycheck-annotate-other-lines-style nil)
-  :init
-  (add-hook 'python-ts-mode-hook #'(lambda ()
-                                  (setq-local flycheck-disabled-checkers '(python-mypy))
-                                  (setq-local flycheck-checker 'python-ruff)))
-  (add-hook 'rust-ts-mode-hook #'(lambda ()
-                                     (setq-local flycheck-checker 'rust-clippy)))
-
   :config
-  (flycheck-add-mode 'javascript-eslint 'jtsx-jsx-mode)
-  (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
-  ;; cargo clippy reports paths relative to the workspace root, but
-  ;; flycheck-rust-manifest-directory returns the nearest Cargo.toml
-  ;; (the member crate's), so warnings in workspace projects never
-  ;; matched the buffer's file name and were silently dropped.
-  (setf (flycheck-checker-get 'rust-clippy 'working-directory)
-        (lambda (_) (flycheck-rust-cargo-workspace-root)))
-
   (add-hook 'flycheck-mode-hook #'flycheck-annotate-mode))
 
 
