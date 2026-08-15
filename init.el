@@ -1116,6 +1116,9 @@ to delete it too.  Interactively uses the worktree under the cursor."
               (diminish 'dired-omit-mode))))
 
 (use-package dired
+  :bind (:map dired-mode-map
+              ("<mouse-2>" . dired-mouse-find-file)
+              ("K" . dired-kill-subdir))
   :custom
   (dired-dwim-target t)
   :config
@@ -1123,7 +1126,14 @@ to delete it too.  Interactively uses the worktree under the cursor."
         "-l --almost-all --human-readable --group-directories-first --no-group")
   ;; this command is useful when you want to close the window of `dirvish-side'
   ;; automatically when opening a file
-  (put 'dired-find-alternate-file 'disabled nil))
+  (put 'dired-find-alternate-file 'disabled nil)
+
+  (defun ma/dired-kill-subdir-goto-dir (fn &rest args)
+    "Leave point on the directory line after killing its listing."
+    (let ((dir (dired-current-directory)))
+      (prog1 (apply fn args)
+        (dired-goto-file (directory-file-name dir)))))
+  (advice-add 'dired-kill-subdir :around #'ma/dired-kill-subdir-goto-dir))
 
 (use-package wdired
   :after dired
