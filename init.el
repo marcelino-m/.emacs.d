@@ -1398,6 +1398,8 @@ which call (newline) command"
   (lsp-completion-provider :none) ;; we use Corfu!
   (lsp-warn-no-matched-clients nil)
   (lsp-diagnostics-provider :flycheck)
+  (lsp-diagnostics-disabled-modes '(python-ts-mode
+                                    rust-mode))
   (lsp-signature-auto-activate nil)
   (lsp-enable-symbol-highlighting t)
   (lsp-modeline-diagnostics-enable t)
@@ -1406,8 +1408,6 @@ which call (newline) command"
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-enable-imenu nil)
   (lsp-clangd-binary-path "~/.src/LLVM-20.1.0-rc1-Linux-X64/bin/clangd")
-  (lsp-rust-analyzer-cargo-watch-command "clippy")
-
   :init
   (add-hook 'lsp-completion-mode-hook
             (lambda ()
@@ -1516,7 +1516,53 @@ which call (newline) command"
   (flycheck-highlighting-mode nil)
   (flycheck-annotate-current-line-style 'below)
   (flycheck-annotate-other-lines-style nil)
+  :init
+
+  (defun my/rust-clippy-target-args ()
+    "Extra `cargo clippy' flags to lint the target the buffer belongs to.
+Clippy only lints the default targets (lib and bins), so files under
+examples/, tests/ or benches/ are never compiled and report nothing."
+    (let ((file (or buffer-file-name "")))
+      (cond ((string-match-p "/examples/" file) '("--examples"))
+            ((string-match-p "/benches/" file)  '("--benches"))
+            ((string-match-p "/tests/" file)    '("--tests")))))
+
+
+  (add-hook 'python-ts-mode-hook #'(lambda ()
+                                  (setq-local flycheck-disabled-checkers '(python-mypy))
+                                  (setq-local flycheck-checker 'python-ruff)))
+  (add-hook 'rust-ts-mode-hook #'(lambda ()
+                                     (setq-local flycheck-checker 'rust-clippy)
+                                     (setq-local flycheck-rust-clippy-args
+                                                 (my/rust-clippy-target-args))))
+
   :config
+  ;; cargo clippy reports paths relative to the workspace root, but
+  ;; flycheck-rust-manifest-directory returns the nearest Cargo.toml
+  ;; (the member crate's), so warnings in workspace projects never
+  ;; matched the buffer's file name and were silently dropped.
+  ;;
+  ;; Two ways to fix it -- enable one, not both:
+
+  ;; (A) run cargo from the workspace root, so the relative paths resolve.
+  ;;     Side effect: clippy checks every member of the workspace.
+  ;; (setf (flycheck-checker-get 'rust-clippy 'working-directory)
+  ;;       (lambda (_) (flycheck-rust-cargo-workspace-root)))
+
+  ;; (B) keep cargo in the crate (only that package is checked) and rewrite
+  ;;     the paths while parsing.  This is what upstream does for rust-cargo
+  ;;     since commit a11c313; rust-clippy never got the same treatment.
+  (setf (flycheck-checker-get 'rust-clippy 'error-filter)
+        (lambda (errors)
+          (let ((root (flycheck-rust-cargo-workspace-root)))
+            (seq-do (lambda (err)
+                      ;; crate level errors carry no filename
+                      (when (flycheck-error-filename err)
+                        (setf (flycheck-error-filename err)
+                              (expand-file-name
+                               (flycheck-error-filename err) root))))
+                    (flycheck-rust-error-filter errors)))))
+
   (add-hook 'flycheck-mode-hook #'flycheck-annotate-mode))
 
 
