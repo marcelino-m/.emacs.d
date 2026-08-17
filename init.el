@@ -1349,7 +1349,7 @@ which call (newline) command"
          ("C-M-`" . popper-toggle-type))
 
   :custom
-  (popper-window-height 0.7)
+  (popper-window-height 0.4)
 
   :init
   (setq popper-reference-buffers
