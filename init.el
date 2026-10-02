@@ -19,6 +19,9 @@
           "~/syncthing/org-capture/work"
         "~/syncthing/org-capture/personal"))
 
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "xdg-open")
+
 ;; Disable the damn thing by making it disposable.
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
@@ -1506,7 +1509,6 @@ which call (newline) command"
   :ensure t
   :diminish)
 
-
 (use-package flycheck
   :ensure t
   :diminish
@@ -1515,7 +1517,7 @@ which call (newline) command"
   (flycheck-display-errors-function  nil)
   (flycheck-relevant-error-other-file-minimum-level 'warning)
   (flycheck-highlighting-mode nil)
-  (flycheck-annotate-current-line-style 'below)
+  (flycheck-annotate-current-line-style 'eol)
   (flycheck-annotate-other-lines-style nil)
   :init
 
