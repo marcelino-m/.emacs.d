@@ -805,6 +805,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 
 (use-package ediff
   :ensure nil
+  :defer t
   :custom
   (ediff-show-ancestor nil)
   (ediff-window-setup-function #'ediff-setup-windows-plain)
