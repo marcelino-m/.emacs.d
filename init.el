@@ -2199,6 +2199,7 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
 
 (use-package vterm
   :ensure t
+  :disabled
   :diminish
   :bind (:map vterm-mode-map
               ("C-y" . #'vterm--self-insert)
