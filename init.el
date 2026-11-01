@@ -2247,23 +2247,46 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
   :ensure t
   :diminish)
 
+(cl-defmacro ma/claude-code-ide-define-provider
+    (name &key base-url auth-host model small-model env)
+  "Define command `claude-code-ide-NAME' to run Claude Code against another API.
+The token is the auth-source password for AUTH-HOST.  ENV is an alist of extra variables."
+  (let ((vars `(("ANTHROPIC_BASE_URL" . ,base-url)
+                ("ANTHROPIC_MODEL" . ,model)
+                ("ANTHROPIC_DEFAULT_OPUS_MODEL" . ,model)
+                ("ANTHROPIC_DEFAULT_SONNET_MODEL" . ,model)
+                ("ANTHROPIC_DEFAULT_HAIKU_MODEL" . ,small-model)
+                ("CLAUDE_CODE_SUBAGENT_MODEL" . ,small-model)
+                ,@env)))
+    `(defun ,(intern (format "claude-code-ide-%s" name)) ()
+       ,(format "Start `claude-code-ide' against the %s API." name)
+       (interactive)
+       (let* ((token (or (auth-source-pick-first-password :host ,auth-host)
+                         (user-error "No API key for %s in auth-source" ,auth-host)))
+              (process-environment
+               (append (list (concat "ANTHROPIC_AUTH_TOKEN=" token))
+                       ',(mapcar (lambda (var) (format "%s=%s" (car var) (cdr var))) vars)
+                       process-environment)))
+         (call-interactively #'claude-code-ide)))))
+
 (use-package claude-code-ide
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind (("C-c cm" . claude-code-ide-menu)
          ("C-c ct" . claude-code-ide-toggle)
          ("M-<f11>" . claude-code-ide-toggle)
          ("C-c ci" . claude-code-ide-insert-at-mentioned))
+  :init
+  (ma/claude-code-ide-define-provider deepseek
+    :base-url "https://api.deepseek.com/anthropic"
+    :auth-host "api.deepseek.com"
+    :model "deepseek-flash[1m]"
+    :small-model "deepseek-flash"
+    :env (("CLAUDE_CODE_EFFORT_LEVEL" . "max")
+          ("CLAUDE_CODE_AUTO_COMPACT_WINDOW" . "786432")))
   :config
   (claude-code-ide-emacs-tools-setup)
   (setq claude-code-ide-terminal-backend 'ghostel)
-  (setq claude-code-ide-window-width 75)
-
-  (defun ma/claude-code-ide-local ()
-    (interactive)
-    (let ((process-environment (copy-sequence process-environment)))
-      (setenv "ANTHROPIC_BASE_URL" "http://localhost:4000")
-      (setenv "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY" "1")
-      (call-interactively #'claude-code-ide))))
+  (setq claude-code-ide-window-width 75))
 
 (use-package systemd
   :ensure t
