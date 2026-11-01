@@ -1788,21 +1788,12 @@ examples/, tests/ or benches/ are never compiled and report nothing."
 
   (setq org-todo-keywords
         '((sequence
-           "TODO(t)" "DOING(d)" "STOPED(s)" "|" )
+           "TODO(t)" "DOING(d)" "STOPPED(s)" "|" )
           (sequence
            "WAITING(w)" "|" )
           (type
            "|" "CANCELED(c)"  "DONE(e)")))
 
-  (setq org-todo-keyword-faces
-        '(("WANT"      :background "#5f5f5f" :foreground "#dcdccc" :weight bold)
-          ("WAIT"      :background "#d0bf8f" :foreground "#3f3f3f" :weight bold)
-          ("TODO"      :background "#cc9393" :foreground "#3f3f3f" :weight bold)
-          ("DOING"     :background "#dfaf8f" :foreground "#3f3f3f" :weight bold)
-          ("STOPPED"   :background "#d0bf8f" :foreground "#3f3f3f" :weight bold)
-          ("DONE"      :background "#7f9f7f" :foreground "#3f3f3f" :weight bold)
-          ("DELEGATED" :background "#7f9f7f" :foreground "#3f3f3f" :weight bold)
-          ("CANCELED"  :background "#5f7f5f" :foreground "#dcdccc" :weight bold)))
 
   (setq org-enforce-todo-dependencies t)
   ;; Source - https://stackoverflow.com/a/78985108
@@ -1839,14 +1830,17 @@ examples/, tests/ or benches/ are never compiled and report nothing."
          (org-agenda-finalize . org-modern-agenda))
   :custom
   (org-modern-todo-faces
-        '(
-          ("TODO"      :background "#df6967" :foreground "#3f3f3f" :weight bold)
-          ("WAIT"      :background "#e6b84e" :foreground "#3f3f3f" :weight bold)
-          ("DOING"     :background "#ef9c58" :foreground "#3f3f3f" :weight bold)
-          ("STOPPED"   :background "#e6b84e" :foreground "#3f3f3f" :weight bold)
-          ("DONE"      :background "#8ccf8a" :foreground "#3f3f3f" :weight bold)
-          ("DELEGATED" :background "#8ccf8a" :foreground "#3f3f3f" :weight bold)
-          ("CANCELED"  :background "#7fbf7f" :foreground "#dcdccc" :weight bold))))
+   '(("TODO"      :background "#df6967" :foreground "#3f3f3f" :weight bold)
+     ("WAITING"   :background "#e6b84e" :foreground "#3f3f3f" :weight bold)
+     ("DOING"     :background "#ef9c58" :foreground "#3f3f3f" :weight bold)
+     ("STOPPED"   :background "#e6b84e" :foreground "#3f3f3f" :weight bold)
+     ("DONE"      :background "#8ccf8a" :foreground "#3f3f3f" :weight bold)
+     ("DELEGATED" :background "#8ccf8a" :foreground "#3f3f3f" :weight bold)
+     ("CANCELED"  :background "#7fbf7f" :foreground "#dcdccc" :weight bold)
+     ("WANT"      :background "#5f5f5f" :foreground "#dcdccc" :weight bold)
+     ("PENDING"   :background "#8a8a8a" :foreground "#3f3f3f" :weight bold)
+     ("SUCCESS"   :background "#afd8af" :foreground "#3f3f3f" :weight bold)
+     ("FAILED"    :background "#8c5353" :foreground "#dcdccc" :weight bold))))
 
 (use-package org-capture
   :bind ("C-c x" . org-capture)
