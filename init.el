@@ -267,6 +267,12 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
    `(forge-pullreq-merged       ((t (:foreground "#9b88c9" :bold t))))
    `(forge-pullreq-rejected     ((t (:foreground "#cc9393" :bold t))))
 
+   ;; orderless: highlight matches with foreground only
+   `(orderless-match-face-0 ((t (:background unspecified))))
+   `(orderless-match-face-1 ((t (:background unspecified))))
+   `(orderless-match-face-2 ((t (:background unspecified))))
+   `(orderless-match-face-3 ((t (:background unspecified))))
+
    ;; magit
    `(magit-section-highlight       ((t (:inherit nil))))
    `(magit-diff-added              ((t (:background unspecified :foreground "#7a9d4d" :extend t :bold nil))))
