@@ -1195,7 +1195,33 @@ to delete it too.  Interactively uses the worktree under the cursor."
         dirvish-side-attributes
         '(vc-state nerd-icons collapse file-size))
   ;; open large directory (over 20000 files) asynchronously with `fd' command
-  (setq dirvish-large-directory-threshold 20000))
+  (setq dirvish-large-directory-threshold 20000)
+
+  (defun ma/dirvish-render-per-window (render window &optional selected)
+    "Call RENDER so that its overlays only apply to WINDOW.
+Otherwise windows showing the same buffer share the last rendered highlight."
+    (with-current-buffer (window-buffer window)
+      (let ((props '(dirvish-a-ov dirvish-l-ov dirvish-r-ov))
+            (others (remq window (get-buffer-window-list nil nil t)))
+            kept)
+        (when others
+          ;; Hide the other windows' overlays from RENDER's cleanup.
+          (dolist (ov (overlays-in (point-min) (point-max)))
+            (dolist (prop props)
+              (when (and (overlay-get ov prop)
+                         (memq (overlay-get ov 'window) others))
+                (overlay-put ov prop nil)
+                (push (cons ov prop) kept)))))
+        (unwind-protect
+            (funcall render window selected)
+          (pcase-dolist (`(,ov . ,prop) kept)
+            (overlay-put ov prop t)))
+        (when others
+          (dolist (ov (overlays-in (point-min) (point-max)))
+            (when (and (null (overlay-get ov 'window))
+                       (seq-some (lambda (prop) (overlay-get ov prop)) props))
+              (overlay-put ov 'window window)))))))
+  (advice-add 'dirvish--render-attrs :around #'ma/dirvish-render-per-window))
 
 
 (use-package deft
