@@ -569,6 +569,13 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (prog-mode . hl-todo-mode)
   (rust-mode . hl-todo-mode))
 
+;; Ensure a server is running even when Emacs isn't started as a daemon,
+;; so `emacsclient' (e.g. Claude Code's Ctrl+G) always has a socket.
+(use-package server
+  :config
+  (unless (server-running-p)
+    (server-start)))
+
 ;; notify when emacs is ready
 ;; I run emacs in server mode set a systemd units
 (use-package notifications
@@ -731,15 +738,6 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
     [("f" "Find file" projectile-find-file)
      ("v" "Magit status" magit-status)
      ("d" "Dired" projectile-dired)])
-
-  (advice-add 'projectile-run-vterm
-              :override
-              (lambda (&optional arg)
-                (interactive "P")
-                (let ((project (projectile-acquire-root)))
-                  (projectile-with-default-dir project
-                    (let ((vterm-buffer-name (projectile-generate-process-name "vterm" arg project)))
-                      (vterm))))))
 
   ;; projectile slows down tramp-mode
   ;; https://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
@@ -2217,26 +2215,18 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
   (add-to-list 'magic-mode-alist '("SQLite format 3\x00" . ma/sqlite-view-file-magically)))
 
 
-(use-package vterm
-  :ensure t
-  :disabled
-  :diminish
-  :bind (:map vterm-mode-map
-              ("C-y" . #'vterm--self-insert)
-              ("C-u" . #'vterm--self-insert)
-              ("C-S-v" . #'vterm-yank)))
-
 (use-package ghostel
   :ensure t
   :custom
-  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-<f11>")))
-
-(use-package vterm-toggle
-  :ensure t
-  :diminish
-  :custom
-  (vterm-toggle-fullscreen-p   t)
-  (vterm-toggle-hide-method    'reset-window-configration))
+  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-<f11>"))
+  :config
+  ;; Unbound, Emacs shift-translates C-S-g to C-g.  Send it as a kitty CSI-u
+  ;; sequence (g=103, shift+ctrl=6) so Claude Code sees ctrl+shift+g.
+  (defun ma/ghostel-send-C-S-g ()
+    "Send ctrl+shift+g to the terminal as a CSI-u sequence."
+    (interactive)
+    (ghostel-send-string "\e[103;6u"))
+  (keymap-set ghostel-mode-map "C-S-g" #'ma/ghostel-send-C-S-g))
 
 (use-package kkp
   :ensure t
@@ -2312,7 +2302,73 @@ The token is the auth-source password for AUTH-HOST.  ENV is an alist of extra v
   :config
   (claude-code-ide-emacs-tools-setup)
   (setq claude-code-ide-terminal-backend 'ghostel)
-  (setq claude-code-ide-window-width 75))
+  (setq claude-code-ide-window-width 75)
+
+  ;; Ctrl+G in Claude runs $EDITOR.  `emacsclient -t' would nest this same
+  ;; Emacs inside its own terminal buffer (keys like C-x hit the outer frame),
+  ;; so use plain emacsclient and show the file in the Claude window itself.
+  ;; C-x # finishes the edit and brings the Claude terminal back.
+  (define-advice claude-code-ide--create-terminal-session
+      (:around (fn &rest args) emacsclient-editor)
+    "Run Claude Code with plain emacsclient as its external editor."
+    (let ((process-environment
+           (append '("EDITOR=emacsclient" "VISUAL=emacsclient")
+                   process-environment)))
+      (apply fn args)))
+
+  (defvar-local ma/claude-code-ide--return-to nil
+    "(WINDOW BUFFER DEDICATED) to restore when this edit is done.")
+
+  (defun ma/claude-code-ide-save-and-finish ()
+    "Save the buffer and hand it back to Claude Code."
+    (interactive)
+    (save-buffer)
+    (server-edit))
+
+  (defvar-keymap ma/claude-code-ide-edit-mode-map
+    "C-x C-s" #'ma/claude-code-ide-save-and-finish)
+
+  (define-minor-mode ma/claude-code-ide-edit-mode
+    "Buffer opened from Claude Code's external editor; C-x C-s finishes it."
+    :lighter " Claude-edit")
+
+  (defun ma/claude-code-ide--server-window (buffer)
+    "Show server BUFFER; inside a Claude window, take over just that window."
+    (let ((win (selected-window)))
+      (if (not (string-prefix-p "*claude-code[" (buffer-name (window-buffer win))))
+          (switch-to-buffer buffer)
+        (let ((ret (list win (window-buffer win) (window-dedicated-p win))))
+          (set-window-dedicated-p win nil)
+          (set-window-buffer win buffer)
+          (with-current-buffer buffer
+            (setq ma/claude-code-ide--return-to ret)
+            (ma/claude-code-ide-edit-mode 1)
+            (ethan-wspace-clean-all)
+            (set-window-point win (point-max)))))))
+
+  (defun ma/claude-code-ide--server-restore ()
+    "Put the Claude terminal back in the window the edit borrowed."
+    (pcase ma/claude-code-ide--return-to
+      (`(,win ,buf ,dedicated)
+       (setq ma/claude-code-ide--return-to nil)
+       (when (and (window-live-p win) (buffer-live-p buf))
+         (set-window-buffer win buf)
+         (set-window-dedicated-p win dedicated)
+         (select-window win)))))
+
+  ;; In Claude terminals C-g acts like Escape (cancel/dismiss); other
+  ;; ghostel buffers keep sending a plain C-g.
+  (defun ma/claude-code-ide-ghostel-C-g ()
+    "Send Escape in Claude Code terminals, C-g in other ghostel buffers."
+    (interactive)
+    (if (string-prefix-p "*claude-code[" (buffer-name))
+        (progn (deactivate-mark) (ghostel-send-key "escape"))
+      (ghostel-send-C-g)))
+  (with-eval-after-load 'ghostel
+    (keymap-set ghostel-mode-map "C-g" #'ma/claude-code-ide-ghostel-C-g))
+
+  (setq server-window #'ma/claude-code-ide--server-window)
+  (add-hook 'server-done-hook #'ma/claude-code-ide--server-restore))
 
 (use-package systemd
   :ensure t
