@@ -2367,6 +2367,14 @@ The token is the auth-source password for AUTH-HOST.  ENV is an alist of extra v
   (with-eval-after-load 'ghostel
     (keymap-set ghostel-mode-map "C-g" #'ma/claude-code-ide-ghostel-C-g))
 
+  (define-advice claude-code-ide-toggle (:around (fn &rest args) offer-new)
+    "When the project has no Claude session, offer to start one."
+    (if (claude-code-ide-mcp--sessions-for-project
+         (claude-code-ide--get-working-directory))
+        (apply fn args)
+      (when (y-or-n-p "No hay sesión de Claude Code en este proyecto. ¿Crear una? ")
+        (call-interactively #'claude-code-ide))))
+
   (setq server-window #'ma/claude-code-ide--server-window)
   (add-hook 'server-done-hook #'ma/claude-code-ide--server-restore))
 
