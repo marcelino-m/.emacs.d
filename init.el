@@ -668,6 +668,15 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :bind (("M-<up>"   . good-scroll-down)
          ("M-<down>"   . good-scroll-up))
   :config
+  ;; `good-scroll-step' is in pixels; on a tty a line is 1 "pixel", so the
+  ;; default 80 would jump 80 lines.  Scroll a few lines there instead.
+  (defvar ma/good-scroll-tty-lines 4
+    "Lines `good-scroll' moves per step on text terminals.")
+  (define-advice good-scroll-move (:filter-args (args) tty-step)
+    "Scale the scroll step to `ma/good-scroll-tty-lines' on ttys."
+    (if (display-graphic-p)
+        args
+      (cons (* (cl-signum (car args)) ma/good-scroll-tty-lines) (cdr args))))
   (good-scroll-mode 1))
 
 
