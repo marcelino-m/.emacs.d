@@ -91,7 +91,9 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   ;; (read-extended-command-predicate #'command-completion-default-include-p)
   ;; Do not allow the cursor in the minibuffer prompt
   (minibuffer-prompt-properties
-   '(read-only t cursor-intangible t face minibuffer-prompt)))
+   '(read-only t cursor-intangible t face minibuffer-prompt))
+  :config
+  (xterm-mouse-mode 1))
 
 (use-package diminish
   :ensure t)
