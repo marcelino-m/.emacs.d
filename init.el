@@ -667,8 +667,8 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
 (use-package good-scroll
   :ensure t
   :diminish
-  :bind (("M-<up>"   . good-scroll-down)
-         ("M-<down>"   . good-scroll-up))
+  :bind (("M-p"   . good-scroll-down)
+         ("M-n"   . good-scroll-up))
   :config
   ;; `good-scroll-step' is in pixels; on a tty a line is 1 "pixel", so the
   ;; default 80 would jump 80 lines.  Scroll a few lines there instead.
