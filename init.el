@@ -738,17 +738,29 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :custom
   (projectile-indexing-method        'hybrid)
   (projectile-sort-order             'recently-active)
-  (projectile-switch-project-action  #'me/projectile-switch-project-transient)
+  (projectile-switch-project-action  #'ma/projectile-switch-project-transient)
   (projectile-project-search-path    '(("~/lab" . 2)))
   (projectile-find-dir-includes-top-level t)
 
   :config
   (require 'transient)
-  (transient-define-prefix me/projectile-switch-project-transient ()
+  ;; Projectile restores `default-directory' on `transient-exit-hook', which
+  ;; also runs when entering a sub-prefix, so calling `magit-worktree' directly
+  ;; ends up targeting the previous buffer's repo.  Run it from the project's
+  ;; magit-status buffer instead.
+  (transient-define-suffix ma/projectile-magit-worktree ()
+    "Open `magit-worktree' for the project being switched to."
+    :transient 'transient--do-replace
+    (interactive)
+    (magit-status-setup-buffer default-directory)
+    (magit-worktree))
+
+  (transient-define-prefix ma/projectile-switch-project-transient ()
     "Action to run after switching Projectile project."
     [("f" "Find file" projectile-find-file)
+     ("d" "Dired" projectile-dired)
      ("v" "Magit status" magit-status)
-     ("d" "Dired" projectile-dired)])
+     ("w" "Worktrees" ma/projectile-magit-worktree)])
 
   ;; projectile slows down tramp-mode
   ;; https://www.reddit.com/r/emacs/comments/320cvb/projectile_slows_tramp_mode_to_a_crawl_is_there_a/
