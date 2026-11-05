@@ -1462,7 +1462,7 @@ which call (newline) command"
   (dolist (face '(lsp-face-highlight-textual
                   lsp-face-highlight-read
                   lsp-face-highlight-write))
-    (set-face-attribute face nil :background 'unspecified :foreground "#da8548" :weight 'ultra-bold)))
+    (set-face-attribute face nil :background 'unspecified :foreground "#ffb454" :weight 'ultra-bold)))
 
 (use-package cape
   :ensure t
