@@ -2341,7 +2341,9 @@ The token is the auth-source password for AUTH-HOST.  ENV is an alist of extra v
     "Save the buffer and hand it back to Claude Code."
     (interactive)
     (save-buffer)
-    (server-edit))
+    ;; Not `server-edit': it would then display the next pending server
+    ;; buffer (e.g. a dired from `emacsclient -t DIR') in the Claude window.
+    (server-done))
 
   (defvar-keymap ma/claude-code-ide-edit-mode-map
     "C-x C-s" #'ma/claude-code-ide-save-and-finish)
