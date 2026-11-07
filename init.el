@@ -1222,26 +1222,21 @@ to delete it too.  Interactively uses the worktree under the cursor."
     "Call RENDER so that its overlays only apply to WINDOW.
 Otherwise windows showing the same buffer share the last rendered highlight."
     (with-current-buffer (window-buffer window)
-      (let ((props '(dirvish-a-ov dirvish-l-ov dirvish-r-ov))
-            (others (remq window (get-buffer-window-list nil nil t)))
-            kept)
-        (when others
-          ;; Hide the other windows' overlays from RENDER's cleanup.
-          (dolist (ov (overlays-in (point-min) (point-max)))
-            (dolist (prop props)
-              (when (and (overlay-get ov prop)
-                         (memq (overlay-get ov 'window) others))
-                (overlay-put ov prop nil)
-                (push (cons ov prop) kept)))))
-        (unwind-protect
-            (funcall render window selected)
-          (pcase-dolist (`(,ov . ,prop) kept)
-            (overlay-put ov prop t)))
-        (when others
-          (dolist (ov (overlays-in (point-min) (point-max)))
-            (when (and (null (overlay-get ov 'window))
-                       (seq-some (lambda (prop) (overlay-get ov prop)) props))
-              (overlay-put ov 'window window)))))))
+      (let ((others (remq window (get-buffer-window-list nil nil t))))
+        (cl-flet ((ovs ()
+                    (cl-loop for ov in (overlays-in (point-min) (point-max))
+                             for prop = (seq-find (lambda (p) (overlay-get ov p))
+                                                  '(dirvish-a-ov dirvish-l-ov dirvish-r-ov))
+                             when prop collect (cons ov prop))))
+          ;; RENDER's cleanup only removes overlays whose PROP is t.
+          (pcase-dolist (`(,ov . ,prop) (ovs))
+            (when (memq (overlay-get ov 'window) others)
+              (overlay-put ov prop 'other)))
+          (unwind-protect
+              (funcall render window selected)
+            (pcase-dolist (`(,ov . ,prop) (ovs))
+              (cond ((eq (overlay-get ov prop) 'other) (overlay-put ov prop t))
+                    ((null (overlay-get ov 'window)) (overlay-put ov 'window window)))))))))
   (advice-add 'dirvish--render-attrs :around #'ma/dirvish-render-per-window))
 
 
