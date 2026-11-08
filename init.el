@@ -2265,7 +2265,22 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
     "Send ctrl+shift+g to the terminal as a CSI-u sequence."
     (interactive)
     (ghostel-send-string "\e[103;6u"))
-  (keymap-set ghostel-mode-map "C-S-g" #'ma/ghostel-send-C-S-g))
+  (keymap-set ghostel-mode-map "C-S-g" #'ma/ghostel-send-C-S-g)
+
+  (defun ma/ghostel-kill-line ()
+    "Send C-k to the terminal and save the killed text in the Emacs kill ring."
+    (interactive)
+    (when-let* ((pos ghostel--cursor-char-pos)
+                ((<= pos (point-max)))
+                (text (string-trim-right
+                       (buffer-substring-no-properties
+                        pos (save-excursion (goto-char pos) (line-end-position))))))
+      (unless (string-empty-p text)
+        (if (eq last-command 'ma/ghostel-kill-line)
+            (kill-append text nil)
+          (kill-new text))))
+    (ghostel-send-key "k" "ctrl"))
+  (keymap-set ghostel-semi-char-mode-map "C-k" #'ma/ghostel-kill-line))
 
 (use-package kkp
   :ensure t
