@@ -974,7 +974,28 @@ to delete it too.  Interactively uses the worktree under the cursor."
     ("^"       enlarge-window)
     ("}"       enlarge-window-horizontally))
 
+  :custom
+  (split-window-preferred-function #'ma/split-window-prefer-side-by-side)
+
   :config
+  (defvar ma/split-min-width 67
+    "Minimum body width of each window after a side-by-side split.")
+
+  (defun ma/split-window-prefer-side-by-side (&optional window)
+    "Split WINDOW side by side if each half keeps `ma/split-min-width' columns.
+Otherwise defer to `split-window-sensibly'."
+    (let* ((window (or window (selected-window)))
+           (total (window-total-width window))
+           (margins (window-margins window))
+           ;; Margins are buffer-specific (e.g. magit-log's author/date
+           ;; column), so they don't count as overhead of the new window.
+           (overhead (- total (window-body-width window)
+                        (or (car margins) 0) (or (cdr margins) 0)))
+           (new-width (- (/ total 2) overhead)))
+      (if (>= new-width ma/split-min-width)
+          (ignore-errors (split-window window nil 'right))
+        (split-window-sensibly window))))
+
   :bind (("s-x" . delete-window)
          ("s-c" . delete-other-windows)))
 
