@@ -2257,7 +2257,7 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
 (use-package ghostel
   :ensure t
   :custom
-  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-<f11>"))
+  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-S-<f11>"))
   :config
   ;; Unbound, Emacs shift-translates C-S-g to C-g.  Send it as a kitty CSI-u
   ;; sequence (g=103, shift+ctrl=6) so Claude Code sees ctrl+shift+g.
@@ -2328,7 +2328,7 @@ The token is the auth-source password for AUTH-HOST.  ENV is an alist of extra v
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind (("C-c cm" . claude-code-ide-menu)
          ("C-c ct" . claude-code-ide-toggle)
-         ("M-<f11>" . claude-code-ide-toggle)
+         ("M-S-<f11>" . claude-code-ide-toggle)
          ("C-c ci" . claude-code-ide-insert-at-mentioned))
   :init
   (ma/claude-code-ide-define-provider deepseek
