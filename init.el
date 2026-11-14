@@ -931,6 +931,9 @@ to delete it too.  Interactively uses the worktree under the cursor."
   :config
   (global-git-commit-mode)
 
+  ;; Evita `magit-reset-quickly' por accidente.
+  (keymap-unset magit-mode-map "x" t)
+
   (transient-append-suffix 'magit-worktree "k"
     '("K" "Delete worktree and branch" ma/magit-worktree-delete-with-branch))
 
@@ -2258,6 +2261,9 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
   :ensure t
   :custom
   (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-S-<f11>"))
+  ;; Let Claude Code's copy-on-select (OSC 52) reach the kill ring and,
+  ;; through Emacs' own OSC 52 in tty, the system clipboard.
+  (ghostel-enable-osc52 t)
   :config
   ;; Unbound, Emacs shift-translates C-S-g to C-g.  Send it as a kitty CSI-u
   ;; sequence (g=103, shift+ctrl=6) so Claude Code sees ctrl+shift+g.
