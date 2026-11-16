@@ -92,7 +92,17 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   ;; Do not allow the cursor in the minibuffer prompt
   (minibuffer-prompt-properties
    '(read-only t cursor-intangible t face minibuffer-prompt))
+  ;; Keep the echo area one line tall; full messages stay in *Messages*.
+  (message-truncate-lines t)
+  :preface
+  (defun ma/message-first-line (msg)
+    "Keep only the first line of MSG so the echo area never grows."
+    (let ((msg (string-trim msg)))
+      (if-let* ((nl (string-search "\n" msg)))
+          (concat (substring msg 0 nl) " …")
+        msg)))
   :config
+  (add-hook 'set-message-functions #'ma/message-first-line)
   (xterm-mouse-mode 1))
 
 (use-package diminish
