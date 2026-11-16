@@ -887,6 +887,13 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
     (let ((magit-display-buffer-function  #'ma/display-buffer-same-windows))
       (magit-diff-buffer-file)))
 
+  (defun ma/magit-section-forward-parent ()
+    "Move to the next sibling section; from a hunk, to the next file."
+    (interactive)
+    (when (magit-section-match 'hunk)
+      (magit-section-up))
+    (magit-section-forward-sibling))
+
   (defun ma/magit-worktree-delete-with-branch (worktree)
     "Delete WORKTREE and the local branch it has checked out.
 Delegates to `magit-worktree-delete' and `magit-branch-delete', so it respects
@@ -942,6 +949,8 @@ to delete it too.  Interactively uses the worktree under the cursor."
 
   ;; Evita `magit-reset-quickly' por accidente.
   (keymap-unset magit-mode-map "x" t)
+
+  (keymap-set magit-section-mode-map "M-e" #'ma/magit-section-forward-parent)
 
   (transient-append-suffix 'magit-worktree "k"
     '("K" "Delete worktree and branch" ma/magit-worktree-delete-with-branch))
