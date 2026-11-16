@@ -294,11 +294,11 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
    ;; ediff
    `(ediff-current-diff-A        ((t (:background "#303030" :foreground "#bc4d44" :extend t))))
    `(ediff-current-diff-B        ((t (:background "#303030" :foreground "#7a9d4d" :extend t))))
-   `(ediff-current-diff-C        ((t (:background "#303030" :foreground unspecified :extend t))))
+   `(ediff-current-diff-C        ((t (:background "#303030" :foreground "#b08850" :extend t))))
    `(ediff-current-diff-Ancestor ((t (:background "#303030" :foreground unspecified :extend t))))
    `(ediff-fine-diff-A           ((t (:background unspecified :foreground "#e67e7d" :inverse-video nil :bold t))))
    `(ediff-fine-diff-B           ((t (:background unspecified :foreground "#a0c66d" :inverse-video nil :bold t))))
-   `(ediff-fine-diff-C           ((t (:background unspecified :foreground unspecified :inverse-video nil :bold t))))
+   `(ediff-fine-diff-C           ((t (:background unspecified :foreground "#d4a85c" :inverse-video nil :bold t))))
    `(ediff-fine-diff-Ancestor    ((t (:background unspecified :foreground unspecified :inverse-video nil :bold t))))
    `(ediff-even-diff-A           ((t (:background "#2c2f38" :foreground unspecified :extend t))))
    `(ediff-even-diff-B           ((t (:background "#2c2f38" :foreground unspecified :extend t))))
@@ -839,7 +839,16 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :custom
   (ediff-show-ancestor nil)
   (ediff-window-setup-function #'ediff-setup-windows-plain)
-  (ediff-split-window-function #'split-window-horizontally))
+  (ediff-split-window-function #'split-window-horizontally)
+  :preface
+  (defun ma/ediff-relative-buffer-name ()
+    "Show magit revision buffers relative to the repo root."
+    (when-let* (((bound-and-true-p magit-buffer-file-name))
+                (root (magit-toplevel)))
+      ;; Not a prefix: magit starts temporary buffer names with a space.
+      (rename-buffer (string-replace root "" (buffer-name)) t)))
+  :hook
+  (ediff-prepare-buffer . ma/ediff-relative-buffer-name))
 
 (use-package vc-git
   :custom
