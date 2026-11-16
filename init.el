@@ -2304,7 +2304,20 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
             (kill-append text nil)
           (kill-new text))))
     (ghostel-send-key "k" "ctrl"))
-  (keymap-set ghostel-semi-char-mode-map "C-k" #'ma/ghostel-kill-line))
+  (keymap-set ghostel-semi-char-mode-map "C-k" #'ma/ghostel-kill-line)
+
+  (defun ma/ghostel-page-scroll (button fallback)
+    "Scroll 3 lines: send wheel BUTTON (4 up, 5 down) to apps that track
+the mouse (e.g. Claude Code), else call FALLBACK with 3."
+    (if (ghostel--mouse-tracking-p ghostel--term)
+        (dotimes (_ 3)
+          (ghostel--mouse-event ghostel--term 0 button (/ (window-body-height) 2) 0 0))
+      (funcall fallback 3)))
+
+  (keymap-set ghostel-semi-char-mode-map "<prior>"
+              (lambda () (interactive) (ma/ghostel-page-scroll 4 #'scroll-down-command)))
+  (keymap-set ghostel-semi-char-mode-map "<next>"
+              (lambda () (interactive) (ma/ghostel-page-scroll 5 #'scroll-up-command))))
 
 (use-package kkp
   :ensure t
