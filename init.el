@@ -643,10 +643,9 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (add-hook 'prog-mode-hook      #'ethan-wspace-mode)
   (add-hook 'markdown-mode-hook  #'ethan-wspace-mode)
   (add-hook 'LaTeX-mode-hook     #'ethan-wspace-mode)
-  (add-hook 'yaml-mode-hook      #'ethan-wspace-mode)
+  (add-hook 'yaml-ts-mode-hook   #'ethan-wspace-mode)
   (add-hook 'see-mode-hook       #'ethan-wspace-mode)
-  (add-hook 'ledger-mode-hook    #'ethan-wspace-mode)
-  (add-hook 'yaml-mode-hook      #'ethan-wspace-mode))
+  (add-hook 'ledger-mode-hook    #'ethan-wspace-mode))
 
 
 (use-package expreg
@@ -810,12 +809,12 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   (org-mode      . flyspell-mode)
   (markdown-mode . flyspell-mode)
   (prog-mode     . flyspell-prog-mode)
-  (yaml-mode     . flyspell-prog-mode)
+  (yaml-ts-mode  . flyspell-prog-mode)
   (pest-mode     . flyspell-prog-mode)
 
   :config
   (add-hook 'prog-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
-  (add-hook 'yaml-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
+  (add-hook 'yaml-ts-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'python-ts-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'jtsx-tsx-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
   (add-hook 'jtsx-jsx-mode-hook (lambda () (setq flyspell-persistent-highlight nil)))
@@ -1326,10 +1325,9 @@ Otherwise windows showing the same buffer share the last rendered highlight."
   :init
   (global-unset-key (kbd "C-<down-mouse-1>")))
 
-(use-package yaml-mode
-  :ensure t
-  :mode (("\\.yml\\'"  . yaml-mode)
-         ("\\.yaml\\'" . yaml-mode)))
+(use-package yaml-ts-mode
+  :mode (("\\.yml\\'"  . yaml-ts-mode)
+         ("\\.yaml\\'" . yaml-ts-mode)))
 
 (use-package toml-mode
   :ensure t
