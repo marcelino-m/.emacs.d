@@ -2521,3 +2521,10 @@ The token is the auth-source password for AUTH-HOST.  ENV is an alist of extra v
               ("RET" . newline)
               ("C-c C-c" . shell-maker-submit)
               ("C-c C-k" . agent-shell-interrupt)))
+
+(use-package breadcrumb
+  :ensure t
+  :hook
+  (markdown-mode . breadcrumb-local-mode)
+  (yaml-ts-mode  . breadcrumb-local-mode))
+
