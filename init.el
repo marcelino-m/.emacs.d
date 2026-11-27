@@ -4,8 +4,8 @@
 (customize-set-variable 'package-archives
                         `(("melpa" . "https://melpa.org/packages/")
                           ,@package-archives))
-(customize-set-variable 'package-enable-at-startup nil)
-(package-initialize)
+;; No `package-initialize': Emacs already activates packages between
+;; early-init.el and init.el (`package-enable-at-startup' is t).
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
