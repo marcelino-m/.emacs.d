@@ -2295,6 +2295,15 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
   ;; Let Claude Code's copy-on-select (OSC 52) reach the kill ring and,
   ;; through Emacs' own OSC 52 in tty, the system clipboard.
   (ghostel-enable-osc52 t)
+  :bind
+  (:map ghostel-mode-map
+   ("C-S-g" . ma/ghostel-send-C-S-g)
+   :map ghostel-semi-char-mode-map
+   ("C-k" . ma/ghostel-kill-line)
+   ("C-/" . ma/ghostel-undo)
+   ("C-_" . ma/ghostel-undo)
+   ("<prior>" . ma/ghostel-page-up)
+   ("<next>" . ma/ghostel-page-down))
   :config
   ;; Unbound, Emacs shift-translates C-S-g to C-g.  Send it as a kitty CSI-u
   ;; sequence (g=103, shift+ctrl=6) so Claude Code sees ctrl+shift+g.
@@ -2302,7 +2311,6 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
     "Send ctrl+shift+g to the terminal as a CSI-u sequence."
     (interactive)
     (ghostel-send-string "\e[103;6u"))
-  (keymap-set ghostel-mode-map "C-S-g" #'ma/ghostel-send-C-S-g)
 
   (defun ma/ghostel-kill-line ()
     "Send C-k to the terminal and save the killed text in the Emacs kill ring."
@@ -2317,7 +2325,13 @@ taken from: https://christiantietze.de/posts/2024/01/emacs-sqlite-mode-open-sqli
             (kill-append text nil)
           (kill-new text))))
     (ghostel-send-key "k" "ctrl"))
-  (keymap-set ghostel-semi-char-mode-map "C-k" #'ma/ghostel-kill-line)
+
+  ;; With the kitty keyboard protocol on, the encoder sends C-/ as CSI-u,
+  ;; which Claude Code doesn't read as undo.  The raw byte works everywhere.
+  (defun ma/ghostel-undo ()
+    "Send undo (C-_) to the terminal."
+    (interactive)
+    (ghostel-send-string "\C-_"))
 
   (defun ma/ghostel-page-scroll (button fallback)
     "Scroll 3 lines: send wheel BUTTON (4 up, 5 down) to apps that track
@@ -2327,10 +2341,15 @@ the mouse (e.g. Claude Code), else call FALLBACK with 3."
           (ghostel--mouse-event ghostel--term 0 button (/ (window-body-height) 2) 0 0))
       (funcall fallback 3)))
 
-  (keymap-set ghostel-semi-char-mode-map "<prior>"
-              (lambda () (interactive) (ma/ghostel-page-scroll 4 #'scroll-down-command)))
-  (keymap-set ghostel-semi-char-mode-map "<next>"
-              (lambda () (interactive) (ma/ghostel-page-scroll 5 #'scroll-up-command))))
+  (defun ma/ghostel-page-up ()
+    "Scroll the terminal up 3 lines."
+    (interactive)
+    (ma/ghostel-page-scroll 4 #'scroll-down-command))
+
+  (defun ma/ghostel-page-down ()
+    "Scroll the terminal down 3 lines."
+    (interactive)
+    (ma/ghostel-page-scroll 5 #'scroll-up-command)))
 
 (use-package kkp
   :ensure t
