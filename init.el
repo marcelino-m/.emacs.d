@@ -899,6 +899,7 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
     (let ((magit-display-buffer-function  #'ma/display-buffer-same-windows))
       (magit-diff-buffer-file)))
 
+
   (defun ma/magit-section-forward-parent ()
     "Move to the next sibling section; from a hunk, to the next file."
     (interactive)
@@ -912,6 +913,30 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
     (when (magit-section-match 'hunk)
       (magit-section-up))
     (magit-section-backward-sibling))
+
+  (defun ma/magit-read-worktree-directory (prompt commit)
+    "Read the directory for a new worktree, placed under REPO-wtrees/.
+REPO is the main checkout, so the location is the same whether the
+command runs from the main checkout or from inside another worktree.
+The REPO-wtrees/ directory is created if missing.  COMMIT (the branch
+or revision being checked out) is offered as the initial name, with
+`/' replaced by `-'.
+
+Installed as `magit-read-worktree-directory-function', which is what
+both create commands, `magit-worktree-checkout' and
+`magit-worktree-branch', call to ask for the directory.  Forge's
+`forge-checkout-worktree' uses it too, via
+`ma/forge-read-worktree-directory'."
+    ;; `magit-list-worktrees' always returns the main checkout first,
+    ;; even when called from inside a worktree.  For example, from
+    ;; either ~/code/repo/ or ~/code/repo-wtrees/feat-x/:
+    ;;   (caar (magit-list-worktrees))  =>  "~/code/repo/"
+    ;;   base                           =>  "~/code/repo-wtrees/"
+    (let ((base (concat (directory-file-name (caar (magit-list-worktrees)))
+                        "-wtrees/")))
+      (make-directory base t)
+      (read-directory-name prompt base nil nil
+                           (and commit (string-replace "/" "-" commit)))))
 
   (defun ma/magit-worktree-delete-with-branch (worktree)
     "Delete WORKTREE and the local branch it has checked out.
@@ -963,8 +988,10 @@ to delete it too.  Interactively uses the worktree under the cursor."
                          (list "Borrar también %s/%s en el remoto" remote remote-branch)
                          nil t))
               (magit-run-git-async "push" "--delete" remote remote-branch))))))))
+
   :config
-  (global-git-commit-mode)
+  (setq magit-read-worktree-directory-function
+        #'ma/magit-read-worktree-directory)
 
   (transient-append-suffix 'magit-worktree "k"
     '("K" "Delete worktree and branch" ma/magit-worktree-delete-with-branch))
@@ -993,7 +1020,23 @@ to delete it too.  Interactively uses the worktree under the cursor."
   :ensure t
   :after magit
   :custom-face
-  (forge-pullreq-draft ((t (:inherit default :background unspecified :foreground "gray63" :bold t)))))
+  (forge-pullreq-draft ((t (:inherit default :background unspecified :foreground "gray63" :bold t))))
+
+  :config
+  (defun ma/forge-read-worktree-directory (pullreq)
+    "Read the directory for a worktree of PULLREQ, placed under REPO-wtrees/.
+Installed as `forge-checkout-worktree-read-directory-function'."
+    ;; Forge does not use `magit-read-worktree-directory-function': it
+    ;; has its own variable, which only receives the PR.  Build the
+    ;; prompt and suggested name the way Forge does ("#12 feat/x" ->
+    ;; "12-feat-x") and let `ma/magit-read-worktree-directory' decide where.
+    (let ((number (oref pullreq number)))
+      (ma/magit-read-worktree-directory
+       (format "Checkout #%s in new worktree: " number)
+       (format "%s-%s" number (oref pullreq head-ref)))))
+
+  (setq forge-checkout-worktree-read-directory-function
+        #'ma/forge-read-worktree-directory))
 
 (use-package git-modes :ensure t :diminish)
 (use-package git-timemachine :ensure t :diminish)
