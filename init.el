@@ -867,7 +867,13 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
   :ensure t
   :defer t
   :bind (("C-c g" . magit-status)
-         ("C-c d" . ma/magit-diff-buffer-file))
+         ("C-c d" . ma/magit-diff-buffer-file)
+         :map magit-mode-map
+         ;; Evita `magit-reset-quickly' por accidente.
+         ("x" . nil)
+         :map magit-section-mode-map
+         ("M-e" . ma/magit-section-forward-parent)
+         ("M-a" . ma/magit-section-backward-parent))
   :custom
   ;; (magit-auto-revert-mode nil)
   ;; (global-auto-revert-mode nil)
@@ -884,9 +890,6 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
                                             (pullreqs   . show)
                                             (unpushed    . show)))
 
-  ;; :hook
-  ;; (git-commit-mode . git-commit-turn-on-flyspell)
-
   :preface
   (defun ma/display-buffer-same-windows (buffer)
     (display-buffer buffer '(display-buffer-same-window)))
@@ -902,6 +905,13 @@ taken from: https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smar
     (when (magit-section-match 'hunk)
       (magit-section-up))
     (magit-section-forward-sibling))
+
+  (defun ma/magit-section-backward-parent ()
+    "Move to the previous sibling section; from a hunk, to the previous file."
+    (interactive)
+    (when (magit-section-match 'hunk)
+      (magit-section-up))
+    (magit-section-backward-sibling))
 
   (defun ma/magit-worktree-delete-with-branch (worktree)
     "Delete WORKTREE and the local branch it has checked out.
@@ -955,11 +965,6 @@ to delete it too.  Interactively uses the worktree under the cursor."
               (magit-run-git-async "push" "--delete" remote remote-branch))))))))
   :config
   (global-git-commit-mode)
-
-  ;; Evita `magit-reset-quickly' por accidente.
-  (keymap-unset magit-mode-map "x" t)
-
-  (keymap-set magit-section-mode-map "M-e" #'ma/magit-section-forward-parent)
 
   (transient-append-suffix 'magit-worktree "k"
     '("K" "Delete worktree and branch" ma/magit-worktree-delete-with-branch))
